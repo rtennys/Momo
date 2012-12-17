@@ -51,8 +51,35 @@ h5 a:link, h5 a:visited, h5 a:active { padding: 0; text-decoration: none; }
 #nav_bottom li a:focus { color: #1c1c1c; background: #d2d2d2; }
 #nav_bottom li.to-menu { display: none; }
 
+.page-body, .page-footer { padding: 15px 5px 55px; }
+
+::-webkit-input-placeholder { color: lightgray; font-style: italic; }
+:-moz-placeholder { color: lightgray; font-style: italic; }
+:-ms-input-placeholder { color: lightgray; font-style: italic; }
+input.placeholder { color: lightgray; font-style: italic; }
+
+/* forms */
+form ol { list-style: none; padding: 0; }
+form ol li { padding: 0; margin-bottom: 10px; }
+form ol li label { display: block; font-weight: bold; }
+form ol li label.checkbox { display: inline; font-weight: bold; }
+form ol li input,
+form ol li textarea { background: #fff; border: 1px solid #e2e2e2; color: #333; font-size: 1.2em; margin: 5px 0 6px 0; padding: 5px; width: 280px; }
+form ol li input:focus,
+form ol li textarea:focus { border: 1px solid #bbb; }
+form ol li input[type="checkbox"] { background: transparent; border: inherit; width: auto; }
+form input[type="submit"],
+form input[type="button"],
+form button { background-color: #d3dce0; border: 1px solid #787878; cursor: pointer; font-weight: 600; margin-right: 8px; padding: 4px 5px; width: auto; }
+
+form ol li input.input-validation-error { border: 1px solid #e80c4d; }
+form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
+form .validation-summary-valid { display: none; }
+
 @media only screen and (min-width: 768px) {
-    .wrapper { width: 768px; margin: auto; }
+    .site-width { width: 768px; margin: auto; }
+    .page-body, .page-footer { padding-left: 0; padding-right: 0; }
+
     #nav_bottom { display: none; }
     .page-header li.to-menu { display: none; }
     .page-header li.menu-item { display: inline; }

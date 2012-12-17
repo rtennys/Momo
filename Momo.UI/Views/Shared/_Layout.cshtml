@@ -14,34 +14,34 @@
     <body id="top">
 
         <div class="line bg-white">
-            <header class="wrapper page-header">
+            <header class="site-width page-header">
                 @Html.Partial("_Nav")
                 <h2>@Html.ActionLink(@App["name"] as string, "Index", "Home")</h2>
             </header>
         </div>
 
         <div class="line bg-light">
-            <div class="wrapper">
-                <section>
-                    @RenderBody()
-                </section>
+            <div class="site-width page-body">
+                @RenderBody()
             </div>
         </div>
 
         <div id="nav_bottom" class="line bg-dark">
-            <div class="wrapper">
+            <div class="site-width">
                 @Html.Partial("_Nav")
             </div>
         </div>
 
         <div class="line bg-darker">
-            <footer class="wrapper">
+            <footer class="site-width page-footer">
                 <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" target="_blank">Version @App["version"]</a></p>
                 @Html.Partial("_LoginPartial")
             </footer>
         </div>
 
         @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+
         @RenderSection("scripts", required: false)
 
         <script type="text/javascript">
@@ -50,6 +50,7 @@
                     height = $('<span>');
 
                 $('<p>')
+                    .css({'font-size': '.85em'})
                     .append(width)
                     .append(' x ')
                     .append(height)

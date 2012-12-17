@@ -1,32 +1,25 @@
-﻿@model Momo.UI.Models.LocalPasswordModel
+﻿@model LocalPasswordModel
 @{
     ViewBag.Title = "Manage Account";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-</hgroup>
+<h1>@ViewBag.Title</h1>
 
-<p class="message-success">@ViewBag.StatusMessage</p>
+<p>@ViewBag.StatusMessage</p>
 
-<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+<div class="line">
+    <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
 
-@if (ViewBag.HasLocalPassword)
-{
-    @Html.Partial("_ChangePasswordPartial")
-}
-else
-{ 
-    @Html.Partial("_SetPasswordPartial")
-}
+    @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
+</div>
 
-<section id="externalLogins">
+
+<div class="line spaced">
     @Html.Action("RemoveExternalLogins")
+</div>
 
+
+<div class="line spaced">
     <h3>Add an external login</h3>
-    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
-</section>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+    @Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl })
+</div>

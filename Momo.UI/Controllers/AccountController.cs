@@ -30,7 +30,7 @@ namespace Momo.UI.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(new LoginModel {RememberMe = true});
         }
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
@@ -41,6 +41,8 @@ namespace Momo.UI.Controllers
 
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
+
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 
