@@ -31,33 +31,6 @@ h5 a:link, h5 a:visited, h5 a:active { padding: 0; text-decoration: none; }
 .size4of5 { width: 80%; }
 .lastUnit { display: table-cell; float: none; width: auto; *display: block; *zoom: 1; _position: relative; _left: -3px; _margin-right: -3px; }
 
-/* site look & feel */
-.bg-white { background: #fff; }
-.bg-light { background: #efeeef; }
-.bg-dark { background: #e2e2e2; }
-.bg-darker, html, body { background: #d2d2d2; }
-
-.page-header a { background: none; color: #d8d8d8; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 20px; line-height: 22px; letter-spacing: 0.2em; }
-.page-header h2, .page-header ul { margin: 0; }
-.page-header ul { float: right; padding-top: 5px; }
-.page-header li { display: none; }
-.page-header li a { font-size: 12px; }
-.page-header li.to-menu { display: inline; }
-
-#nav_bottom ul { list-style: none; background: #1c1c1c; margin: 0; padding: 0; }
-#nav_bottom li a { display: block; padding: 0 20px; color: #fff; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; letter-spacing: 0.1em; line-height: 2em; height: 2em; border-bottom: 1px solid #3c3c3c; }
-#nav_bottom li:last-child a { border-bottom: none; }
-#nav_bottom li a:hover,
-#nav_bottom li a:focus { color: #1c1c1c; background: #d2d2d2; }
-#nav_bottom li.to-menu { display: none; }
-
-.page-body, .page-footer { padding: 15px 5px 55px; }
-
-::-webkit-input-placeholder { color: lightgray; font-style: italic; }
-:-moz-placeholder { color: lightgray; font-style: italic; }
-:-ms-input-placeholder { color: lightgray; font-style: italic; }
-input.placeholder { color: lightgray; font-style: italic; }
-
 /* forms */
 form ol { list-style: none; padding: 0; }
 form ol li { padding: 0; margin-bottom: 10px; }
@@ -76,11 +49,41 @@ form ol li input.input-validation-error { border: 1px solid #e80c4d; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
 form .validation-summary-valid { display: none; }
 
+/* misc */
+
+::-webkit-input-placeholder { color: lightgray; font-style: italic; }
+:-moz-placeholder { color: lightgray; font-style: italic; }
+:-ms-input-placeholder { color: lightgray; font-style: italic; }
+input.placeholder { color: lightgray; font-style: italic; }
+
+
+/* site look & feel */
+.bg-white { background: #fff; }
+.bg-light { background: #efeeef; }
+.bg-dark { background: #e2e2e2; }
+.bg-darker, html, body { background: #d2d2d2; }
+
+.page-header a { background: none; color: #d8d8d8; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 20px; line-height: 22px; letter-spacing: 0.2em; }
+.page-header h2, .page-header ul { margin: 0; }
+.page-body, .page-footer { padding: 15px 5px 55px; }
+
+#menu-link { display: block; float: right; font-size: 12px; padding-top: 5px; }
+
+#menu-container nav ul { list-style: none; background: #1c1c1c; margin: 0; padding: 0; }
+#menu-container nav li a { display: block; padding: 0 20px; color: #fff; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; letter-spacing: 0.1em; line-height: 2em; height: 2em; border-bottom: 1px solid #3c3c3c; }
+#menu-container nav li:last-child a { border-bottom: none; }
+#menu-container nav li a:hover,
+#menu-container nav li a:focus { color: #1c1c1c; background: #d2d2d2; }
+
 @media only screen and (min-width: 768px) {
     .site-width { width: 768px; margin: auto; }
     .page-body, .page-footer { padding-left: 0; padding-right: 0; }
 
-    #nav_bottom { display: none; }
-    .page-header li.to-menu { display: none; }
-    .page-header li.menu-item { display: inline; }
+    #menu-container { position: absolute; top: 0; left: 0; width: 100%; }
+    #menu-container nav ul { float: right; background: none; padding-top: 5px; }
+    #menu-container nav ul li { display: inline; }
+    #menu-container nav ul li a { display: inline; background: none; border: 0; color: #d8d8d8; }
+    #menu-container nav ul li a:hover { background: none; color: #d8d8d8; }
+
+    #menu-container #top-link, #menu-link { display: none; }
 }
