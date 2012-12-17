@@ -3,7 +3,7 @@
         <li class="menu-item">@Html.ActionLink("Home", "Index", "Home")</li>
         <li class="menu-item">@Html.ActionLink("About", "About", "Home")</li>
         <li class="menu-item">@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
-        <li class="to-menu"><a href="#nav_bottom">Menu</a></li>
-        <li class="to-top"><a href="#top">Top</a></li>
+        <li class="to-menu"><a href="#nav_bottom" class="smooth-scroll">Menu</a></li>
+        <li class="to-top"><a href="#top" class="smooth-scroll">Top</a></li>
     </ul>
 </nav>
