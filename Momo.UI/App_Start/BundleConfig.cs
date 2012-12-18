@@ -19,8 +19,8 @@ namespace Momo.UI
                 "~/Scripts/Site.js"));
 
             bundles.Add(new StyleBundle("~/bundles/common/css").Include(
-                "~/Content/themes/base/jquery-ui.css",
-                "~/Content/site.css"));
+                "~/Content/site.css",
+                "~/Content/themes/base/jquery-ui.css"));
         }
     }
 }

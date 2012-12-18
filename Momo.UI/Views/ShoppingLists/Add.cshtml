@@ -1,0 +1,20 @@
+﻿@model ShoppingListsAddModel
+
+@{
+    ViewBag.Title = "New Shopping List";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <ol>
+        <li>@Html.EditorFor(m => m.Name)</li>
+    </ol>
+
+    <input type="submit" value="Save" />
+
+    @Html.ValidationSummary()    
+}

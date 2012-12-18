@@ -130,6 +130,17 @@ $(function() {
         $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 800);
     });
 
+    $('button, input[type="button"], input[type="submit"], .button').button();
+
+    $('ul[data-role="listview"]')
+        .css({ 'list-style': 'none', 'padding': 0 })
+        .find('li')
+        .addClass('ui-state-default')
+        .mouseenter(function () { $(this).addClass('ui-state-hover'); })
+        .mouseleave(function () { $(this).removeClass('ui-state-hover'); })
+        .find('a')
+        .css({ 'display': 'block', 'padding': '5px 10px' });
+
     (function () {
         var width = $('<span>'),
             height = $('<span>');

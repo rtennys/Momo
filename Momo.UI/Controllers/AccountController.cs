@@ -213,7 +213,7 @@ namespace Momo.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!_repository.Find<UserProfile>().Any(x => x.UserName == model.UserName))
+                if (!_repository.Find<UserProfile>().Any(x => x.Username == model.UserName))
                 {
                     _repository.Add(new UserProfile(model.UserName));
                     _uow.Commit();

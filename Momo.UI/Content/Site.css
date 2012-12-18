@@ -8,9 +8,8 @@ h3 { font-size: 1.2em; }
 h4 { font-size: 1.1em; }
 h5, h6 { font-size: 1em; }
 a { color: #333; outline: none; padding-left: 3px; padding-right: 3px; text-decoration: underline; }
-a:link, a:visited, a:active { color: #333; }
-a:hover { background-color: #c7d1d6; color: #fff; text-decoration: none; }
-h5 a:link, h5 a:visited, h5 a:active { padding: 0; text-decoration: none; }
+a:visited { color: #333; }
+h5 a, h5 a:visited { padding: 0; text-decoration: none; }
 
 /* grids */
 .line:before, .line:after, .lastUnit:before, .lastUnit:after { content: ""; display: table; }
@@ -36,14 +35,12 @@ form ol { list-style: none; padding: 0; }
 form ol li { padding: 0; margin-bottom: 10px; }
 form ol li label { display: block; font-weight: bold; }
 form ol li label.checkbox { display: inline; font-weight: bold; }
-form ol li input,
+form ol li input[type="text"],
+form ol li input[type="password"],
 form ol li textarea { background: #fff; border: 1px solid #e2e2e2; color: #333; font-size: 1.2em; margin: 5px 0 6px 0; padding: 5px; width: 280px; }
-form ol li input:focus,
+form ol li input[type="text"]:focus,
+form ol li input[type="password"]:focus,
 form ol li textarea:focus { border: 1px solid #bbb; }
-form ol li input[type="checkbox"] { background: transparent; border: inherit; width: auto; }
-form input[type="submit"],
-form input[type="button"],
-form button { background-color: #d3dce0; border: 1px solid #787878; cursor: pointer; font-weight: 600; margin-right: 8px; padding: 4px 5px; width: auto; }
 
 form ol li input.input-validation-error { border: 1px solid #e80c4d; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
@@ -51,10 +48,10 @@ form .validation-summary-valid { display: none; }
 
 /* misc */
 
-::-webkit-input-placeholder { color: lightgray; font-style: italic; }
-:-moz-placeholder { color: lightgray; font-style: italic; }
-:-ms-input-placeholder { color: lightgray; font-style: italic; }
-input.placeholder { color: lightgray; font-style: italic; }
+::-webkit-input-placeholder { color: lightgray !important; font-style: italic !important; }
+:-moz-placeholder { color: lightgray !important; font-style: italic !important; }
+:-ms-input-placeholder { color: lightgray !important; font-style: italic !important; }
+input.placeholder { color: lightgray !important; font-style: italic !important; }
 
 
 /* site look & feel */
@@ -83,7 +80,8 @@ input.placeholder { color: lightgray; font-style: italic; }
     #menu-container nav ul { float: right; background: none; padding-top: 5px; }
     #menu-container nav ul li { display: inline; }
     #menu-container nav ul li a { display: inline; background: none; border: 0; color: #d8d8d8; }
-    #menu-container nav ul li a:hover { background: none; color: #d8d8d8; }
+    #menu-container nav ul li a:hover,
+    #menu-container nav ul li a:focus { background: none; color: #d8d8d8; }
 
     #menu-container #top-link, #menu-link { display: none; }
 }

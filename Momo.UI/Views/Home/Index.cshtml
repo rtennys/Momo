@@ -1,10 +1,20 @@
-﻿@{
+﻿@model Momo.Domain.Entities.ShoppingList[]
+
+@{
     ViewBag.Title = "Home";
 }
 
 <h3>Your Shopping Lists</h3>
 
-<p id="shoppingLists">Loading...</p>
+<p>
+    <ul data-role="listview">
+        <li>@Html.ActionLink("** New **", "Add", "ShoppingLists")</li>
+        @foreach (var shoppingList in Model)
+        {
+            <li>@Html.ActionLink(@shoppingList.Name, "Show", "ShoppingLists", new {id = shoppingList.Id}, null)</li>
+        }
+    </ul>
+</p>
 
 @section scripts
 {

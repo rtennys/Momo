@@ -21,4 +21,11 @@ create table dbo.UserProfile (
     Username nvarchar(255) not null
 );
 
+create table dbo.ShoppingList (
+    Id int identity(1,1) not null constraint PK_ShoppingList primary key,
+    Version int not null,
+    Name nvarchar(255) not null,
+    UserProfileId int not null constraint FK_ShoppingList_UserProfileId foreign key references UserProfile (Id)
+);
+
 GO
