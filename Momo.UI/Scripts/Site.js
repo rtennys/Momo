@@ -123,44 +123,42 @@ app = {
     }
 };
 
-$(function() {
+(function($) {
 
-    $('.smooth-scroll').click(function (e) {
-        e.preventDefault();
-        $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 800);
+    $(function () {
+
+        $('[data-role="menu"]').menu()
+            .addClass('site-menu')
+            .find('a').addClass('ui-state-default');
+
+        $('[data-role="button"], button, input[type="button"], input[type="submit"]').button();
+
+        $('.smooth-scroll').click(function (e) {
+            e.preventDefault();
+            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 800);
+        });
+
+        (function () {
+            var width = $('<span>'),
+                height = $('<span>');
+
+            $('<p>')
+                .css({ 'font-size': '.85em' })
+                .append(width)
+                .append(' x ')
+                .append(height)
+                .append('  (320 x 421 - iphone)')
+                .appendTo($('footer'));
+
+            function setSize() {
+                width.text($(window).width());
+                height.text($(window).height());
+            }
+
+            setSize();
+            $(window).resize(setSize);
+        })();
+
     });
 
-    $('button, input[type="button"], input[type="submit"], .button').button();
-
-    $('ul[data-role="listview"]')
-        .css({ 'list-style': 'none', 'padding': 0 })
-        .find('li')
-        .addClass('ui-state-default')
-        .mouseenter(function () { $(this).addClass('ui-state-hover'); })
-        .mouseleave(function () { $(this).removeClass('ui-state-hover'); })
-        .find('a')
-        .css({ 'display': 'block', 'padding': '5px 10px' });
-
-    (function () {
-        var width = $('<span>'),
-            height = $('<span>');
-
-        $('<p>')
-            .css({ 'font-size': '.85em' })
-            .append(width)
-            .append(' x ')
-            .append(height)
-            .append('  (320 x 421 - iphone)')
-            .appendTo($('footer'));
-
-        function setSize() {
-            width.text($(window).width());
-            height.text($(window).height());
-        }
-
-        setSize();
-        $(window).resize(setSize);
-    })();
-
-});
-
+})(jQuery);

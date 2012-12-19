@@ -14,14 +14,14 @@
     <body id="top">
 
         <div class="bg-white">
-            <header class="line site-width page-header">
+            <header id="page-header" class="line site-width">
                 <a id="menu-link" href="#menu-container" class="smooth-scroll">Menu</a>
                 <h2>@Html.ActionLink(@App["name"] as string, "Index", "Home")</h2>
             </header>
         </div>
 
         <div class="bg-light">
-            <div class="line site-width page-body">
+            <div id="page-body" class="line site-width">
                 @RenderBody()
             </div>
         </div>
@@ -29,10 +29,10 @@
         <div id="menu-container">
             <div class="line site-width">
                 <nav>
-                    <ul>
-                        <li class="menu-item">@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li class="menu-item">@Html.ActionLink("About", "About", "Home")</li>
-                        <li class="menu-item">@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
+                    <ul data-role="menu">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
                         <li id="top-link"><a href="#top" class="smooth-scroll">Top</a></li>
                     </ul>
                 </nav>
@@ -40,7 +40,7 @@
         </div>
 
         <div class="bg-darker">
-            <footer class="line site-width page-footer">
+            <footer id="page-footer" class="line site-width">
                 <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" target="_blank">Version @App["version"]</a></p>
                 @Html.Partial("_LoginPartial")
             </footer>

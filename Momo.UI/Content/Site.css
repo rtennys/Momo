@@ -42,7 +42,7 @@ form ol li input[type="text"]:focus,
 form ol li input[type="password"]:focus,
 form ol li textarea:focus { border: 1px solid #bbb; }
 
-form ol li input.input-validation-error { border: 1px solid #e80c4d; }
+form ol li input.input-validation-error { border: 1px solid #e80c4d !important; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
 form .validation-summary-valid { display: none; }
 
@@ -53,35 +53,31 @@ form .validation-summary-valid { display: none; }
 :-ms-input-placeholder { color: lightgray !important; font-style: italic !important; }
 input.placeholder { color: lightgray !important; font-style: italic !important; }
 
-
 /* site look & feel */
 .bg-white { background: #fff; }
 .bg-light { background: #efeeef; }
 .bg-dark { background: #e2e2e2; }
 .bg-darker, html, body { background: #d2d2d2; }
 
-.page-header a { background: none; color: #d8d8d8; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 20px; line-height: 22px; letter-spacing: 0.2em; }
-.page-header h2, .page-header ul { margin: 0; }
-.page-body, .page-footer { padding: 15px 5px 55px; }
+#page-header h2 { margin: 0; }
+#page-header a { background: none; color: #d8d8d8; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 20px; line-height: 22px; letter-spacing: 0.2em; }
+#page-header #menu-link { display: block; float: right; font-size: 12px; padding-top: 5px; }
 
-#menu-link { display: block; float: right; font-size: 12px; padding-top: 5px; }
+#page-body, #page-footer { padding: 15px 5px auto; }
+#page-body { padding-bottom: 150px; }
 
-#menu-container nav ul { list-style: none; background: #1c1c1c; margin: 0; padding: 0; }
-#menu-container nav li a { display: block; padding: 0 20px; color: #fff; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; letter-spacing: 0.1em; line-height: 2em; height: 2em; border-bottom: 1px solid #3c3c3c; }
-#menu-container nav li:last-child a { border-bottom: none; }
-#menu-container nav li a:hover,
-#menu-container nav li a:focus { color: #1c1c1c; background: #d2d2d2; }
+.site-menu { border: 0; background: none; }
+.site-menu.ui-menu .ui-menu-item a.ui-state-focus { margin: 0; }
 
 @media only screen and (min-width: 768px) {
     .site-width { width: 768px; margin: auto; }
-    .page-body, .page-footer { padding-left: 0; padding-right: 0; }
+    #page-body, #page-footer { padding-left: 0; padding-right: 0; }
 
     #menu-container { position: absolute; top: 0; left: 0; width: 100%; }
-    #menu-container nav ul { float: right; background: none; padding-top: 5px; }
-    #menu-container nav ul li { display: inline; }
-    #menu-container nav ul li a { display: inline; background: none; border: 0; color: #d8d8d8; }
-    #menu-container nav ul li a:hover,
-    #menu-container nav ul li a:focus { background: none; color: #d8d8d8; }
+    #menu-container nav ul { float: right; padding-top: 5px; }
+    #menu-container nav ul li { display: inline; padding-right: 5px; }
+    #menu-container nav ul li a { border: 0; background: none; display: inline; color: #d8d8d8; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+    #menu-container nav ul li a.ui-state-focus { border: 0; margin: 0; background: none; }
 
-    #menu-container #top-link, #menu-link { display: none; }
+    #menu-container #top-link, #page-header #menu-link { display: none; }
 }
