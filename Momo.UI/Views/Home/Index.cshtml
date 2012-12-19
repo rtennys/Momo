@@ -4,19 +4,10 @@
     ViewBag.Title = "Home";
 }
 
-<h3>Your Shopping Lists</h3>
-
-<p>
-    <ul data-role="menu">
-        <li>@Html.ActionLink("** New **", "Add", "ShoppingLists")</li>
-        @foreach (var shoppingList in Model)
-        {
-            <li>@Html.ActionLink(@shoppingList.Name, "Show", "ShoppingLists", new {id = shoppingList.Id}, null)</li>
-        }
+<nav>
+    <ul data-role="listview">
+        <li>@Html.ActionLink("Shopping Lists", "Index", "ShoppingLists")</li>
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
     </ul>
-</p>
-
-@section scripts
-{
-    @Scripts.Render("~/Scripts/Site.Home.Index.js")
-}
+</nav>

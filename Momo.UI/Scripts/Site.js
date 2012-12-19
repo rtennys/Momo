@@ -127,12 +127,6 @@ app = {
 
     $(function () {
 
-        $('[data-role="menu"]').menu()
-            .addClass('site-menu')
-            .find('a').addClass('ui-state-default');
-
-        $('[data-role="button"], button, input[type="button"], input[type="submit"]').button();
-
         $('.smooth-scroll').click(function (e) {
             e.preventDefault();
             $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 800);
@@ -148,7 +142,7 @@ app = {
                 .append(' x ')
                 .append(height)
                 .append('  (320 x 421 - iphone)')
-                .appendTo($('footer'));
+                .appendTo($('[data-role="footer"]'));
 
             function setSize() {
                 width.text($(window).width());

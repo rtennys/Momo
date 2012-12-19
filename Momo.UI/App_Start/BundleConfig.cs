@@ -14,13 +14,13 @@ namespace Momo.UI
 
             bundles.Add(new ScriptBundle("~/bundles/common/js").Include(
                 "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/jquery.mobile-{version}.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/Site.js"));
 
             bundles.Add(new StyleBundle("~/bundles/common/css").Include(
-                "~/Content/site.css",
-                "~/Content/themes/base/jquery-ui.css"));
+                "~/Content/jquery.mobile-{version}.css",
+                "~/Content/site.css"));
         }
     }
 }

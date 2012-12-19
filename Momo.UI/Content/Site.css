@@ -1,15 +1,6 @@
 ﻿html, body { margin: 0; padding: 0; }
-body { color: #333; font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif; font-size: .85em; }
-header, footer, hgroup, nav, section { display: block; }
-h1, h2, h3, h4, h5, h6 { color: #000; }
-h1 { font-size: 2em; }
-h2 { font-size: 1.75em; }
-h3 { font-size: 1.2em; }
-h4 { font-size: 1.1em; }
-h5, h6 { font-size: 1em; }
-a { color: #333; outline: none; padding-left: 3px; padding-right: 3px; text-decoration: underline; }
-a:visited { color: #333; }
-h5 a, h5 a:visited { padding: 0; text-decoration: none; }
+body { font-size: 0.875em; }
+form, fieldset, table, tr, th, td, img, input, button, select, textarea, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; }
 
 /* grids */
 .line:before, .line:after, .lastUnit:before, .lastUnit:after { content: ""; display: table; }
@@ -33,51 +24,24 @@ h5 a, h5 a:visited { padding: 0; text-decoration: none; }
 /* forms */
 form ol { list-style: none; padding: 0; }
 form ol li { padding: 0; margin-bottom: 10px; }
-form ol li label { display: block; font-weight: bold; }
-form ol li label.checkbox { display: inline; font-weight: bold; }
-form ol li input[type="text"],
-form ol li input[type="password"],
-form ol li textarea { background: #fff; border: 1px solid #e2e2e2; color: #333; font-size: 1.2em; margin: 5px 0 6px 0; padding: 5px; width: 280px; }
-form ol li input[type="text"]:focus,
-form ol li input[type="password"]:focus,
-form ol li textarea:focus { border: 1px solid #bbb; }
-
 form ol li input.input-validation-error { border: 1px solid #e80c4d !important; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
 form .validation-summary-valid { display: none; }
 
-/* misc */
-
+/* placeholder */
 ::-webkit-input-placeholder { color: lightgray !important; font-style: italic !important; }
 :-moz-placeholder { color: lightgray !important; font-style: italic !important; }
 :-ms-input-placeholder { color: lightgray !important; font-style: italic !important; }
 input.placeholder { color: lightgray !important; font-style: italic !important; }
 
 /* site look & feel */
-.bg-white { background: #fff; }
-.bg-light { background: #efeeef; }
-.bg-dark { background: #e2e2e2; }
-.bg-darker, html, body { background: #d2d2d2; }
-
-#page-header h2 { margin: 0; }
-#page-header a { background: none; color: #d8d8d8; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 20px; line-height: 22px; letter-spacing: 0.2em; }
-#page-header #menu-link { display: block; float: right; font-size: 12px; padding-top: 5px; }
-
-#page-body, #page-footer { padding: 15px 5px auto; }
-#page-body { padding-bottom: 150px; }
-
-.site-menu { border: 0; background: none; }
-.site-menu.ui-menu .ui-menu-item a.ui-state-focus { margin: 0; }
+.ui-footer { font-size: 0.85em; }
+.ui-footer p { margin-left: 10px; }
 
 @media only screen and (min-width: 768px) {
-    .site-width { width: 768px; margin: auto; }
-    #page-body, #page-footer { padding-left: 0; padding-right: 0; }
-
-    #menu-container { position: absolute; top: 0; left: 0; width: 100%; }
-    #menu-container nav ul { float: right; padding-top: 5px; }
-    #menu-container nav ul li { display: inline; padding-right: 5px; }
-    #menu-container nav ul li a { border: 0; background: none; display: inline; color: #d8d8d8; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-    #menu-container nav ul li a.ui-state-focus { border: 0; margin: 0; background: none; }
-
-    #menu-container #top-link, #page-header #menu-link { display: none; }
+    .ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }
+    .ui-mobile-viewport .ui-header, .ui-mobile-viewport .ui-footer { border-width: 1px; border-style: solid; border-color: transparent; border-radius: 8px;  }
+    .ui-mobile-viewport .ui-header { margin-bottom: 1.5em; }
+    .ui-mobile-viewport .ui-footer { margin-top: 1.5em; }
+    .ui-mobile-viewport .ui-listview .ui-li {  border-width: 1px; border-color: transparent; border-radius: 8px; margin-bottom: 3px; }
 }

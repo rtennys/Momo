@@ -13,37 +13,18 @@
     </head>
     <body id="top">
 
-        <div class="bg-white">
-            <header id="page-header" class="line site-width">
-                <a id="menu-link" href="#menu-container" class="smooth-scroll">Menu</a>
-                <h2>@Html.ActionLink(@App["name"] as string, "Index", "Home")</h2>
-            </header>
-        </div>
-
-        <div class="bg-light">
-            <div id="page-body" class="line site-width">
+        <div data-role="page" data-theme="d">
+            <div data-role="header" data-theme="d">
+                <h1>@ViewBag.Title</h1>
+                <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>
+            </div>
+            <div data-role="content">
                 @RenderBody()
             </div>
-        </div>
-
-        <div id="menu-container">
-            <div class="line site-width">
-                <nav>
-                    <ul data-role="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
-                        <li id="top-link"><a href="#top" class="smooth-scroll">Top</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-
-        <div class="bg-darker">
-            <footer id="page-footer" class="line site-width">
+            <div data-role="footer" data-theme="d">
                 <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" target="_blank">Version @App["version"]</a></p>
                 @Html.Partial("_LoginPartial")
-            </footer>
+            </div>
         </div>
 
         @Scripts.Render("~/bundles/common/js")

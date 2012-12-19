@@ -1,6 +1,6 @@
 ﻿@model ICollection<AuthenticationClientData>
 
-@using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}))
+@using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {data_ajax = "false"}))
 {
     @Html.AntiForgeryToken()
     <p>

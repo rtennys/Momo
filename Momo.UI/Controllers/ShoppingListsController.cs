@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Momo.Common.DataAccess;
 using Momo.Domain.Entities;
@@ -17,6 +18,17 @@ namespace Momo.UI.Controllers
 
         private readonly IUnitOfWork _uow;
         private readonly IRepository _repository;
+
+        public ActionResult Index()
+        {
+            var model = _repository
+                .Find<ShoppingList>()
+                .Where(x => x.UserProfile.Username == User.Identity.Name)
+                .OrderByDescending(x => x.Id)
+                .ToArray();
+
+            return View(model);
+        }
 
         public ActionResult Add()
         {
