@@ -8,6 +8,6 @@
     <li>@Html.ActionLink("** New **", "Add")</li>
     @foreach (var shoppingList in Model)
     {
-        <li>@Html.ActionLink(@shoppingList.Name, "Show", new {id = shoppingList.Id})</li>
+        <li>@Html.ActionLink(@shoppingList.Name, "Show", new {shoppingList = shoppingList.Name})</li>
     }
 </ul>

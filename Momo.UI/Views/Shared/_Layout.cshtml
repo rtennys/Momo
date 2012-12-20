@@ -15,14 +15,22 @@
 
         <div data-role="page" data-theme="d">
             <div data-role="header" data-theme="d">
+                @{
+                    var parts = Request.Url.AbsolutePath.Split('/');
+                    parts = parts.Take(parts.Length - 1).ToArray();
+                    if (parts.Length > 1)
+                    {
+                        <a href="@string.Join("/", parts)" data-icon="arrow-l" class="ui-btn-left">@(parts.Last())</a>
+                    }
+                }
                 <h1>@ViewBag.Title</h1>
-                <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>
+                <a href="@Url.Action("Index", "Home")" data-icon="home" class="ui-btn-right">Home</a>
             </div>
             <div data-role="content">
                 @RenderBody()
             </div>
             <div data-role="footer" data-theme="d">
-                <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" target="_blank">Version @App["version"]</a></p>
+                <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

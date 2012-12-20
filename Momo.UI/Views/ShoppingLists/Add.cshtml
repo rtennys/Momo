@@ -4,7 +4,7 @@
     ViewBag.Title = "New Shopping List";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new {data_ajax = "false"}))
 {
     @Html.AntiForgeryToken()
 

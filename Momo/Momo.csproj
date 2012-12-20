@@ -67,6 +67,7 @@
     <Compile Include="Common\JsonHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
     <Compile Include="Domain\Entities\EntityBase.cs" />
+    <Compile Include="Domain\Entities\ShoppingList.cs" />
     <Compile Include="Domain\Entities\UserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -88,16 +89,6 @@
     <GitVersion LocalPath="$(SolutionDir)">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
-    <AssemblyInfo
-      CodeLanguage="CS"
-      OutputFile="$(SolutionDir)\GlobalAssemblyInfo.cs"
-      AssemblyCompany="Iroh Services, LLC"
-      AssemblyProduct="Codename: Momo"
-      AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Iroh Services, LLC"
-      AssemblyTrademark="Iroh Services"
-      AssemblyConfiguration="$(Configuration)"
-      AssemblyVersion="0.1.0.0"
-      AssemblyFileVersion="0.1.0.0"
-      AssemblyInformationalVersion="0.1.0.$(Revision)" />
+    <AssemblyInfo CodeLanguage="CS" OutputFile="$(SolutionDir)\GlobalAssemblyInfo.cs" AssemblyCompany="Iroh Services, LLC" AssemblyProduct="Codename: Momo" AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Iroh Services, LLC" AssemblyTrademark="Iroh Services" AssemblyConfiguration="$(Configuration)" AssemblyVersion="0.1.0.0" AssemblyFileVersion="0.1.0.0" AssemblyInformationalVersion="0.1.0.$(Revision)" />
   </Target>
 </Project>

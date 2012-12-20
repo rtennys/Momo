@@ -1,5 +1,6 @@
-﻿using System.Web;
+﻿using System;
 using System.Web.Mvc;
+using Momo.UI.Controllers;
 
 namespace Momo.UI
 {
@@ -8,6 +9,7 @@ namespace Momo.UI
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new RouteUsernameAttribute());
         }
     }
 }

@@ -29,20 +29,4 @@ namespace Momo.Domain.Entities
             _shoppingLists.Add(new ShoppingList(this, name));
         }
     }
-
-    public class ShoppingList : EntityBase
-    {
-        protected ShoppingList()
-        {
-        }
-
-        public ShoppingList(UserProfile userProfile, string name)
-        {
-            UserProfile = userProfile;
-            Name = name;
-        }
-
-        public virtual UserProfile UserProfile { get; protected set; }
-        public virtual string Name { get; protected set; }
-    }
 }
