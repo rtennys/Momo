@@ -1,0 +1,20 @@
+﻿@model ShoppingListsRenameModel
+
+@{
+    ViewBag.Title = "Rename";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {data_ajax = "false"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <ol>
+        <li>@Html.Editor("Name")</li>
+    </ol>
+
+    <input type="submit" value="Save" />
+    @Html.ActionLink("Cancel", "Show", null, new {data_role = "button"})
+
+    @Html.ValidationSummary()
+}

@@ -176,8 +176,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RouteUsernameAttribute.cs" />
     <Compile Include="Controllers\ShoppingListsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -251,6 +251,7 @@
     <Content Include="Views\ShoppingLists\Add.cshtml" />
     <Content Include="Views\ShoppingLists\Index.cshtml" />
     <Content Include="Views\ShoppingLists\Show.cshtml" />
+    <Content Include="Views\ShoppingLists\Rename.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

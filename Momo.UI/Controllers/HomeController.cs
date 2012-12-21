@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace Momo.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : AppController
     {
         public ActionResult Index()
         {

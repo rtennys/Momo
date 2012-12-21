@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using Momo.Domain.Commands;
 
 namespace Momo.UI.Models
 {
@@ -11,12 +11,15 @@ namespace Momo.UI.Models
 
     public class ShoppingListsShowModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 
-    public class ShoppingListsAddModel
+    public class ShoppingListsAddModel : AddShoppingListCommand
     {
-        [Required]
-        public string Name { get; set; }
+    }
+
+    public class ShoppingListsRenameModel : RenameShoppingListCommand
+    {
     }
 }

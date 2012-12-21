@@ -68,7 +68,8 @@
     <Compile Include="Common\Ioc.cs" />
     <Compile Include="Common\JsonHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
-    <Compile Include="Domain\Commands\AddUserCommand.cs" />
+    <Compile Include="Domain\Commands\ShoppingListCommands.cs" />
+    <Compile Include="Domain\Commands\UserCommands.cs" />
     <Compile Include="Domain\Entities\EntityBase.cs" />
     <Compile Include="Domain\Entities\ShoppingList.cs" />
     <Compile Include="Domain\Entities\UserProfile.cs" />

@@ -4,4 +4,13 @@
     ViewBag.Title = Model.Name;
 }
 
-<p>Comming soon...</p>
+<div>
+    @using (Html.BeginForm("Delete", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <input type="submit" value="Delete" data-icon="delete" data-mini="true" data-inline="true" />
+    }
+
+    @Html.ActionLink("Rename", "Rename", null, new {data_role="button", data_icon="edit", data_mini="true", data_inline="true", data_ajax = "false"})
+</div>

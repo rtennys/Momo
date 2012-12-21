@@ -26,7 +26,6 @@ namespace Momo.Domain.Commands
         public CommandResult Handle(AddUserCommand command)
         {
             var result = _validationFacade.Validate(command);
-
             if (result.AnyErrors())
                 return result;
 

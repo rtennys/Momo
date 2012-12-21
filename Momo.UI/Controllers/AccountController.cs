@@ -13,7 +13,7 @@ using WebMatrix.WebData;
 namespace Momo.UI.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : AppController
     {
         public AccountController(IUnitOfWork uow, ICommandExecutor commandExecutor)
         {
@@ -63,7 +63,7 @@ namespace Momo.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _commandExecutor.Handle((AddUserCommand)model);
+                var result = _commandExecutor.Execute((AddUserCommand)model);
 
                 if (result.AnyErrors())
                     ModelState.AddModelErrors(result);
@@ -212,7 +212,7 @@ namespace Momo.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = _commandExecutor.Handle((AddUserCommand)model);
+                var result = _commandExecutor.Execute((AddUserCommand)model);
 
                 if (result.AnyErrors())
                     ModelState.AddModelErrors(result);

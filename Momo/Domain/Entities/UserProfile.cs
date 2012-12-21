@@ -24,9 +24,14 @@ namespace Momo.Domain.Entities
             get { return _shoppingLists.AsReadOnly(); }
         }
 
-        public virtual void CreateShoppingList(string name)
+        protected internal virtual void AddShoppingList(string name)
         {
             _shoppingLists.Add(new ShoppingList(this, name));
+        }
+
+        protected internal virtual void Remove(ShoppingList shoppingList)
+        {
+            _shoppingLists.Remove(shoppingList);
         }
     }
 }

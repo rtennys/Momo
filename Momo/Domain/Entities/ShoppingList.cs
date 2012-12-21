@@ -15,6 +15,6 @@ namespace Momo.Domain.Entities
         }
 
         public virtual UserProfile UserProfile { get; protected set; }
-        public virtual string Name { get; protected set; }
+        public virtual string Name { get; protected internal set; }
     }
 }

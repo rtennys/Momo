@@ -7,19 +7,19 @@ namespace Momo.Domain
     {
     }
 
-    public interface ICommandHandler<in T> where T : ICommand
+    public interface ICommandHandler<in T>
     {
         CommandResult Handle(T command);
     }
 
     public interface ICommandExecutor
     {
-        CommandResult Handle<T>(T command) where T : ICommand;
+        CommandResult Execute<T>(T command) where T : ICommand;
     }
 
     public class CommandExecutor : ICommandExecutor
     {
-        public CommandResult Handle<T>(T command) where T : ICommand
+        public CommandResult Execute<T>(T command) where T : ICommand
         {
             var handler = Ioc.Resolve<ICommandHandler<T>>();
 
