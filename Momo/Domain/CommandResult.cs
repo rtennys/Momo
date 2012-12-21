@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
 using Momo.Common;
 
 namespace Momo.Domain
@@ -36,11 +35,6 @@ namespace Momo.Domain
         public CommandResult Add(string error)
         {
             return Add(new CommandError("", error));
-        }
-
-        public CommandResult Add<T>(Expression<Func<T, object>> key, string error)
-        {
-            return Add(key.Body.As<MemberExpression>().Member.Name, error);
         }
 
         public bool AnyErrors()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Momo.Common;
 using Momo.Common.DataAccess;
 using Momo.Domain.Entities;
 
@@ -54,7 +55,7 @@ namespace Momo.Domain.Commands
             var user = _repository.Get<UserProfile>(x => x.Username == command.Username);
 
             if (user.ShoppingLists.Any(x => string.Equals(x.Name, command.Name, StringComparison.OrdinalIgnoreCase)))
-                result.Add<AddShoppingListCommand>(x => x.Name, "Name Must Be Unique");
+                result.Add(command.GetName(x => x.Name), "Name Must Be Unique");
             else
                 user.AddShoppingList(command.Name);
 
@@ -71,9 +72,9 @@ namespace Momo.Domain.Commands
             var shoppingList = user.ShoppingLists.SingleOrDefault(x => x.Id == command.Id);
 
             if (shoppingList == null)
-                result.Add<RenameShoppingListCommand>(x => x.Id, "Shopping List Not Found");
+                result.Add(command.GetName(x => x.Id), "Shopping List Not Found");
             else if (!string.Equals(shoppingList.Name, command.Name, StringComparison.OrdinalIgnoreCase) && user.ShoppingLists.Any(x => string.Equals(x.Name, command.Name, StringComparison.OrdinalIgnoreCase)))
-                result.Add<AddShoppingListCommand>(x => x.Name, "Name Must Be Unique");
+                result.Add(command.GetName(x => x.Name), "Name Must Be Unique");
             else
                 shoppingList.Name = command.Name;
 
@@ -90,7 +91,7 @@ namespace Momo.Domain.Commands
             var shoppingList = user.ShoppingLists.SingleOrDefault(x => x.Id == command.Id);
 
             if (shoppingList == null)
-                result.Add<DeleteShoppingListCommand>(x => x.Id, "Shopping List Not Found");
+                result.Add(command.GetName(x => x.Id), "Shopping List Not Found");
             else
                 user.Remove(shoppingList);
 

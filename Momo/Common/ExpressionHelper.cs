@@ -13,5 +13,15 @@ namespace Momo.Common
 
             return Expression.Lambda<Func<T, object>>(expression, param).Compile();
         }
+
+        public static string GetName<T>(Expression<Func<T, object>> propertyExpression)
+        {
+            return propertyExpression.Body.As<MemberExpression>().Member.Name;
+        }
+
+        public static string GetName<T>(this T _, Expression<Func<T, object>> propertyExpression)
+        {
+            return GetName(propertyExpression);
+        }
     }
 }

@@ -51,8 +51,6 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Domain\Command.cs" />
-    <Compile Include="Domain\CommandResult.cs" />
     <Compile Include="Common\DataAccess\Entities.cs" />
     <Compile Include="Common\DataAccess\FileRepository.cs" />
     <Compile Include="Common\DataAccess\IdGenerator.cs" />
@@ -68,6 +66,8 @@
     <Compile Include="Common\Ioc.cs" />
     <Compile Include="Common\JsonHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
+    <Compile Include="Domain\Command.cs" />
+    <Compile Include="Domain\CommandResult.cs" />
     <Compile Include="Domain\Commands\ShoppingListCommands.cs" />
     <Compile Include="Domain\Commands\UserCommands.cs" />
     <Compile Include="Domain\Entities\EntityBase.cs" />
