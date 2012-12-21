@@ -1,5 +1,6 @@
 ﻿using System;
 using Momo.Domain.Commands;
+using Momo.Domain.Entities;
 
 namespace Momo.UI.Models
 {
@@ -11,8 +12,10 @@ namespace Momo.UI.Models
 
     public class ShoppingListsShowModel
     {
+        public bool IsOwner { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
+        public ShoppingListItem[] Items { get; set; }
     }
 
     public class ShoppingListsAddModel : AddShoppingListCommand
@@ -20,6 +23,10 @@ namespace Momo.UI.Models
     }
 
     public class ShoppingListsRenameModel : RenameShoppingListCommand
+    {
+    }
+
+    public class ShoppingListsAddItemModel : AddShoppingListItemCommand
     {
     }
 }

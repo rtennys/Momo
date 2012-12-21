@@ -69,6 +69,7 @@
     <Compile Include="Domain\Command.cs" />
     <Compile Include="Domain\CommandResult.cs" />
     <Compile Include="Domain\Commands\ShoppingListCommands.cs" />
+    <Compile Include="Domain\Commands\ShoppingListItemCommands.cs" />
     <Compile Include="Domain\Commands\UserCommands.cs" />
     <Compile Include="Domain\Entities\EntityBase.cs" />
     <Compile Include="Domain\Entities\ShoppingList.cs" />

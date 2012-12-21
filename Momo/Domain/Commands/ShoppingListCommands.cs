@@ -12,7 +12,7 @@ namespace Momo.Domain.Commands
         [Required]
         public string Username { get; set; }
 
-        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Username may only contain alphanumeric characters or dashes and must begin with a letter")]
+        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Name may only contain alphanumeric characters or dashes and must begin with a letter")]
         public string Name { get; set; }
     }
 

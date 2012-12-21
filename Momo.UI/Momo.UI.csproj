@@ -252,6 +252,9 @@
     <Content Include="Views\ShoppingLists\Index.cshtml" />
     <Content Include="Views\ShoppingLists\Show.cshtml" />
     <Content Include="Views\ShoppingLists\Rename.cshtml" />
+    <Content Include="Views\ShoppingLists\AddItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\decimal.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\int32.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

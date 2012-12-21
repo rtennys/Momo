@@ -4,13 +4,57 @@
     ViewBag.Title = Model.Name;
 }
 
-<div>
-    @using (Html.BeginForm("Delete", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+@if (Model.IsOwner)
+{
+    @Html.AntiForgeryToken()
+    @Html.ActionLink("Add Item", "AddItem", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false"})
+    @Html.ActionLink("Rename", "Rename", null, new {data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false"})
+}
+
+<ul data-role="listview" data-inset="true">
+    @foreach (var group in Model.Items.GroupBy(x => x.Isle))
+    {
+        <li data-role="list-divider">
+            @(group.Key == 0 ? "Isle Not Set" : "Isle " + group.Key)
+            <span class="ui-li-count">@group.Count()</span>
+        </li>
+        foreach (var item in group)
+        {
+            <li data-icon="false">
+                <a href="#" style="padding: 0;">
+                    <fieldset data-role="controlgroup" style="margin: 0;">
+                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") />
+                        <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
+                    </fieldset>
+                    <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
+                </a>
+            </li>
+        }
+    }
+</ul>
+
+@if (Model.IsOwner)
+{
+    using (Html.BeginForm("Delete", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Delete" data-icon="delete" data-mini="true" data-inline="true" />
+        <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
     }
+}
 
-    @Html.ActionLink("Rename", "Rename", null, new {data_role="button", data_icon="edit", data_mini="true", data_inline="true", data_ajax = "false"})
-</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $(document).on('change', '[data-shoppinglistitemid]', function() {
+                var cb = $(this),
+                    data = {
+                        id: cb.data('shoppinglistitemid'),
+                        picked: cb.is(':checked')
+                    };
+                app.post('@Url.Action("ChangedPicked")', data);
+            });
+        });
+    </script>
+}

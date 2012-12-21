@@ -1,0 +1,22 @@
+﻿@model ShoppingListsAddItemModel
+
+@{
+    ViewBag.Title = "Add";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {data_ajax = "false"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ShoppingListId)
+
+    <ol>
+        <li>@Html.EditorFor(x => x.Name)</li>
+        <li>@Html.EditorFor(x => x.Quantity)</li>
+        <li>@Html.EditorFor(x => x.Isle)</li>
+        <li>@Html.EditorFor(x => x.Price)</li>
+    </ol>
+
+    <input type="submit" value="Add" />
+
+    @Html.ValidationSummary()
+}

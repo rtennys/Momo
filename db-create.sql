@@ -28,4 +28,15 @@ create table dbo.ShoppingList (
     UserProfileId int not null constraint FK_ShoppingList_UserProfileId foreign key references UserProfile (Id)
 );
 
+create table dbo.ShoppingListItem (
+    Id int identity(1,1) not null constraint PK_ShoppingListItem primary key,
+    Version int not null,
+    Name nvarchar(255) not null,
+    Isle int not null,
+    Price decimal(9,2) not null,
+    Quantity int not null,
+    Picked bit not null,
+    ShoppingListId int not null constraint FK_ShoppingListItem_ShoppingListId foreign key references ShoppingList (Id)
+);
+
 GO

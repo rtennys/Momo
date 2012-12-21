@@ -1,0 +1,5 @@
+﻿@{
+ViewData["placeholder"] = ViewData.ModelMetadata.Watermark ?? ViewData.ModelMetadata.DisplayName ?? ViewData.ModelMetadata.PropertyName;
+}
+
+@Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue, ViewData)
