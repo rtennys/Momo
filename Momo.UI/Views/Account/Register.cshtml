@@ -4,12 +4,12 @@
     ViewBag.Title = "Register";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new {data_ajax = "false"}))
 {
     @Html.AntiForgeryToken()
 
     <ol>
-        <li>@Html.EditorFor(m => m.UserName)</li>
+        <li>@Html.EditorFor(m => m.Username)</li>
         <li>@Html.EditorFor(m => m.Password)</li>
         <li>@Html.EditorFor(m => m.ConfirmPassword)</li>
     </ol>

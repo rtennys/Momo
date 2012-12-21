@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
-using System.Web.Security;
-using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using Momo.Common.DataAccess;
-using Momo.Domain.Entities;
+using Momo.Domain;
+using Momo.Domain.Commands;
 using Momo.UI.Models;
 using WebMatrix.WebData;
 
@@ -17,14 +15,14 @@ namespace Momo.UI.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(IUnitOfWork uow, IRepository repository)
+        public AccountController(IUnitOfWork uow, ICommandExecutor commandExecutor)
         {
             _uow = uow;
-            _repository = repository;
+            _commandExecutor = commandExecutor;
         }
 
         private readonly IUnitOfWork _uow;
-        private readonly IRepository _repository;
+        private readonly ICommandExecutor _commandExecutor;
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -36,7 +34,7 @@ namespace Momo.UI.Controllers
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid && WebSecurity.Login(model.Username, model.Password, persistCookie: model.RememberMe))
                 return RedirectToLocal(returnUrl);
 
             // If we got this far, something failed, redisplay form
@@ -65,20 +63,21 @@ namespace Momo.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
-                try
+                var result = _commandExecutor.Handle((AddUserCommand)model);
+
+                if (result.AnyErrors())
+                    ModelState.AddModelErrors(result);
+                else
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
+                    _uow.Commit();
+
+                    WebSecurity.CreateAccount(model.Username, model.Password);
+                    WebSecurity.Login(model.Username, model.Password);
+
                     return RedirectToAction("Index", "Home");
-                }
-                catch (MembershipCreateUserException e)
-                {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -181,7 +180,7 @@ namespace Momo.UI.Controllers
         [AllowAnonymous]
         public ActionResult ExternalLoginCallback(string returnUrl)
         {
-            AuthenticationResult result = OAuthWebSecurity.VerifyAuthentication(Url.Action("ExternalLoginCallback", new {ReturnUrl = returnUrl}));
+            var result = OAuthWebSecurity.VerifyAuthentication(Url.Action("ExternalLoginCallback", new {ReturnUrl = returnUrl}));
             if (!result.IsSuccessful)
                 return RedirectToAction("ExternalLoginFailure");
 
@@ -199,7 +198,7 @@ namespace Momo.UI.Controllers
             var loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
             ViewBag.ReturnUrl = returnUrl;
-            return View("ExternalLoginConfirmation", new RegisterExternalLoginModel {UserName = ParseUsername(result.UserName), ExternalLoginData = loginData});
+            return View("ExternalLoginConfirmation", new RegisterExternalLoginModel {Username = ParseUsername(result.UserName), ExternalLoginData = loginData});
         }
 
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
@@ -213,18 +212,19 @@ namespace Momo.UI.Controllers
 
             if (ModelState.IsValid)
             {
-                if (!_repository.Find<UserProfile>().Any(x => x.Username == model.UserName))
+                var result = _commandExecutor.Handle((AddUserCommand)model);
+
+                if (result.AnyErrors())
+                    ModelState.AddModelErrors(result);
+                else
                 {
-                    _repository.Add(new UserProfile(model.UserName));
                     _uow.Commit();
 
-                    OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
+                    OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.Username);
                     OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: true);
 
                     return RedirectToLocal(returnUrl);
                 }
-
-                ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
             }
 
             ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(provider).DisplayName;
@@ -282,44 +282,6 @@ namespace Momo.UI.Controllers
             if (username.IndexOf('.') >= 0) username = username.Substring(0, username.IndexOf('.'));
 
             return Regex.Replace(username, "[^A-Za-z0-9-]", "-");
-        }
-
-        private string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
         }
 
         public enum ManageMessageId

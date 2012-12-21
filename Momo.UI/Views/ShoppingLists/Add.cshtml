@@ -13,6 +13,7 @@
     </ol>
 
     <input type="submit" value="Save" />
+    @Html.ActionLink("Cancel", "Index", null, new {data_role = "button"})
 
     @Html.ValidationSummary()    
 }

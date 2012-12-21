@@ -24,10 +24,11 @@ namespace Momo.UI.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            var model = user
-                .ShoppingLists
-                .OrderByDescending(x => x.Id)
-                .ToArray();
+            var model = new ShoppingListsIndexModel
+                        {
+                            ShowNew = string.Equals(User.Identity.Name, user.Username, StringComparison.OrdinalIgnoreCase),
+                            ShoppingLists = user.ShoppingLists.OrderByDescending(x => x.Id).Select(x => x.Name).ToArray()
+                        };
 
             return View(model);
         }
@@ -42,7 +43,12 @@ namespace Momo.UI.Controllers
             if (shoppingList == null)
                 return HttpNotFound();
 
-            return View(shoppingList);
+            var model = new ShoppingListsShowModel
+                        {
+                            Name = shoppingList.Name
+                        };
+
+            return View(model);
         }
 
 

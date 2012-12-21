@@ -3,6 +3,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Momo.Common;
 using Momo.Common.DataAccess;
+using Momo.Domain;
 using Momo.UI.Infrastructure;
 using StructureMap;
 
@@ -23,8 +24,9 @@ namespace Momo.UI
 
                 x.Scan(scan =>
                 {
-                    scan.AssembliesFromApplicationBaseDirectory(assembly => assembly.FullName.StartsWith("Toph"));
+                    scan.AssembliesFromApplicationBaseDirectory(assembly => assembly.FullName.StartsWith("Momo"));
                     scan.WithDefaultConventions();
+                    scan.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<>));
                 });
             });
 
