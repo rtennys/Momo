@@ -260,6 +260,7 @@
     <Content Include="Views\Shared\EditorTemplates\decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\int32.cshtml" />
     <Content Include="Views\Home\NotFound.cshtml" />
+    <Content Include="Views\ShoppingLists\EditItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

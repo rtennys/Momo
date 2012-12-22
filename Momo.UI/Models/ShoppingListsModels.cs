@@ -27,4 +27,8 @@ namespace Momo.UI.Models
     public class ShoppingListsAddItemModel : AddShoppingListItemCommand
     {
     }
+
+    public class ShoppingListsEditItemModel : EditShoppingListItemCommand
+    {
+    }
 }

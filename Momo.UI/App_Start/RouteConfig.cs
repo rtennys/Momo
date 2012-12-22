@@ -19,7 +19,8 @@ namespace Momo.UI
 
             routes.MapRouteLowercase("shopping lists add", "add", new {controller = "shoppinglists", action = "add"});
             routes.MapRouteLowercase("shopping lists index", "{username}", new {controller = "shoppinglists", action = "index"});
-            routes.MapRouteLowercase("shopping lists", "{username}/{shoppinglist}/{action}", new {controller = "shoppinglists", action = "show"});
+            routes.MapRouteLowercase("shopping lists edit item", "{username}/{shoppinglist}/{id}", new {controller = "shoppinglists", action = "edititem"}, new {id = @"^\d+$"});
+            routes.MapRouteLowercase("shopping lists", "{username}/{shoppinglist}/{action}/{id}", new {controller = "shoppinglists", action = "show", id = UrlParameter.Optional});
         }
     }
 }

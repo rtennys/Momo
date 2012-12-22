@@ -19,7 +19,7 @@
     @Html.AntiForgeryToken()
 }
 
-<ul data-role="listview" data-inset="true">
+<ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
     @if (Model.Items.Length == 0)
     {
         <li><em style="font-size: .85em;">No items in this list yet</em></li>
@@ -40,6 +40,10 @@
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
                 </a>
+                @if (CurrentUser.HasShoppingListAccess())
+                {
+                    @Html.ActionLink("Edit", "EditItem", new {id = item.Id}, new {data_ajax = "false"})
+                }
             </li>
         }
     }
@@ -66,7 +70,7 @@
                         id: cb.data('shoppinglistitemid'),
                         picked: cb.is(':checked')
                     };
-                app.post('@Url.Action("ChangedPicked")', data);
+                app.post('@Url.Action("ChangePicked")', data);
             });
         });
     </script>

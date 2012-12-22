@@ -170,12 +170,53 @@ namespace Momo.UI.Controllers
 
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult ChangedPicked(int id, bool picked)
+        public void ChangePicked(int id, bool picked)
         {
             _repository.Get<ShoppingListItem>(id).Picked = picked;
             _uow.Commit();
+        }
 
-            return Json(new {Success = true});
+
+        [ValidateShoppingListAccess]
+        public ActionResult EditItem(string username, string shoppinglist, int id)
+        {
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
+            if (user == null)
+                return HttpNotFound();
+
+            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+            if (shoppingList == null)
+                return HttpNotFound();
+
+            var item = shoppingList.ShoppingListItems.SingleOrDefault(x => x.Id == id);
+            if (item == null)
+                return HttpNotFound();
+
+            var model = new ShoppingListsEditItemModel
+                        {
+                            ShoppingListId = shoppingList.Id,
+                            Id = item.Id,
+                            Name = item.Name,
+                            Quantity = item.Quantity > 0 ? item.Quantity : (int?)null,
+                            Isle = item.Isle > 0 ? item.Isle : (int?)null,
+                            Price = item.Price > 0M ? item.Price : (decimal?)null
+                        };
+
+            return View(model);
+        }
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult EditItem(ShoppingListsEditItemModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            ModelState.AddModelErrors(_commandExecutor.Execute<EditShoppingListItemCommand>(model));
+            if (!ModelState.IsValid)
+                return View(model);
+
+            _uow.Commit();
+            return RedirectToAction("Show");
         }
     }
 }

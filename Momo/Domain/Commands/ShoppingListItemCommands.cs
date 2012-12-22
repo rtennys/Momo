@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Momo.Common.DataAccess;
 using Momo.Domain.Entities;
 
 namespace Momo.Domain.Commands
 {
-    public class AddShoppingListItemCommand : ICommand
+    public class AddEditShoppingListItemCommand : ICommand
     {
         [Required]
         public int ShoppingListId { get; set; }
@@ -17,11 +18,20 @@ namespace Momo.Domain.Commands
         public int? Quantity { get; set; }
 
         public int? Isle { get; set; }
-
         public decimal? Price { get; set; }
     }
 
-    public class AddShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>
+    public class AddShoppingListItemCommand : AddEditShoppingListItemCommand
+    {
+    }
+
+    public class EditShoppingListItemCommand : AddEditShoppingListItemCommand
+    {
+        [Required]
+        public int Id { get; set; }
+    }
+
+    public class AddShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
     {
         public AddShoppingListItemCommandHandler(IRepository repository, IValidationFacade validationFacade)
         {
@@ -46,6 +56,23 @@ namespace Momo.Domain.Commands
 
             if (command.Isle.HasValue) item.Isle = command.Isle.Value;
             if (command.Price.HasValue) item.Price = command.Price.Value;
+
+            return result;
+        }
+
+        public CommandResult Handle(EditShoppingListItemCommand command)
+        {
+            var result = _validationFacade.Validate(command);
+            if (result.AnyErrors())
+                return result;
+
+            var shoppingList = _repository.Get<ShoppingList>(command.ShoppingListId);
+            var item = shoppingList.ShoppingListItems.Single(x => x.Id == command.Id);
+
+            item.Name = command.Name;
+            item.Quantity = command.Quantity.GetValueOrDefault();
+            item.Isle = command.Isle.GetValueOrDefault();
+            item.Price = command.Price.GetValueOrDefault();
 
             return result;
         }
