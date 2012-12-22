@@ -7,11 +7,22 @@
 @if (Model.IsOwner)
 {
     @Html.AntiForgeryToken()
-    @Html.ActionLink("Add Item", "AddItem", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false"})
-    @Html.ActionLink("Rename", "Rename", null, new {data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false"})
+
+    @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false" })
+
+    using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        <input type="submit" value="Clear" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Clear this list?'); " />
+    }
 }
 
 <ul data-role="listview" data-inset="true">
+    @if (Model.Items.Length == 0)
+    {
+        <li><em style="font-size: .85em;">No items in this list yet</em></li>
+    }
     @foreach (var group in Model.Items.GroupBy(x => x.Isle))
     {
         <li data-role="list-divider">
@@ -23,7 +34,7 @@
             <li data-icon="false">
                 <a href="#" style="padding: 0;">
                     <fieldset data-role="controlgroup" style="margin: 0;">
-                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") />
+                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(Model.IsOwner ? "" : "disabled=\"disabled\"") />
                         <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
@@ -35,7 +46,8 @@
 
 @if (Model.IsOwner)
 {
-    using (Html.BeginForm("Delete", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+    @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
+    using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)

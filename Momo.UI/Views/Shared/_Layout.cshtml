@@ -20,11 +20,11 @@
                     parts = parts.Take(parts.Length - 1).ToArray();
                     if (parts.Length > 1)
                     {
-                        <a href="@string.Join("/", parts)" data-icon="arrow-l" class="ui-btn-left">@(parts.Last())</a>
+                        <a href="@string.Join("/", parts)" data-icon="arrow-l" data-ajax="false" class="ui-btn-left">@(parts.Last())</a>
                     }
                 }
                 <h1>@ViewBag.Title</h1>
-                <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" class="ui-btn-right">Home</a>
+                <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-ajax="false" class="ui-btn-right">Home</a>
             </div>
             <div data-role="content">
                 @RenderBody()

@@ -35,7 +35,16 @@ namespace Momo.Domain.Commands
         public int Id { get; set; }
     }
 
-    public class ShoppingListCommandHandler : ICommandHandler<AddShoppingListCommand>, ICommandHandler<RenameShoppingListCommand>, ICommandHandler<DeleteShoppingListCommand>
+    public class ClearShoppingListCommand : ICommand
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public int Id { get; set; }
+    }
+
+    public class ShoppingListCommandHandler : ICommandHandler<AddShoppingListCommand>, ICommandHandler<RenameShoppingListCommand>, ICommandHandler<DeleteShoppingListCommand>, ICommandHandler<ClearShoppingListCommand>
     {
         public ShoppingListCommandHandler(IRepository repository, IValidationFacade validationFacade)
         {
@@ -94,6 +103,23 @@ namespace Momo.Domain.Commands
                 result.Add(command.GetName(x => x.Id), "Shopping List Not Found");
             else
                 user.Remove(shoppingList);
+
+            return result;
+        }
+
+        public CommandResult Handle(ClearShoppingListCommand command)
+        {
+            var result = _validationFacade.Validate(command);
+            if (result.AnyErrors())
+                return result;
+
+            var user = _repository.Get<UserProfile>(x => x.Username == command.Username);
+            var shoppingList = user.ShoppingLists.SingleOrDefault(x => x.Id == command.Id);
+
+            if (shoppingList == null)
+                result.Add(command.GetName(x => x.Id), "Shopping List Not Found");
+            else
+                shoppingList.Clear();
 
             return result;
         }

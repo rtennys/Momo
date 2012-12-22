@@ -32,7 +32,7 @@ namespace Momo.UI.Controllers
 
             var model = new ShoppingListsIndexModel
                         {
-                            ShowNew = string.Equals(User.Identity.Name, user.Username, StringComparison.OrdinalIgnoreCase),
+                            IsOwner = string.Equals(User.Identity.Name, user.Username, StringComparison.OrdinalIgnoreCase),
                             ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => x.Name).ToArray()
                         };
 
@@ -124,6 +124,18 @@ namespace Momo.UI.Controllers
                 _uow.Commit();
 
             return RedirectToAction("Index");
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Clear(int id)
+        {
+            ModelState.AddModelErrors(_commandExecutor.Execute(new ClearShoppingListCommand {Username = User.Identity.Name, Id = id}));
+
+            if (ModelState.IsValid)
+                _uow.Commit();
+
+            return RedirectToAction("Show");
         }
 
 

@@ -6,7 +6,7 @@ namespace Momo.UI.Models
 {
     public class ShoppingListsIndexModel
     {
-        public bool ShowNew { get; set; }
+        public bool IsOwner { get; set; }
         public string[] ShoppingLists { get; set; }
     }
 

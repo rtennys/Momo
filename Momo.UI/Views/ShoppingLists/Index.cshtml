@@ -4,13 +4,18 @@
     ViewBag.Title = "Shopping Lists";
 }
 
-<ul data-role="listview">
-    @if (Model.ShowNew)
+@if (Model.IsOwner)
+{
+    @Html.ActionLink("New List", "Add", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false"})
+}
+
+<ul data-role="listview" data-inset="true">
+    @if (Model.ShoppingLists.Length == 0)
     {
-    <li>@Html.ActionLink("** New **", "Add")</li>
+        <li><em style="font-size: .85em;">No lists yet</em></li>
     }
     @foreach (var shoppingList in Model.ShoppingLists)
     {
-        <li>@Html.ActionLink(@shoppingList, "Show", new {shoppingList})</li>
+        <li>@Html.ActionLink(@shoppingList, "Show", new {shoppingList}, new {data_ajax = "false"})</li>
     }
 </ul>

@@ -12,7 +12,7 @@
 
 <div class="line spaced">
     <h2>Use a local account</h2>
-    @using (Html.BeginForm(new {ViewBag.ReturnUrl}))
+    @using (Html.BeginForm(null, null, new {ViewBag.ReturnUrl}, FormMethod.Post, new {data_ajax = "false"}))
     {
         @Html.AntiForgeryToken()
 
@@ -30,7 +30,7 @@
         @Html.ValidationSummary(true)
 
         <p>
-            @Html.ActionLink("Register", "Register") if you don't have an account.
+            @Html.ActionLink("Register", "Register", null, new {data_ajax = "false"}) if you don't have an account.
         </p>
     }
 </div>

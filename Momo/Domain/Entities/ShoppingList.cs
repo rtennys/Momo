@@ -39,6 +39,15 @@ namespace Momo.Domain.Entities
 
             return item;
         }
+
+        protected internal virtual void Clear()
+        {
+            foreach (var item in _shoppingListItems)
+            {
+                item.Quantity = 0;
+                item.Picked = false;
+            }
+        }
     }
 
     public class ShoppingListItem : EntityBase
