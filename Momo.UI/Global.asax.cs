@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Momo.Common;
+using Momo.UI.Controllers;
 using WebMatrix.WebData;
 
 namespace Momo.UI
@@ -35,6 +36,24 @@ namespace Momo.UI
             IocConfig.Initialize();
 
             WebSecurity.InitializeDatabaseConnection("momo_conn", "UserProfile", "Id", "Username", true);
+        }
+
+        protected void Application_EndRequest()
+        {
+            if (Context.Response.StatusCode == 404) HandleNotFoundResponse();
+        }
+
+        private void HandleNotFoundResponse()
+        {
+            Response.Clear();
+
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Home";
+            routeData.Values["action"] = "NotFound";
+
+            Ioc.Resolve<HomeController>()
+               .As<IController>()
+               .Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
         }
     }
 }

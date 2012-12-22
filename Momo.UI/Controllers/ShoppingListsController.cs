@@ -32,7 +32,6 @@ namespace Momo.UI.Controllers
 
             var model = new ShoppingListsIndexModel
                         {
-                            IsOwner = string.Equals(User.Identity.Name, user.Username, StringComparison.OrdinalIgnoreCase),
                             ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => x.Name).ToArray()
                         };
 
@@ -52,7 +51,6 @@ namespace Momo.UI.Controllers
 
             var model = new ShoppingListsShowModel
                         {
-                            IsOwner = string.Equals(User.Identity.Name, user.Username, StringComparison.OrdinalIgnoreCase),
                             Id = shoppingList.Id,
                             Name = shoppingList.Name,
                             Items = shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Isle).ThenBy(x => x.Name).ToArray()
@@ -82,9 +80,10 @@ namespace Momo.UI.Controllers
         }
 
 
-        public ActionResult Rename(string shoppinglist)
+        [ValidateRouteUsername]
+        public ActionResult Rename(string username, string shoppinglist)
         {
-            var user = _repository.Get<UserProfile>(x => x.Username == User.Identity.Name);
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
             var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
             if (shoppingList == null)
                 return HttpNotFound();
@@ -98,7 +97,7 @@ namespace Momo.UI.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Rename(ShoppingListsRenameModel model)
         {
             model.Username = User.Identity.Name;
@@ -115,10 +114,10 @@ namespace Momo.UI.Controllers
         }
 
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
+        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Delete(DeleteShoppingListCommand command)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(new DeleteShoppingListCommand {Username = User.Identity.Name, Id = id}));
+            ModelState.AddModelErrors(_commandExecutor.Execute(command));
 
             if (ModelState.IsValid)
                 _uow.Commit();
@@ -127,10 +126,10 @@ namespace Momo.UI.Controllers
         }
 
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Clear(int id)
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Clear(ClearShoppingListCommand command)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(new ClearShoppingListCommand {Username = User.Identity.Name, Id = id}));
+            ModelState.AddModelErrors(_commandExecutor.Execute(command));
 
             if (ModelState.IsValid)
                 _uow.Commit();
@@ -139,6 +138,7 @@ namespace Momo.UI.Controllers
         }
 
 
+        [ValidateShoppingListAccess]
         public ActionResult AddItem(string username, string shoppinglist)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -154,7 +154,7 @@ namespace Momo.UI.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult AddItem(ShoppingListsAddItemModel model)
         {
             if (!ModelState.IsValid)
@@ -169,7 +169,7 @@ namespace Momo.UI.Controllers
         }
 
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult ChangedPicked(int id, bool picked)
         {
             _repository.Get<ShoppingListItem>(id).Picked = picked;

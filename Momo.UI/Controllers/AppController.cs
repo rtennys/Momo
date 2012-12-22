@@ -18,10 +18,9 @@ namespace Momo.UI.Controllers
             if (!requestContext.HttpContext.Request.IsAuthenticated) return;
 
             var usernameKey = "Username";
-            var username = requestContext.HttpContext.User.Identity.Name;
 
             if (!requestContext.RouteData.Values.ContainsKey(usernameKey) || string.IsNullOrWhiteSpace((string)requestContext.RouteData.Values[usernameKey]))
-                requestContext.RouteData.Values[usernameKey] = username;
+                requestContext.RouteData.Values[usernameKey] = requestContext.HttpContext.User.Identity.Name;
         }
     }
 }

@@ -14,5 +14,10 @@ namespace Momo.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult NotFound()
+        {
+            return View();
+        }
     }
 }

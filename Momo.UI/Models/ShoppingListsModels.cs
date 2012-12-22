@@ -6,13 +6,11 @@ namespace Momo.UI.Models
 {
     public class ShoppingListsIndexModel
     {
-        public bool IsOwner { get; set; }
         public string[] ShoppingLists { get; set; }
     }
 
     public class ShoppingListsShowModel
     {
-        public bool IsOwner { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         public ShoppingListItem[] Items { get; set; }

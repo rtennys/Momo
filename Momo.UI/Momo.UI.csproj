@@ -179,10 +179,13 @@
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShoppingListsController.cs" />
+    <Compile Include="Controllers\ValidateShoppingListAccessAttribute.cs" />
+    <Compile Include="Controllers\ValidateRouteUsername.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ModelStateDictionaryExtensions.cs" />
+    <Compile Include="Infrastructure\MyMvcExtensions.cs" />
     <Compile Include="Infrastructure\NHibernateSessionFactoryHelper.cs" />
     <Compile Include="Infrastructure\NHibernateUnitOfWork.cs" />
     <Compile Include="Infrastructure\NHibernateRepository.cs" />
@@ -255,6 +258,7 @@
     <Content Include="Views\ShoppingLists\AddItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\decimal.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\int32.cshtml" />
+    <Content Include="Views\Home\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
