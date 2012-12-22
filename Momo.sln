@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		db-create.sql = db-create.sql
 		db-update.bat = db-update.bat
 		db-update.sql = db-update.sql
+		deploy.bat = deploy.bat
+		deploy.proj = deploy.proj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Momo.UI", "Momo.UI\Momo.UI.csproj", "{15E35EC8-5930-4B42-8F25-9DBE9688F3AE}"

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Deploy" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$([System.IO.Path]::GetFullPath('.'))</SolutionDir>
+    <StagingDir>$([System.IO.Path]::GetFullPath('..\stage'))</StagingDir>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\Build</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+
+  <Import Project="$(SolutionDir)\Build\MSBuild.Community.Tasks.targets" />
+
+  <Target Name="Deploy" DependsOnTargets="
+          BuildProject;
+          DeployToStage;
+          Cleanup;
+          OpenExplorer;" />
+
+  <Target Name="BuildProject">
+
+    <MSBuild Projects="$(SolutionDir)\Momo.sln" Targets="clean;build" Properties="Configuration=Release" />
+
+    <RemoveDir Directories="$(SolutionDir)\Momo.UI\obj" />
+    <Exec Command="c:\WINDOWS\Microsoft.NET\Framework64\v4.0.30319\aspnet_compiler -p &quot;$(SolutionDir)\Momo.UI&quot; -v /" />
+
+  </Target>
+
+  <Target Name="DeployToStage">
+    <GitVersion LocalPath="$(SolutionDir)">
+      <Output TaskParameter="CommitHash" PropertyName="Revision" />
+    </GitVersion>
+    <CreateProperty Value="$(StagingDir)\$([System.DateTime]::Now.ToString(`yyyy-MM-dd`))-$(Revision)">
+      <Output TaskParameter="Value" PropertyName="StagingDir" />
+    </CreateProperty>
+    <MSBuild
+       Projects="$(SolutionDir)\Momo.UI\Momo.UI.csproj"
+       Targets="PipelinePreDeployCopyAllFilesToOneFolder"
+       Properties="Configuration=Release;AutoParameterizationWebConfigConnectionStrings=False;_PackageTempDir=$(StagingDir)" />
+  </Target>
+
+  <Target Name="Cleanup">
+    <MSBuild Projects="$(SolutionDir)\Momo.sln" Targets="clean" Properties="Configuration=Release;TrickTheCache=1;" />
+  </Target>
+
+  <Target Name="OpenExplorer">
+    <Exec Command='start explorer.exe "$(StagingDir)"' IgnoreExitCode="true" />
+  </Target>
+
+</Project>

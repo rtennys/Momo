@@ -26,7 +26,7 @@ namespace Momo.UI.Infrastructure
             return new StructureMapDependencyResolver(_container.GetNestedContainer());
         }
 
-        public object GetService(Type serviceType)
+        public new object GetService(Type serviceType)
         {
             if (serviceType == null) return null;
 
