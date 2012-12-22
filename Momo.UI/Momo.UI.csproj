@@ -184,6 +184,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\CurrentUser.cs" />
     <Compile Include="Infrastructure\ModelStateDictionaryExtensions.cs" />
     <Compile Include="Infrastructure\MyMvcExtensions.cs" />
     <Compile Include="Infrastructure\NHibernateSessionFactoryHelper.cs" />

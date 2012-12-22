@@ -4,7 +4,7 @@
     ViewBag.Title = "Shopping Lists";
 }
 
-@if (Html.IsRouteUsername())
+@if (CurrentUser.IsRouteUsername())
 {
     @Html.ActionLink("New List", "Add", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false"})
 }

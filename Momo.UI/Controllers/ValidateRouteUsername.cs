@@ -7,7 +7,7 @@ namespace Momo.UI.Controllers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.RouteData.IsRouteUsername(filterContext.HttpContext.User)) return;
+            if (CurrentUser.IsRouteUsername()) return;
 
             filterContext.Result = new HttpNotFoundResult();
         }

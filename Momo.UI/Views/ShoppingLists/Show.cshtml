@@ -4,7 +4,7 @@
     ViewBag.Title = Model.Name;
 }
 
-@if (Html.HasShoppingListAccess())
+@if (CurrentUser.HasShoppingListAccess())
 {
     @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false" })
 
@@ -35,7 +35,7 @@
             <li data-icon="false">
                 <a href="#" style="padding: 0;">
                     <fieldset data-role="controlgroup" style="margin: 0;">
-                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(Html.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
                         <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
@@ -45,7 +45,7 @@
     }
 </ul>
 
-@if (Html.IsRouteUsername())
+@if (CurrentUser.IsRouteUsername())
 {
     @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
     using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
