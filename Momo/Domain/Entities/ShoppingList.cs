@@ -33,6 +33,19 @@ namespace Momo.Domain.Entities
             get { return _sharedWith.AsReadOnly(); }
         }
 
+        public virtual void StartSharing(UserProfile user)
+        {
+            _sharedWith.Add(user);
+            user.AddSharedList(this);
+        }
+
+        public virtual void StopSharing(string username)
+        {
+            var user = _sharedWith.Single(x => string.Equals(x.Username, username, StringComparison.OrdinalIgnoreCase));
+            _sharedWith.Remove(user);
+            user.RemoveSharedList(this);
+        }
+
         protected internal virtual ShoppingListItem GetOrAddItem(string name)
         {
             var item = ShoppingListItems.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));

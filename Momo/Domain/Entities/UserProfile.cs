@@ -39,5 +39,15 @@ namespace Momo.Domain.Entities
         {
             _shoppingLists.Remove(shoppingList);
         }
+
+        protected internal virtual void AddSharedList(ShoppingList shoppingList)
+        {
+            _sharedLists.Add(shoppingList);
+        }
+
+        protected internal virtual void RemoveSharedList(ShoppingList shoppingList)
+        {
+            _sharedLists.Remove(shoppingList);
+        }
     }
 }

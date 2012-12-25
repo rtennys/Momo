@@ -115,6 +115,43 @@ namespace Momo.UI.Controllers
         }
 
 
+        [ValidateRouteUsername]
+        public ActionResult Share(string username, string shoppinglist)
+        {
+            var usernames = _repository.Find<ShoppingList>()
+                .Where(x => x.UserProfile.Username == username && x.Name == shoppinglist)
+                .SelectMany(x => x.SharedWith)
+                .Select(x => x.Username)
+                .ToArray();
+
+            return View(usernames);
+        }
+
+        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult StartSharing(string username, string shoppinglist, string shareWith)
+        {
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
+            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+
+            shoppingList.StartSharing(_repository.Get<UserProfile>(x => x.Username == shareWith));
+
+            _uow.Commit();
+            return RedirectToAction("Share");
+        }
+
+        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult StopSharing(string username, string shoppinglist, string shareWith)
+        {
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
+            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+
+            shoppingList.StopSharing(shareWith);
+
+            _uow.Commit();
+            return RedirectToAction("Share");
+        }
+
+
         [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Delete(DeleteShoppingListCommand command)
         {

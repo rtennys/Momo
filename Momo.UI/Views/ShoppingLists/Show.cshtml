@@ -51,13 +51,18 @@
 
 @if (CurrentUser.IsRouteUsername())
 {
-    @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
-    using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
-    }
+    <p>
+        @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
+        @Html.ActionLink("Sharing", "Share", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
+    </p>
+    <p>
+        @using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
+        }
+    </p>
 }
 
 @section scripts

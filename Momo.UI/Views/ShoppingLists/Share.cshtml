@@ -1,0 +1,54 @@
+﻿@model string[]
+
+@{
+    ViewBag.Title = "Share";
+}
+
+@using (Html.BeginForm("StartSharing", null, FormMethod.Post, new {data_ajax = "false"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("username")
+    @Html.Hidden("shoppinglist")
+    <ol>
+        <li>@Html.TextBox("shareWith")</li>
+    </ol>
+    <input type="submit" value="Add" id="start-sharing" />
+}
+
+<ul data-role="listview" data-inset="true" style="margin-top: 50px">
+    <li data-role="list-divider">Currently Shared With</li>
+    @if (Model.Length == 0)
+    {
+        <li><em>Not being shared</em></li>
+    }
+    @foreach (var username in Model)
+    {
+        <li data-icon="delete" title="remove">
+            <a href="#" onclick="$(this).children('form').submit();">
+                @username
+                @using (Html.BeginForm("StopSharing", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("username")
+                    @Html.Hidden("shoppinglist")
+                    @Html.Hidden("shareWith", username)
+                }
+            </a>
+        </li>
+    }
+</ul>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+
+            $('xxform').submit(function () {
+                var form = $(this);
+                app.post(form.attr('action'), form.toObject());
+                return false;
+            });
+
+        });
+    </script>
+}
