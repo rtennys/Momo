@@ -125,32 +125,25 @@ app = {
 
 (function($) {
 
-    $(function () {
+    $(function() {
 
-        $('.smooth-scroll').click(function (e) {
+        var $window = $(window), $document = $(document);
+
+        $document.on('click', '.smooth-scroll', function(e) {
             e.preventDefault();
-            $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 800);
+            $('html, body').animate({ scrollTop: $(this.hash).offset().top }, 800);
         });
 
-        (function () {
-            var width = $('<span>'),
-                height = $('<span>');
-
-            $('<p>')
-                .css({ 'font-size': '.85em' })
-                .append(width)
-                .append(' x ')
-                .append(height)
-                .append('  (320 x 421 - iphone)')
-                .appendTo($('[data-role="footer"]'));
+        (function() {
 
             function setSize() {
-                width.text($(window).width());
-                height.text($(window).height());
+                $('.screenSize').text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
             }
 
             setSize();
-            $(window).resize(setSize);
+            $window.resize(setSize);
+            $document.on('pageshow', '.ui-page', setSize);
+
         })();
 
     });

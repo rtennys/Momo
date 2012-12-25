@@ -32,6 +32,7 @@
             <div data-role="footer" data-theme="d">
                 <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
                 @Html.Partial("_LoginPartial")
+                @if (Request.IsLocal) { <p class="screenSize" style="font-size: .85em;"></p> }
             </div>
         </div>
 
