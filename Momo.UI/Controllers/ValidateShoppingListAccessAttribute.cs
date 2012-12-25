@@ -7,10 +7,7 @@ namespace Momo.UI.Controllers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (CurrentUser.IsRouteUsername()) return;
-
-            // At some point soon, figure out how to get the shopping list and verify access.
-            // Currently only the owner has access
+            if (CurrentUser.IsRouteUsername() || CurrentUser.HasShoppingListAccess()) return;
 
             filterContext.Result = new HttpNotFoundResult();
         }

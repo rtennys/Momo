@@ -6,7 +6,8 @@ namespace Momo.UI.Models
 {
     public class ShoppingListsIndexModel
     {
-        public string[] ShoppingLists { get; set; }
+        public ShoppingList[] ShoppingLists { get; set; }
+        public ShoppingList[] SharedLists { get; set; }
     }
 
     public class ShoppingListsShowModel

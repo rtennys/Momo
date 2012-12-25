@@ -16,12 +16,18 @@ namespace Momo.Domain.Entities
         }
 
         private readonly IList<ShoppingList> _shoppingLists = new List<ShoppingList>();
+        private readonly IList<ShoppingList> _sharedLists = new List<ShoppingList>();
 
         public virtual string Username { get; protected set; }
 
-        public virtual IList<ShoppingList> ShoppingLists
+        public virtual IReadOnlyList<ShoppingList> ShoppingLists
         {
             get { return _shoppingLists.AsReadOnly(); }
+        }
+
+        public virtual IReadOnlyList<ShoppingList> SharedLists
+        {
+            get { return _sharedLists.AsReadOnly(); }
         }
 
         protected internal virtual void AddShoppingList(string name)

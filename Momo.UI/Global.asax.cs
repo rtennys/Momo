@@ -9,6 +9,7 @@ using System.Web.Routing;
 using Momo.Common;
 using Momo.UI.Controllers;
 using WebMatrix.WebData;
+using log4net.Config;
 
 namespace Momo.UI
 {
@@ -16,6 +17,8 @@ namespace Momo.UI
     {
         protected void Application_Start()
         {
+            XmlConfigurator.Configure();
+
             var version = Assembly
                 .GetExecutingAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()

@@ -9,6 +9,7 @@ using FluentNHibernate.Conventions.Instances;
 using Momo.Common;
 using Momo.Domain.Entities;
 using NHibernate;
+using Prefix = FluentNHibernate.Mapping.Prefix;
 
 namespace Momo.UI.Infrastructure
 {
@@ -35,7 +36,13 @@ namespace Momo.UI.Infrastructure
                 .Where(entityBaseType.IsAssignableFrom)
                 .Conventions.Add<MyIdConvention>()
                 .Conventions.Add<MyForeignKeyConvention>()
-                .Conventions.Add<MyCollectionConvention>();
+                .Conventions.Add<MyCollectionConvention>()
+                .Override<ShoppingList>(mapping => mapping.HasManyToMany(x => x.SharedWith).Table("ShoppingListToUserProfile").Not.Inverse())
+                .Override<UserProfile>(mapping =>
+                {
+                    mapping.HasMany(x => x.ShoppingLists).Table("ShoppingList");
+                    mapping.HasManyToMany(x => x.SharedLists).Table("ShoppingListToUserProfile");
+                });
 
             return Fluently.Configure()
                            .Database(MsSqlConfiguration.MsSql2008.ConnectionString(x => x.FromConnectionStringWithKey("momo_conn")))

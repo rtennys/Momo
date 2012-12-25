@@ -39,4 +39,9 @@ create table dbo.ShoppingListItem (
     ShoppingListId int not null constraint FK_ShoppingListItem_ShoppingListId foreign key references ShoppingList (Id)
 );
 
+create table dbo.ShoppingListToUserProfile (
+    ShoppingListId int not null constraint FK_ShoppingListToUserProfile_ShoppingListId foreign key references ShoppingList (Id),
+    UserProfileId int not null constraint FK_ShoppingListToUserProfile_UserProfileId foreign key references UserProfile (Id)
+);
+
 GO

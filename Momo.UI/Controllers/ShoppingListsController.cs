@@ -32,7 +32,8 @@ namespace Momo.UI.Controllers
 
             var model = new ShoppingListsIndexModel
                         {
-                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => x.Name).ToArray()
+                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).ToArray(),
+                            SharedLists = user.SharedLists.OrderBy(x => x.Name).ToArray()
                         };
 
             return View(model);
