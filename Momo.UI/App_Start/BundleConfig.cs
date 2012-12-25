@@ -12,13 +12,13 @@ namespace Momo.UI
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/common/js").Include(
+            bundles.Add(new ScriptBundle("~/bundles/common").Include(
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery.mobile-{version}.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/Site.js"));
 
-            bundles.Add(new StyleBundle("~/bundles/common/css").Include(
+            bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/jquery.mobile-{version}.css",
                 "~/Content/site.css"));
         }
