@@ -10,7 +10,10 @@
     @Html.HiddenFor(m => m.ShoppingListId)
 
     <ol>
-        <li>@Html.EditorFor(x => x.Name)</li>
+        <li>
+            @Html.EditorFor(x => x.Name)
+            <ul id="suggestions" data-role="listview" data-inset="true"></ul>
+        </li>
         <li>@Html.EditorFor(x => x.Quantity)</li>
         <li>@Html.EditorFor(x => x.Isle)</li>
         <li>@Html.EditorFor(x => x.Price)</li>
@@ -19,4 +22,62 @@
     <input type="submit" value="Add" />
 
     @Html.ValidationSummary()
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+
+            var suggestions = $('#suggestions'),
+                nameInput = suggestions.prev(),
+                getSuggestions = new app.Delayed(function () {
+                    var text = $(this).val();
+                    if (text.length <= 0) {
+                        suggestions.html('');
+                        suggestions.listview('refresh');
+                    } else {
+                        app.post('@Url.Action("GetSuggestions")', { search: text }, function(result) {
+                            suggestions.empty();
+                            suggestions.append($.map(result, function(value) {
+                                return $('<li>')
+                                    .attr('data-icon', 'false')
+                                    .attr('data-listitem-name', value.Name)
+                                    .attr('data-listitem-quantity', value.Quantity)
+                                    .attr('data-listitem-isle', value.Isle)
+                                    .attr('data-listitem-price', value.Price)
+                                    .append($('<a href="#">').text(value.Name))
+                                    .get();
+                            }));
+                            suggestions.listview('refresh');
+                        });
+                    }
+                });
+
+            nameInput.attr('autocomplete', 'off');
+
+            suggestions.css({
+                'position': 'absolute',
+                'top': nameInput.position().top + nameInput.innerHeight(),
+                'left': nameInput.position().left,
+                'width': nameInput.outerWidth(),
+                'z-index': 1,
+                'background': '#efefef'
+            });
+
+            $('#Name').on('input', getSuggestions.execute);
+
+            suggestions.on('click', 'li', function() {
+                var li = $(this);
+
+                $('#Name').val(li.data('listitem-name'));
+                $('#Quantity').val(li.data('listitem-quantity'));
+                $('#Isle').val(li.data('listitem-isle'));
+                $('#Price').val(li.data('listitem-price'));
+
+                suggestions.empty();
+                suggestions.listview('refresh');
+            });
+        });
+    </script>
 }

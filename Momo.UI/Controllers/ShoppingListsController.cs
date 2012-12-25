@@ -218,5 +218,28 @@ namespace Momo.UI.Controllers
             _uow.Commit();
             return RedirectToAction("Show");
         }
+
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult GetSuggestions(string username, string shoppinglist, string search)
+        {
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
+            if (user == null)
+                return HttpNotFound();
+
+            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+            if (shoppingList == null)
+                return HttpNotFound();
+
+            var model = shoppingList
+                .ShoppingListItems
+                .Where(x => x.Name.StartsWith(search, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(x => x.Name)
+                .Take(5)
+                .Select(x => new {x.Name, x.Quantity, x.Isle, x.Price})
+                .ToArray();
+
+            return Json(model);
+        }
     }
 }
