@@ -1,6 +1,9 @@
-﻿@model ShoppingListsShowModel
+﻿@using Momo.Common
+@model ShoppingListsShowModel
 
 @{
+    var routeData = Request.RequestContext.RouteData;
+    ViewBag.HeaderTitle = "{0}/{1}".F(routeData.Values["username"], routeData.Values["shoppinglist"]);
     ViewBag.Title = Model.Name;
 }
 

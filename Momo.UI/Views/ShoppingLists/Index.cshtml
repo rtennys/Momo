@@ -1,7 +1,7 @@
 ﻿@model ShoppingListsIndexModel
 
 @{
-    ViewBag.Title = "Shopping Lists";
+    ViewBag.Title = Request.RequestContext.RouteData.Values["username"];
 }
 
 @if (CurrentUser.IsRouteUsername())

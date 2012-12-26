@@ -8,7 +8,7 @@ namespace Momo.Domain.Commands
 {
     public class AddUserCommand : ICommand
     {
-        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Username may only contain alphanumeric characters or dashes and must begin with a letter")]
+        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Start with a letter and then letters, numbers, and dashes only")]
         public string Username { get; set; }
     }
 

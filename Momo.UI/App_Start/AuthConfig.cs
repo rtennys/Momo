@@ -23,9 +23,8 @@ namespace Momo.UI
             //    appId: "",
             //    appSecret: "");
 
-
-            OAuthWebSecurity.RegisterClient(new OpenIdClient("MyOpenId", "https://myopenid.com/"), "MyOpenID", null);
             OAuthWebSecurity.RegisterGoogleClient();
+            OAuthWebSecurity.RegisterClient(new OpenIdClient("MyOpenId", "https://myopenid.com/"), "MyOpenID", null);
             OAuthWebSecurity.RegisterYahooClient();
         }
     }

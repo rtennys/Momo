@@ -26,7 +26,7 @@ namespace Momo.UI
 
             Application["version"] = version;
             Application["versionUrl"] = "https://github.com/rtennys/Momo/commit/{0}".F(version.Split('.').Last());
-            Application["name"] = "Momo";
+            Application["name"] = "mnmllist";
 
             AreaRegistration.RegisterAllAreas();
 

@@ -3,6 +3,10 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", data_ajax = "false"}))
     {
         @Html.AntiForgeryToken()
-        <p><a href="javascript:document.getElementById('logoutForm').submit()">Sign Out</a></p>
+        <p><a href="#sign-out" onclick=" $(this).parents('form:first').submit() ">Sign Out</a></p>
     }
+}
+else
+{
+    <p>@Html.ActionLink("Sign in", "Login", "Account", null, new {data_ajax = "false"})</p>
 }

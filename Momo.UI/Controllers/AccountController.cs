@@ -263,7 +263,8 @@ namespace Momo.UI.Controllers
             }
 
             ViewBag.ShowRemoveButton = externalLogins.Count > 1 || OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            return PartialView("_RemoveExternalLoginsPartial", externalLogins);
+
+            return PartialView("_RemoveExternalLoginsPartial", externalLogins.ToArray());
         }
 
         private ActionResult RedirectToLocal(string returnUrl)

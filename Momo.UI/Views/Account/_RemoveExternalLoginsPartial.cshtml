@@ -1,6 +1,6 @@
-﻿@model ICollection<ExternalLogin>
+﻿@model ExternalLogin[]
 
-@if (Model.Count > 0)
+@if (Model.Length > 0)
 {
     <h3>Registered external logins</h3>
     <table>
@@ -12,7 +12,7 @@
                 <td>
                     @if (ViewBag.ShowRemoveButton)
                     {
-                        using (Html.BeginForm("Disassociate", "Account"))
+                        using (Html.BeginForm("Disassociate", "Account", FormMethod.Post, new {data_ajax = "false"}))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("provider", externalLogin.Provider)
