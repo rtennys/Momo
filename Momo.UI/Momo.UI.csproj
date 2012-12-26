@@ -263,9 +263,7 @@
     <Content Include="Views\ShoppingLists\EditItem.cshtml" />
     <Content Include="Views\ShoppingLists\Share.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

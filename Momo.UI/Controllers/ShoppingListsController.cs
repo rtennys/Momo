@@ -207,14 +207,6 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public void ChangePicked(int id, bool picked)
-        {
-            _repository.Get<ShoppingListItem>(id).Picked = picked;
-            _uow.Commit();
-        }
-
-
         [ValidateShoppingListAccess]
         public ActionResult EditItem(string username, string shoppinglist, int id)
         {
@@ -254,6 +246,26 @@ namespace Momo.UI.Controllers
                 return View(model);
 
             _uow.Commit();
+            return RedirectToAction("Show");
+        }
+
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public void ChangePicked(int id, bool picked)
+        {
+            var item = _repository.Get<ShoppingListItem>(id);
+            item.Picked = picked;
+            _uow.Commit();
+        }
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult UpdatePicked(int id, int? isle, decimal? price)
+        {
+            var item = _repository.Get<ShoppingListItem>(id);
+            item.Isle = isle.HasValue ? isle.Value : 0;
+            item.Price = price.HasValue ? price.Value : 0M;
+            _uow.Commit();
+
             return RedirectToAction("Show");
         }
 

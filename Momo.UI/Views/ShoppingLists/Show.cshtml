@@ -17,6 +17,23 @@
         @Html.HiddenFor(m => m.Id)
         <input type="submit" value="Clear" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Clear this list?'); " />
     }
+    
+    <div id="islePrompt" data-role="popup" class="ui-content">
+        <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+        @using (Html.BeginForm("UpdatePicked", null, null, FormMethod.Post, new {data_ajax = "false"}))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Id")
+            <div style="padding: 10px 20px;">
+                <h3>Update Item?</h3>
+                <ol>
+                    <li>@Html.TextBox("Isle", null, new {autocomplete = "off"})</li>
+                    <li>@Html.TextBox("Price", null, new {autocomplete = "off"})</li>
+                </ol>
+                <input type="submit" value="Save" />
+            </div>
+        }
+    </div>
 
     // This is for the "picked" javascript
     @Html.AntiForgeryToken()
@@ -38,14 +55,14 @@
             <li data-icon="false">
                 <a href="#" style="padding: 0;">
                     <fieldset data-role="controlgroup" style="margin: 0;">
-                        <input type="checkbox" data-shoppinglistitemid="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <input type="checkbox" data-shoppinglistitemid="@item.Id" data-shoppinglistitemisle="@item.Isle" data-shoppinglistitemprice="@item.Price" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
                         <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
                 </a>
                 @if (CurrentUser.HasShoppingListAccess())
                 {
-                    @Html.ActionLink("Edit", "EditItem", new {id = item.Id}, new {data_ajax = "false"})
+                    @Html.ActionLink("Edit", "EditItem", new { id = item.Id }, new { data_ajax = "false" })
                 }
             </li>
         }
@@ -71,14 +88,28 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             $(document).on('change', '[data-shoppinglistitemid]', function() {
+
                 var cb = $(this),
                     data = {
                         id: cb.data('shoppinglistitemid'),
                         picked: cb.is(':checked')
                     };
-                app.post('@Url.Action("ChangePicked")', data);
+
+                app.post('@Url.Action("ChangePicked")', data, function (result) {
+                    if (!data.picked) return;
+
+                    var isle = cb.data('shoppinglistitemisle'),
+                        price = cb.data('shoppinglistitemprice');
+
+                    $('#islePrompt form #Id').val(data.id);
+                    $('#islePrompt form #Isle').val(isle == '0' ? '' : isle);
+                    $('#islePrompt form #Price').val(price == '0.00' ? '' : price);
+
+                    $('#islePrompt').popup('open');
+                });
+
             });
         });
     </script>
