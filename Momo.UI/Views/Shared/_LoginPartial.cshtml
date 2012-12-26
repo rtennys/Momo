@@ -8,5 +8,5 @@
 }
 else
 {
-    <p>@Html.ActionLink("Sign in", "Login", "Account", null, new {data_ajax = "false"})</p>
+    <p>@Html.ActionLink("Sign in", "Login", "Account", new {returnUrl = Request.RawUrl}, new {data_ajax = "false"})</p>
 }
