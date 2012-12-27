@@ -1,4 +1,5 @@
-﻿@model ICollection<AuthenticationClientData>
+﻿@using Momo.Common
+@model ICollection<AuthenticationClientData>
 
 @using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {data_ajax = "false"}))
 {
@@ -6,7 +7,17 @@
     <p>
         @foreach (var externalLogin in Model)
         {
-            <button type="submit" name="provider" value="@externalLogin.AuthenticationClient.ProviderName" title="Log in using your @externalLogin.DisplayName account">@externalLogin.DisplayName</button>
+            <button
+                type="submit"
+                name="provider"
+                value="@externalLogin.AuthenticationClient.ProviderName"
+                title="Log in using your @externalLogin.DisplayName account"
+                class="login-button @("{0}-login".F(externalLogin.AuthenticationClient.ProviderName))"
+                data-role="none">
+
+                &nbsp;
+
+            </button>
         }
     </p>
 }

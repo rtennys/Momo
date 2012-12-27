@@ -38,6 +38,13 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 .ui-footer { font-size: 0.85em; }
 .ui-footer p { margin-left: 10px; }
 
+.login-button { margin-right: 15px; margin-bottom: 15px; width: 60px; height: 60px; background-color: transparent; background-size: 60px 60px; cursor: pointer; border: none; }
+.facebook-login { background-image: url('images/facebook.png'); }
+.microsoft-login { background-image: url('images/microsoft.png'); }
+.google-login { background-image: url('images/google.png'); }
+.myopenid-login { background-image: url('images/myopenid.png'); }
+.yahoo-login { background-image: url('images/yahoo.png'); }
+
 @media only screen and (min-width: 768px) {
     .ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }
     .ui-mobile-viewport .ui-header, .ui-mobile-viewport .ui-footer { border-width: 1px; border-style: solid; border-color: transparent; border-radius: 8px;  }

@@ -19,7 +19,7 @@ namespace Momo.UI
             OAuthWebSecurity.RegisterFacebookClient(ConfigurationManager.AppSettings["FacebookAppId"], ConfigurationManager.AppSettings["FacebookAppSecret"]);
             OAuthWebSecurity.RegisterMicrosoftClient(ConfigurationManager.AppSettings["MicrosoftClientId"], ConfigurationManager.AppSettings["MicrosoftClientSecret"]);
             OAuthWebSecurity.RegisterGoogleClient();
-            OAuthWebSecurity.RegisterClient(new OpenIdClient("MyOpenId", "https://myopenid.com/"), "MyOpenID", null);
+            OAuthWebSecurity.RegisterClient(new OpenIdClient("myopenid", "https://myopenid.com/"), "MyOpenID", null);
             OAuthWebSecurity.RegisterYahooClient();
         }
     }

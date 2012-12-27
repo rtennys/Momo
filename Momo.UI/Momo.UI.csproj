@@ -200,10 +200,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\ajax-loader.gif" />
+    <Content Include="Content\images\facebook.png" />
+    <Content Include="Content\images\google.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
+    <Content Include="Content\images\microsoft.png" />
+    <Content Include="Content\images\myopenid.png" />
+    <Content Include="Content\images\yahoo.png" />
     <Content Include="Content\jquery.mobile-1.2.0.css" />
     <Content Include="Content\jquery.mobile-1.2.0.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.2.0.css" />
