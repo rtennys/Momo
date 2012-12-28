@@ -15,7 +15,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Clear" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Clear this list?'); " />
+        <input type="submit" value="Set all to Zero" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
     }
     
     <div id="islePrompt" data-role="popup" class="ui-content">
