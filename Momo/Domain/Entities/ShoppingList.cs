@@ -83,7 +83,7 @@ namespace Momo.Domain.Entities
 
         public virtual ShoppingList ShoppingList { get; protected set; }
         public virtual string Name { get; protected internal set; }
-        public virtual int Isle { get; set; }
+        public virtual int Aisle { get; set; }
         public virtual decimal Price { get; set; }
         public virtual int Quantity { get; set; }
         public virtual bool Picked { get; set; }

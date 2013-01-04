@@ -32,7 +32,7 @@ create table dbo.ShoppingListItem (
     Id int identity(1,1) not null constraint PK_ShoppingListItem primary key,
     Version int not null,
     Name nvarchar(255) not null,
-    Isle int not null,
+    Aisle int not null,
     Price decimal(9,2) not null,
     Quantity int not null,
     Picked bit not null,

@@ -27,7 +27,7 @@
             <div style="padding: 10px 20px;">
                 <h3>Update Item?</h3>
                 <ol>
-                    <li>@Html.TextBox("Isle", null, new {autocomplete = "off"})</li>
+                    <li>@Html.TextBox("Aisle", null, new {autocomplete = "off"})</li>
                     <li>@Html.TextBox("Price", null, new {autocomplete = "off"})</li>
                 </ol>
                 <input type="submit" value="Save" />
@@ -44,10 +44,10 @@
     {
         <li><em style="font-size: .85em;">No items in this list yet</em></li>
     }
-    @foreach (var group in Model.Items.GroupBy(x => x.Isle))
+    @foreach (var group in Model.Items.GroupBy(x => x.Aisle))
     {
         <li data-role="list-divider">
-            @(group.Key == 0 ? "Isle Not Set" : "Isle " + group.Key)
+            @(group.Key == 0 ? "Aisle Not Set" : "Aisle " + group.Key)
             <span class="ui-li-count">@group.Count()</span>
         </li>
         foreach (var item in group)
@@ -55,7 +55,7 @@
             <li data-icon="false">
                 <a href="#" style="padding: 0;">
                     <fieldset data-role="controlgroup" style="margin: 0;">
-                        <input type="checkbox" data-shoppinglistitemid="@item.Id" data-shoppinglistitemisle="@item.Isle" data-shoppinglistitemprice="@item.Price" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <input type="checkbox" data-shoppinglistitemid="@item.Id" data-shoppinglistitemisle="@item.Aisle" data-shoppinglistitemprice="@item.Price" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
                         <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
@@ -100,11 +100,11 @@
                 app.post('@Url.Action("ChangePicked")', data, function (result) {
                     if (!data.picked) return;
 
-                    var isle = cb.data('shoppinglistitemisle'),
+                    var aisle = cb.data('shoppinglistitemisle'),
                         price = cb.data('shoppinglistitemprice');
 
                     $('#islePrompt form #Id').val(data.id);
-                    $('#islePrompt form #Isle').val(isle == '0' ? '' : isle);
+                    $('#islePrompt form #Aisle').val(aisle == '0' ? '' : aisle);
                     $('#islePrompt form #Price').val(price == '0.00' ? '' : price);
 
                     $('#islePrompt').popup('open');

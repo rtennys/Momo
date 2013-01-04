@@ -54,7 +54,7 @@ namespace Momo.UI.Controllers
                         {
                             Id = shoppingList.Id,
                             Name = shoppingList.Name,
-                            Items = shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Isle).ThenBy(x => x.Name).ToArray()
+                            Items = shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Aisle).ThenBy(x => x.Name).ToArray()
                         };
 
             return View(model);
@@ -228,7 +228,7 @@ namespace Momo.UI.Controllers
                             Id = item.Id,
                             Name = item.Name,
                             Quantity = item.Quantity > 0 ? item.Quantity : (int?)null,
-                            Isle = item.Isle > 0 ? item.Isle : (int?)null,
+                            Aisle = item.Aisle > 0 ? item.Aisle : (int?)null,
                             Price = item.Price > 0M ? item.Price : (decimal?)null
                         };
 
@@ -259,10 +259,10 @@ namespace Momo.UI.Controllers
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult UpdatePicked(int id, int? isle, decimal? price)
+        public ActionResult UpdatePicked(int id, int? aisle, decimal? price)
         {
             var item = _repository.Get<ShoppingListItem>(id);
-            item.Isle = isle.HasValue ? isle.Value : 0;
+            item.Aisle = aisle.HasValue ? aisle.Value : 0;
             item.Price = price.HasValue ? price.Value : 0M;
             _uow.Commit();
 
@@ -286,7 +286,7 @@ namespace Momo.UI.Controllers
                 .Where(x => x.Name.StartsWith(search, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(x => x.Name)
                 .Take(5)
-                .Select(x => new {x.Name, x.Quantity, x.Isle, x.Price})
+                .Select(x => new {x.Name, x.Quantity, x.Aisle, x.Price})
                 .ToArray();
 
             return Json(model);

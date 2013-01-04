@@ -17,7 +17,7 @@ namespace Momo.Domain.Commands
         [Required, Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero")]
         public int? Quantity { get; set; }
 
-        public int? Isle { get; set; }
+        public int? Aisle { get; set; }
         public decimal? Price { get; set; }
     }
 
@@ -54,7 +54,7 @@ namespace Momo.Domain.Commands
             item.Quantity = command.Quantity.GetValueOrDefault();
             item.Picked = false;
 
-            if (command.Isle.HasValue) item.Isle = command.Isle.Value;
+            if (command.Aisle.HasValue) item.Aisle = command.Aisle.Value;
             if (command.Price.HasValue) item.Price = command.Price.Value;
 
             return result;
@@ -71,7 +71,7 @@ namespace Momo.Domain.Commands
 
             item.Name = command.Name;
             item.Quantity = command.Quantity.GetValueOrDefault();
-            item.Isle = command.Isle.GetValueOrDefault();
+            item.Aisle = command.Aisle.GetValueOrDefault();
             item.Price = command.Price.GetValueOrDefault();
 
             return result;

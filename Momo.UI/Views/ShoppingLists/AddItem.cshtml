@@ -15,7 +15,7 @@
             <ul id="suggestions" data-role="listview" data-inset="true"></ul>
         </li>
         <li>@Html.EditorFor(x => x.Quantity)</li>
-        <li>@Html.EditorFor(x => x.Isle)</li>
+        <li>@Html.EditorFor(x => x.Aisle)</li>
         <li>@Html.EditorFor(x => x.Price)</li>
     </ol>
 
@@ -44,7 +44,7 @@
                                     .attr('data-icon', 'false')
                                     .attr('data-listitem-name', value.Name)
                                     .attr('data-listitem-quantity', value.Quantity == 0 ? 1 : value.Quantity)
-                                    .attr('data-listitem-isle', value.Isle)
+                                    .attr('data-listitem-aisle', value.Aisle)
                                     .attr('data-listitem-price', value.Price)
                                     .append($('<a href="#">').text(value.Name))
                                     .get();
@@ -72,7 +72,7 @@
 
                 $('#Name').val(li.data('listitem-name'));
                 $('#Quantity').val(li.data('listitem-quantity')).focus().select();
-                $('#Isle').val(li.data('listitem-isle'));
+                $('#Aisle').val(li.data('listitem-aisle'));
                 $('#Price').val(li.data('listitem-price'));
 
                 suggestions.empty();
