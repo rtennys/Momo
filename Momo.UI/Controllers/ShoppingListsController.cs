@@ -258,17 +258,6 @@ namespace Momo.UI.Controllers
             _uow.Commit();
         }
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult UpdatePicked(int id, int? aisle, decimal? price)
-        {
-            var item = _repository.Get<ShoppingListItem>(id);
-            item.Aisle = aisle.HasValue ? aisle.Value : 0;
-            item.Price = price.HasValue ? price.Value : 0M;
-            _uow.Commit();
-
-            return RedirectToAction("Show");
-        }
-
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult GetSuggestions(string username, string shoppinglist, string search)

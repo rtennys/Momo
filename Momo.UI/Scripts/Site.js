@@ -1,5 +1,17 @@
 ﻿/******************************************************/
 /******************************************************/
+// prototypes
+
+String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+};
+
+
+/******************************************************/
+/******************************************************/
 // jquery extensions
 
 $.fn.setToSizeOfWindow = function () {
@@ -125,27 +137,41 @@ app = {
 
 (function($) {
 
+    var $window = $(window), $document = $(document);
+
+    $document.on('click', '.smooth-scroll', function(e) {
+        e.preventDefault();
+        $('html, body').animate({ scrollTop: $(this.hash).offset().top }, 800);
+    });
+
     $(function() {
 
-        var $window = $(window), $document = $(document);
+        function setSize() {
+            $('.screenSize').text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
+        }
 
-        $document.on('click', '.smooth-scroll', function(e) {
-            e.preventDefault();
-            $('html, body').animate({ scrollTop: $(this.hash).offset().top }, 800);
-        });
-
-        (function() {
-
-            function setSize() {
-                $('.screenSize').text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
-            }
-
-            setSize();
-            $window.resize(setSize);
-            $document.on('pageshow', '.ui-page', setSize);
-
-        })();
+        setSize();
+        $window.resize(setSize);
+        $document.on('pageshow', '.ui-page', setSize);
 
     });
+
+    /******************************************************/
+    // shoppinglists.show
+    (function() {
+
+        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
+
+        function onInit() {
+            $('[data-item-id]', this).change(function() {
+                var cb = $(this);
+                app.post(document.URL + '/changepicked', { id: cb.data('item-id'), picked: cb.is(':checked') });
+            });
+        }
+
+        function onShow() {
+        }
+
+    })();
 
 })(jQuery);

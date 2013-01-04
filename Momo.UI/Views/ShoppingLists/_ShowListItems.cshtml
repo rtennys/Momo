@@ -1,0 +1,31 @@
+﻿@model Momo.Domain.Entities.ShoppingListItem[]
+
+<ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+    @if (Model.Length == 0)
+    {
+        <li><em style="font-size: .85em;">No items in this list yet</em></li>
+    }
+    @foreach (var group in Model.GroupBy(x => x.Aisle))
+    {
+        <li data-role="list-divider">
+            @(group.Key == 0 ? "Aisle Not Set" : "Aisle " + group.Key)
+            <span class="ui-li-count">@group.Count()</span>
+        </li>
+        foreach (var item in group)
+        {
+            <li data-icon="false">
+                <a href="#" style="padding: 0;">
+                    <fieldset data-role="controlgroup" style="margin: 0;">
+                        <input type="checkbox" data-item-id="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
+                    </fieldset>
+                    <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
+                </a>
+                @if (CurrentUser.HasShoppingListAccess())
+                {
+                    @Html.ActionLink("Edit", "EditItem", new { id = item.Id }, new { data_ajax = "false" })
+                }
+            </li>
+        }
+    }
+</ul>

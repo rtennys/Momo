@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Momo.Common
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -13,7 +14,11 @@
     </head>
     <body id="top">
 
-        <div data-role="page" data-theme="d">
+        @* prefetch the icons for faster page load *@
+        <div class="ui-icon" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
+        <div class="ui-icon-loading" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
+
+        <div data-role="page" data-theme="d" class="@("{0}-{1}".F(Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]))">
             <div data-role="header" data-theme="d">
                 @{
                     var parts = Request.Url.AbsolutePath.Split('/');

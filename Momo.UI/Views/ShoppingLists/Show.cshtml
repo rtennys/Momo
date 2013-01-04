@@ -17,57 +17,12 @@
         @Html.HiddenFor(m => m.Id)
         <input type="submit" value="Set all to Zero" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
     }
-    
-    <div id="islePrompt" data-role="popup" class="ui-content">
-        <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-        @using (Html.BeginForm("UpdatePicked", null, null, FormMethod.Post, new {data_ajax = "false"}))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Id")
-            <div style="padding: 10px 20px;">
-                <h3>Update Item?</h3>
-                <ol>
-                    <li>@Html.TextBox("Aisle", null, new {autocomplete = "off"})</li>
-                    <li>@Html.TextBox("Price", null, new {autocomplete = "off"})</li>
-                </ol>
-                <input type="submit" value="Save" />
-            </div>
-        }
-    </div>
 
     // This is for the "picked" javascript
     @Html.AntiForgeryToken()
 }
 
-<ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
-    @if (Model.Items.Length == 0)
-    {
-        <li><em style="font-size: .85em;">No items in this list yet</em></li>
-    }
-    @foreach (var group in Model.Items.GroupBy(x => x.Aisle))
-    {
-        <li data-role="list-divider">
-            @(group.Key == 0 ? "Aisle Not Set" : "Aisle " + group.Key)
-            <span class="ui-li-count">@group.Count()</span>
-        </li>
-        foreach (var item in group)
-        {
-            <li data-icon="false">
-                <a href="#" style="padding: 0;">
-                    <fieldset data-role="controlgroup" style="margin: 0;">
-                        <input type="checkbox" data-shoppinglistitemid="@item.Id" data-shoppinglistitemisle="@item.Aisle" data-shoppinglistitemprice="@item.Price" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
-                        <label for="item-@item.Id" style="font-size: .85em; border: 0;">@item.Name</label>
-                    </fieldset>
-                    <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
-                </a>
-                @if (CurrentUser.HasShoppingListAccess())
-                {
-                    @Html.ActionLink("Edit", "EditItem", new { id = item.Id }, new { data_ajax = "false" })
-                }
-            </li>
-        }
-    }
-</ul>
+@Html.Partial("_ShowListItems", Model.Items)
 
 @if (CurrentUser.IsRouteUsername())
 {
@@ -83,34 +38,4 @@
             <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
         }
     </p>
-}
-
-@section scripts
-{
-    <script type="text/javascript">
-        $(function () {
-            $(document).on('change', '[data-shoppinglistitemid]', function() {
-
-                var cb = $(this),
-                    data = {
-                        id: cb.data('shoppinglistitemid'),
-                        picked: cb.is(':checked')
-                    };
-
-                app.post('@Url.Action("ChangePicked")', data, function (result) {
-                    if (!data.picked) return;
-
-                    var aisle = cb.data('shoppinglistitemisle'),
-                        price = cb.data('shoppinglistitemprice');
-
-                    $('#islePrompt form #Id').val(data.id);
-                    $('#islePrompt form #Aisle').val(aisle == '0' ? '' : aisle);
-                    $('#islePrompt form #Price').val(price == '0.00' ? '' : price);
-
-                    $('#islePrompt').popup('open');
-                });
-
-            });
-        });
-    </script>
 }

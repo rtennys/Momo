@@ -267,6 +267,7 @@
     <Content Include="Views\Home\NotFound.cshtml" />
     <Content Include="Views\ShoppingLists\EditItem.cshtml" />
     <Content Include="Views\ShoppingLists\Share.cshtml" />
+    <Content Include="Views\ShoppingLists\_ShowListItems.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
