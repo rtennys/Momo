@@ -157,7 +157,7 @@ app = {
     });
 
     /******************************************************/
-    // shoppinglists.show
+    // shoppinglists-show
     (function() {
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
@@ -170,6 +170,87 @@ app = {
         }
 
         function onShow() {
+        }
+
+    })();
+
+    /******************************************************/
+    // shoppinglists-additem
+    (function() {
+
+        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-additem');
+
+        function onInit() {
+            var page = $(this),
+                suggestions = $('#suggestions', page),
+                nameInput = suggestions.prev(),
+                getSuggestions = new app.Delayed(function () {
+                    var text = $(this).val();
+                    if (text.length < 2) {
+                        suggestions.html('');
+                        suggestions.listview('refresh');
+                    } else {
+                        app.post(suggestions.data('getsuggestionsurl'), { search: text }, function (result) {
+                            suggestions.empty();
+                            suggestions.append($.map(result, function (value) {
+                                return $('<li>')
+                                    .attr('data-icon', 'false')
+                                    .attr('data-listitem-name', value.Name)
+                                    .attr('data-listitem-quantity', value.Quantity == 0 ? 1 : value.Quantity)
+                                    .attr('data-listitem-aisle', value.Aisle)
+                                    .attr('data-listitem-price', value.Price)
+                                    .append($('<a href="#">').text(value.Name))
+                                    .get();
+                            }));
+                            suggestions.listview('refresh');
+                        });
+                    }
+                });
+
+            $('input[type="text"]', page).attr('autocomplete', 'off').placeholder();
+
+            nameInput.on('input', getSuggestions.execute);
+
+            suggestions.on('click', 'li', function () {
+                var li = $(this);
+
+                $('#Name', page).val(li.data('listitem-name'));
+                $('#Quantity', page).val(li.data('listitem-quantity')).focus().select();
+                $('#Aisle', page).val(li.data('listitem-aisle'));
+                $('#Price', page).val(li.data('listitem-price'));
+
+                suggestions.empty();
+                suggestions.listview('refresh');
+            });
+        }
+
+        function onShow() {
+            var name = $('#Name', this);
+            name.focus().select();
+            $('#suggestions', this).css({
+                'position': 'absolute',
+                'top': name.position().top + name.innerHeight(),
+                'left': name.position().left,
+                'width': name.outerWidth(),
+                'z-index': 1,
+                'background': '#efefef'
+            });
+        }
+
+    })();
+
+    /******************************************************/
+    // shoppinglists-edititem
+    (function() {
+
+        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-edititem');
+
+        function onInit() {
+            $('input[type="text"]', this).attr('autocomplete', 'off').placeholder();
+        }
+
+        function onShow() {
+            $('#Aisle', this).focus().select();
         }
 
     })();

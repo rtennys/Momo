@@ -23,7 +23,7 @@
                 </a>
                 @if (CurrentUser.HasShoppingListAccess())
                 {
-                    @Html.ActionLink("Edit", "EditItem", new { id = item.Id }, new { data_ajax = "false" })
+                    @Html.ActionLink("Edit", "EditItem", new { id = item.Id })
                 }
             </li>
         }

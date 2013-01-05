@@ -9,7 +9,7 @@
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false" })
+    @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true" })
 
     using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
     {

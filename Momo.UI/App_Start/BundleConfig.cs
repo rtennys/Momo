@@ -16,6 +16,7 @@ namespace Momo.UI
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery.mobile-{version}.js",
                 "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.placeholder.js",
                 "~/Scripts/Site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

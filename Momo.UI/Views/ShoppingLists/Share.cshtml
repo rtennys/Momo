@@ -37,18 +37,3 @@
         </li>
     }
 </ul>
-
-@section scripts
-{
-    <script type="text/javascript">
-        $(function() {
-
-            $('xxform').submit(function () {
-                var form = $(this);
-                app.post(form.attr('action'), form.toObject());
-                return false;
-            });
-
-        });
-    </script>
-}
