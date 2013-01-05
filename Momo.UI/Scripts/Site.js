@@ -207,7 +207,7 @@ app = {
                     }
                 });
 
-            $('input[type="text"]', page).attr('autocomplete', 'off').placeholder();
+            $('input[type="text"]', page).attr('autocomplete', 'off');
 
             nameInput.on('input', getSuggestions.execute);
 
@@ -246,7 +246,7 @@ app = {
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-edititem');
 
         function onInit() {
-            $('input[type="text"]', this).attr('autocomplete', 'off').placeholder();
+            $('input[type="text"]', this).attr('autocomplete', 'off');
         }
 
         function onShow() {
