@@ -25,7 +25,7 @@
 
     @if (CurrentUser.HasShoppingListAccess())
     {
-        using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
+        using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false"}))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)
@@ -41,7 +41,7 @@
             @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
             @Html.ActionLink("Sharing", "Share", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
         </p>
-        using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
+        using (Html.BeginForm("Delete", null, FormMethod.Post, new {data_ajax = "false"}))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)

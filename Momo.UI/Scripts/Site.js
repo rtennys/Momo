@@ -146,7 +146,8 @@ app = {
 
     $document.on('click', '.footer-toggle', function (e) {
         e.preventDefault();
-        $('.site-footer').slideToggle('slow');
+        $('.site-footer').slideToggle();
+        this.blur();
     });
 
     $(function() {

@@ -35,7 +35,7 @@ form .validation-summary-valid { display: none; }
 input.placeholder { color: lightgray !important; font-style: italic !important; }
 
 /* site look & feel */
-.ui-footer a.footer-toggle { display: block; float: right; padding: 0 8px 10px; color: #333; text-decoration: none; letter-spacing: 2px; }
+.ui-footer a.footer-toggle { display: block; position: absolute; top: 0; bottom: 0; right: 0; padding: 0 15px; color: #333; text-decoration: none; letter-spacing: 2px; }
 .site-footer { font-size: 0.85em; display: none; }
 .site-footer p { margin-left: 10px; }
 .site-footer p.screenSize { font-size: 0.85em; }
