@@ -4,11 +4,6 @@
     ViewBag.Title = Request.RequestContext.RouteData.Values["username"];
 }
 
-@if (CurrentUser.IsRouteUsername())
-{
-    @Html.ActionLink("New List", "Add", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_ajax = "false"})
-}
-
 <ul data-role="listview" data-inset="true">
     @if (Model.ShoppingLists.Length == 0)
     {
@@ -29,4 +24,12 @@
             <li>@Html.ActionLink(shoppingList.UserProfile.Username + "/" + @shoppingList.Name, "Show", new {username = shoppingList.UserProfile.Username, shoppingList = shoppingList.Name}, new {data_ajax = "false"})</li>
         }
     </ul>
+}
+
+@section FooterBarButtons
+{
+    @if (CurrentUser.IsRouteUsername())
+    {
+        @Html.ActionLink("New List", "Add", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_iconpos = "notext"})
+    }
 }

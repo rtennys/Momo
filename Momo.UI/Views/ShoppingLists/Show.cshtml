@@ -7,35 +7,48 @@
     ViewBag.Title = Model.Name;
 }
 
-@if (CurrentUser.HasShoppingListAccess())
-{
-    @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true" })
-
-    using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.Id)
-        <input type="submit" value="Set all to Zero" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
-    }
-
-    // This is for the "picked" javascript
-    @Html.AntiForgeryToken()
-}
+@* This is for the "picked" javascript*@
+@Html.AntiForgeryToken()
 
 @Html.Partial("_ShowListItems", Model.Items)
 
-@if (CurrentUser.IsRouteUsername())
+@section FooterBarButtons
 {
-    <p>
-        @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
-        @Html.ActionLink("Sharing", "Share", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
-    </p>
-    <p>
-        @using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
+    @if (CurrentUser.HasShoppingListAccess())
+    {
+        @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_iconpos = "notext" })
+    }
+}
+
+@section FooterContent
+{
+
+    @if (CurrentUser.HasShoppingListAccess())
+    {
+        using (Html.BeginForm("Clear", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)
-            <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
+            <p>
+                <input type="submit" value="Set all to Zero" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
+            </p>
         }
-    </p>
+    }
+
+    @if (CurrentUser.IsRouteUsername())
+    {
+        <p>
+            @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
+            @Html.ActionLink("Sharing", "Share", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
+        </p>
+        using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false", style = "display: inline;" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <p>
+                <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
+            </p>
+        }
+    }
+
 }

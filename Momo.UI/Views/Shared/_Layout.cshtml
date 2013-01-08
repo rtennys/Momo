@@ -34,10 +34,19 @@
             <div data-role="content">
                 @RenderBody()
             </div>
-            <div data-role="footer" data-theme="d">
-                <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
-                @Html.Partial("_LoginPartial")
-                @if (Request.IsLocal) { <p class="screenSize" style="font-size: .85em;"></p> }
+            <div data-role="footer" data-theme="d" data-position="fixed" data-tap-toggle="false">
+                <div class="line" style="text-align: center; position: relative; height: 40px;">
+                    <a href="#" class="footer-toggle">...</a>
+                    @RenderSection("FooterBarButtons", required: false)
+                </div>
+                <div class="line site-footer">
+                    <div class="line">
+                        @RenderSection("FooterContent", required: false)
+                    </div>
+                    <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
+                    @Html.Partial("_LoginPartial")
+                    @if (Request.IsLocal) { <p class="screenSize"></p> }
+                </div>
             </div>
         </div>
 

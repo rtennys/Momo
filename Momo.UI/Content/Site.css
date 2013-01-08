@@ -35,8 +35,10 @@ form .validation-summary-valid { display: none; }
 input.placeholder { color: lightgray !important; font-style: italic !important; }
 
 /* site look & feel */
-.ui-footer { font-size: 0.85em; }
-.ui-footer p { margin-left: 10px; }
+.ui-footer a.footer-toggle { display: block; float: right; padding: 0 8px 10px; color: #333; text-decoration: none; letter-spacing: 2px; }
+.site-footer { font-size: 0.85em; display: none; }
+.site-footer p { margin-left: 10px; }
+.site-footer p.screenSize { font-size: 0.85em; }
 
 .login-button { margin-right: 15px; margin-bottom: 15px; width: 60px; height: 60px; background-color: transparent; background-size: 60px 60px; cursor: pointer; border: none; }
 .facebook-login { background-image: url('images/facebook.png'); }
@@ -46,9 +48,10 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 .yahoo-login { background-image: url('images/yahoo.png'); }
 
 @media only screen and (min-width: 768px) {
-    .ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }
+    body.ui-mobile-viewport, div.ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }
     .ui-mobile-viewport .ui-header, .ui-mobile-viewport .ui-footer { border-width: 1px; border-style: solid; border-color: transparent; border-radius: 8px;  }
     .ui-mobile-viewport .ui-header { margin-bottom: 1.5em; }
     .ui-mobile-viewport .ui-footer { margin-top: 1.5em; }
+    .ui-mobile-viewport .ui-header-fixed, .ui-mobile-viewport .ui-footer-fixed { position: absolute; }
     .ui-mobile-viewport .ui-listview .ui-li {  border-width: 1px; border-color: transparent; border-radius: 8px; margin-bottom: 3px; }
 }

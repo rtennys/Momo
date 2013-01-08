@@ -144,6 +144,11 @@ app = {
         $('html, body').animate({ scrollTop: $(this.hash).offset().top }, 800);
     });
 
+    $document.on('click', '.footer-toggle', function (e) {
+        e.preventDefault();
+        $('.site-footer').slideToggle('slow');
+    });
+
     $(function() {
 
         function setSize() {
