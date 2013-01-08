@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain;
 
@@ -12,6 +13,20 @@ namespace Momo.UI
                 modelState.AddModelError(error.Key, error.Error);
 
             return modelState;
+        }
+
+        public static string[] ToErrorList(this ModelStateDictionary modelState)
+        {
+            return modelState
+                .SelectMany(x => x.Value.Errors)
+                .Select(x => !string.IsNullOrWhiteSpace(x.ErrorMessage)
+                                 ? x.ErrorMessage
+                                 : x.Exception != null
+                                       ? x.Exception.Message
+                                       : null)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .DefaultIfEmpty("Unknown Error")
+                .ToArray();
         }
     }
 }

@@ -10,7 +10,26 @@
 @* This is for the "picked" javascript*@
 @Html.AntiForgeryToken()
 
-@Html.Partial("_ShowListItems", Model.Items)
+<div id="items-container">
+    @Html.Partial("_ShowListItems", Model.Items)
+</div>
+
+<div id="edit-item-container" data-role="popup" class="ui-content" style="display: none;">
+    <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+    <form method="post" novalidate="novalidate">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ShoppingListId" id="ShoppingListId" value="@Model.Id" />
+        <input type="hidden" name="Id" id="Id" />
+        <ol>
+            <li><input type="text" placeholder="Name" name="Name" id="Name" data-val-required="Name is required." data-val="true" autocomplete="off" /></li>
+            <li><input type="text" placeholder="Quantity" name="Quantity" id="Quantity" data-val-range-min="0" data-val-range-max="2147483647" data-val-range="Quantity must be ae positive number" data-val-number="Quantity must be a number." data-val="true" autocomplete="off" /></li>
+            <li><input type="text" placeholder="Aisle" name="Aisle" id="Aisle" data-val-number="Aisle must be a number." data-val="true" autocomplete="off" /></li>
+            <li><input type="text" placeholder="Price" name="Price" id="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" /></li>
+        </ol>
+        <input type="submit" value="Save" />
+        @Html.ValidationSummary()
+    </form>
+</div>
 
 @section FooterBarButtons
 {

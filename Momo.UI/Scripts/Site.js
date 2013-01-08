@@ -38,6 +38,7 @@ $.fn.resetUnobtrusiveValidation = function () {
         form.removeData('validator');
         form.removeData('unobtrusiveValidation');
         form.find('[data-valmsg-summary=true]').addClass('validation-summary-valid').removeClass('validation-summary-errors').find('ul').empty();
+        form.find('.input-validation-error').removeClass('input-validation-error');
         $.validator.unobtrusive.parse(form);
     });
 };
@@ -169,9 +170,50 @@ app = {
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
 
         function onInit() {
-            $('[data-item-id]', this).change(function() {
+            $(this).on('change', '[data-item-id]', function() {
                 var cb = $(this);
                 app.post(document.URL + '/changepicked', { id: cb.data('item-id'), picked: cb.is(':checked') });
+                cb.parents('.ui-focus').removeClass('ui-focus');
+            });
+
+            $(this).on('click', '.ui-li-link-alt', function (e) {
+                var editLink = $(this),
+                    li = editLink.parents('li:first'),
+                    popup = $('#edit-item-container'),
+                    form = popup.find('form');
+
+                form.attr('action', editLink.attr('href'));
+                form.find('#Id').val(li.data('item-id'));
+                form.find('#Name').val(li.data('item-name'));
+                form.find('#Quantity').val(li.data('item-quantity'));
+                form.find('#Aisle').val(li.data('item-aisle'));
+                form.find('#Price').val(li.data('item-price'));
+                form.resetUnobtrusiveValidation();
+
+                popup.show().popup('open');
+                setTimeout(function () { form.find('#Aisle').focus().select(); }, 100);
+
+                this.blur();
+                e.preventDefault();
+                return false;
+            });
+
+            $('#edit-item-container').find('form').submit(function () {
+                var form = $(this);
+
+                if (form.valid()) {
+                    app.post(form.attr('action'), form.toObject(), function (result) {
+                        if (typeof result === 'string') {
+                            $('#items-container').empty().html(result).trigger('create');
+                            $('#edit-item-container').popup('close');
+                        } else {
+                            app.debug(result.Errors);
+                            form.appendValidationErrors(result.Errors);
+                        }
+                    });
+                }
+
+                return false;
             });
         }
 
@@ -232,7 +274,6 @@ app = {
 
         function onShow() {
             var name = $('#Name', this);
-            name.focus().select();
             $('#suggestions', this).css({
                 'position': 'absolute',
                 'top': name.position().top + name.innerHeight(),
@@ -241,6 +282,7 @@ app = {
                 'z-index': 1,
                 'background': '#efefef'
             });
+            setTimeout(function() { name.focus(); }, 10);
         }
 
     })();
@@ -256,7 +298,8 @@ app = {
         }
 
         function onShow() {
-            $('#Aisle', this).focus().select();
+            var aisle = $('#Aisle', this);
+            setTimeout(function () { aisle.focus().select(); }, 10);
         }
 
     })();

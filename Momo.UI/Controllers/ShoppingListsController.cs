@@ -207,46 +207,25 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess]
-        public ActionResult EditItem(string username, string shoppinglist, int id)
-        {
-            var user = _repository.Get<UserProfile>(x => x.Username == username);
-            if (user == null)
-                return HttpNotFound();
-
-            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
-            if (shoppingList == null)
-                return HttpNotFound();
-
-            var item = shoppingList.ShoppingListItems.SingleOrDefault(x => x.Id == id);
-            if (item == null)
-                return HttpNotFound();
-
-            var model = new ShoppingListsEditItemModel
-                        {
-                            ShoppingListId = shoppingList.Id,
-                            Id = item.Id,
-                            Name = item.Name,
-                            Quantity = item.Quantity > 0 ? item.Quantity : (int?)null,
-                            Aisle = item.Aisle > 0 ? item.Aisle : (int?)null,
-                            Price = item.Price > 0M ? item.Price : (decimal?)null
-                        };
-
-            return View(model);
-        }
-
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditItem(ShoppingListsEditItemModel model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return Json(new {Errors = ModelState.ToErrorList()});
 
-            ModelState.AddModelErrors(_commandExecutor.Execute<EditShoppingListItemCommand>(model));
-            if (!ModelState.IsValid)
-                return View(model);
+            var result = _commandExecutor.Execute<EditShoppingListItemCommand>(model);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
 
             _uow.Commit();
-            return RedirectToAction("Show");
+
+            var shoppingList = result.Data.ShoppingList as ShoppingList;
+
+            return PartialView("_ShowListItems", shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Aisle).ThenBy(x => x.Name).ToArray());
         }
 
 

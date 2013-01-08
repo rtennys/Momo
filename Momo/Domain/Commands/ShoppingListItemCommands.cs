@@ -14,21 +14,23 @@ namespace Momo.Domain.Commands
         [Required]
         public string Name { get; set; }
 
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero")]
-        public int? Quantity { get; set; }
-
         public int? Aisle { get; set; }
         public decimal? Price { get; set; }
     }
 
     public class AddShoppingListItemCommand : AddEditShoppingListItemCommand
     {
+        [Required, Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero.")]
+        public int? Quantity { get; set; }
     }
 
     public class EditShoppingListItemCommand : AddEditShoppingListItemCommand
     {
         [Required]
         public int Id { get; set; }
+
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
+        public int? Quantity { get; set; }
     }
 
     public class AddShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
@@ -73,6 +75,8 @@ namespace Momo.Domain.Commands
             item.Quantity = command.Quantity.GetValueOrDefault();
             item.Aisle = command.Aisle.GetValueOrDefault();
             item.Price = command.Price.GetValueOrDefault();
+
+            result.Data.ShoppingList = shoppingList;
 
             return result;
         }

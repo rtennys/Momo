@@ -13,7 +13,13 @@
         </li>
         foreach (var item in group)
         {
-            <li data-icon="false">
+            <li data-icon="false"
+                data-item-id="@item.Id"
+                data-item-name="@item.Name"
+                data-item-quantity="@item.Quantity"
+                data-item-aisle="@(item.Aisle > 0 ? item.Aisle.ToString() : "")"
+                data-item-price="@(item.Price > 0M ? item.Price.ToString() : "")">
+
                 <a href="#" style="padding: 0;">
                     <fieldset data-role="controlgroup" style="margin: 0;">
                         <input type="checkbox" data-item-id="@item.Id" name="item-@item.Id" id="item-@item.Id" @(item.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
@@ -21,10 +27,12 @@
                     </fieldset>
                     <span class="ui-li-count" style="z-index: 1;">@item.Quantity</span>
                 </a>
+
                 @if (CurrentUser.HasShoppingListAccess())
                 {
                     @Html.ActionLink("Edit", "EditItem", new { id = item.Id })
                 }
+
             </li>
         }
     }
