@@ -234,9 +234,11 @@ namespace Momo.UI.Controllers
 
             var result = _commandExecutor.Execute(command);
 
-            ModelState.AddModelErrors(result);
-            if (!ModelState.IsValid)
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
                 return Json(new {Errors = ModelState.ToErrorList()});
+            }
 
             _uow.Commit();
 

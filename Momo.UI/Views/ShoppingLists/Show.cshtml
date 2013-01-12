@@ -38,7 +38,7 @@
 
 <div data-bind="with: itemToEdit" id="edit-item-container" data-role="popup" class="ui-content" style="display: none;">
     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-    @using (Html.BeginForm("edititem", null, FormMethod.Post, new { data_bind = "submit: $root.onEditItemSubmit", data_ajax = "false" }))
+    @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.onEditItemSubmit", data_ajax = "false"}))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" value="@Model.Id" name="ShoppingListId" />

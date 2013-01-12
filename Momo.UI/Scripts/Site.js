@@ -238,8 +238,9 @@ app = {
                         return;
                     }
 
-                    if (vm.itemToEdit().Quantity() == 0)
-                        vm.listItems.remove(vm.itemToEdit());
+                    vm.listItems.remove(vm.itemToEdit());
+                    if (vm.itemToEdit().Quantity() > 0)
+                        vm.listItems.push(vm.itemToEdit());
 
                     popup.popup('close');
                     vm.itemToEdit(null);
