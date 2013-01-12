@@ -13,15 +13,10 @@ namespace Momo.Domain.Commands
 
         [Required]
         public string Name { get; set; }
-
-        public int? Aisle { get; set; }
-        public decimal? Price { get; set; }
     }
 
     public class AddShoppingListItemCommand : AddEditShoppingListItemCommand
     {
-        [Required, Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than zero.")]
-        public int? Quantity { get; set; }
     }
 
     public class EditShoppingListItemCommand : AddEditShoppingListItemCommand
@@ -31,6 +26,10 @@ namespace Momo.Domain.Commands
 
         [Required, Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
         public int? Quantity { get; set; }
+
+        public int? Aisle { get; set; }
+
+        public decimal? Price { get; set; }
     }
 
     public class AddShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
@@ -53,11 +52,11 @@ namespace Momo.Domain.Commands
             var shoppingList = _repository.Get<ShoppingList>(command.ShoppingListId);
             var item = shoppingList.GetOrAddItem(command.Name);
 
-            item.Quantity = command.Quantity.GetValueOrDefault();
+            if (item.Quantity <= 0) item.Quantity = 1;
+
             item.Picked = false;
 
-            if (command.Aisle.HasValue) item.Aisle = command.Aisle.Value;
-            if (command.Price.HasValue) item.Price = command.Price.Value;
+            result.Data.Item = item;
 
             return result;
         }
@@ -70,6 +69,9 @@ namespace Momo.Domain.Commands
 
             var shoppingList = _repository.Get<ShoppingList>(command.ShoppingListId);
             var item = shoppingList.ShoppingListItems.Single(x => x.Id == command.Id);
+
+            if (shoppingList.ShoppingListItems.Any(x => x.Id != command.Id && string.Equals(x.Name, command.Name, StringComparison.OrdinalIgnoreCase)))
+                return result.Add("Name", "List item name must be unique");
 
             item.Name = command.Name;
             item.Quantity = command.Quantity.GetValueOrDefault();

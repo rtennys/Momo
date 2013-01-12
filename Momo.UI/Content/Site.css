@@ -24,6 +24,7 @@ form, fieldset, table, tr, th, td, img, input, button, select, textarea, optgrou
 /* forms */
 form ol { list-style: none; padding: 0; }
 form ol li { padding: 0; margin-bottom: 10px; }
+form ol li label { display: block; margin-bottom: -0.4em; font-weight: bold; }
 form ol li input.input-validation-error { border: 1px solid #e80c4d !important; }
 form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
 form .validation-summary-valid { display: none; }

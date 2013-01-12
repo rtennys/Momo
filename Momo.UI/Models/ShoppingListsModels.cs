@@ -24,11 +24,23 @@ namespace Momo.UI.Models
     {
     }
 
-    public class ShoppingListsAddItemModel : AddShoppingListItemCommand
+    public class ShoppingListItemModel
     {
-    }
+        public ShoppingListItemModel(ShoppingListItem item)
+        {
+            Id = item.Id;
+            Name = item.Name;
+            Aisle = item.Aisle;
+            Quantity = item.Quantity;
+            Price = item.Price;
+            Picked = item.Picked;
+        }
 
-    public class ShoppingListsEditItemModel : EditShoppingListItemCommand
-    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Aisle { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public bool Picked { get; set; }
     }
 }

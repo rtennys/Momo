@@ -10,9 +10,17 @@
 @* This is for the "picked" javascript*@
 @Html.AntiForgeryToken()
 
+@using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit", data_ajax = "false"}))
+{
+    <input type="hidden" name="ShoppingListId" value="@Model.Id" />
+    <input type="text" name="Name" placeholder="new item" data-bind="value: newItemName, valueUpdate: 'afterkeydown'" />
+    @Html.ValidationSummary()
+}
+
 <div id="items-container" style="display: none;">
     <ul data-bind="foreach: listItems" data-inset="true" data-split-icon="gear" data-split-theme="d">
-        <li data-icon="false" data-bind="attr: {'data-item-aisle': Aisle}">
+        <li data-icon="false">
+            <input type="hidden" data-bind="value: Aisle" id="hidAisle" />
             <a href="#" style="padding: 0;">
                 <fieldset data-role="controlgroup" style="margin: 0;">
                     <input type="checkbox" data-bind="checked: Picked, click: $root.onPickedChange, attr: {name: htmlName, id: htmlName}" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
@@ -22,7 +30,7 @@
             </a>
             @if (CurrentUser.HasShoppingListAccess())
             {
-                <a href="#" data-bind="click: $root.editItem">Edit</a>
+                <a href="#" data-bind="click: $root.onEditItem">Edit</a>
             }
         </li>
     </ul>
@@ -30,16 +38,28 @@
 
 <div data-bind="with: itemToEdit" id="edit-item-container" data-role="popup" class="ui-content" style="display: none;">
     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-    @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.editItemSubmit", data_ajax = "false"}))
+    @using (Html.BeginForm("edititem", null, FormMethod.Post, new { data_bind = "submit: $root.onEditItemSubmit", data_ajax = "false" }))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" value="@Model.Id" name="ShoppingListId" />
         <input type="hidden" data-bind="value: Id" name="Id" />
         <ol>
-            <li><input type="text" data-bind="value: Name" placeholder="Name" name="Name" data-val-required="Name is required." data-val="true" autocomplete="off" /></li>
-            <li><input type="text" data-bind="value: Quantity" placeholder="Quantity" name="Quantity" data-val-range-min="0" data-val-range-max="2147483647" data-val-range="Quantity must be ae positive number" data-val-number="Quantity must be a number." data-val="true" autocomplete="off" /></li>
-            <li><input type="text" data-bind="value: Aisle" placeholder="Aisle" name="Aisle" data-val-number="Aisle must be a number." data-val="true" autocomplete="off" /></li>
-            <li><input type="text" data-bind="value: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" /></li>
+            <li>
+                <label>Name</label>
+                <input type="text" data-bind="value: Name" placeholder="Name" name="Name" data-val-required="Name is required." data-val="true" autocomplete="off" />
+            </li>
+            <li>
+                <label>Quantity</label>
+                <input type="text" data-bind="value: Quantity" placeholder="Quantity" name="Quantity" data-val-range-min="0" data-val-range-max="2147483647" data-val-range="Quantity must be ae positive number" data-val-number="Quantity must be a number." data-val="true" autocomplete="off" />
+            </li>
+            <li>
+                <label>Aisle</label>
+                <input type="text" data-bind="value: Aisle" placeholder="Aisle" name="Aisle" data-val-number="Aisle must be a number." data-val="true" autocomplete="off" />
+            </li>
+            <li>
+                <label>Price</label>
+                <input type="text" data-bind="value: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
+            </li>
         </ol>
         <input type="submit" value="Save" />
         @Html.ValidationSummary()

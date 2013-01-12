@@ -170,23 +170,11 @@ app = {
         var vm = {
             listItems: ko.observableArray(),
             itemToEdit: ko.observable(),
+            newItemName: ko.observable(),
             onPickedChange: onPickedChange,
-            editItem: editItem,
-            editItemSubmit: editItemSubmit,
-            setItems: function(items) {
-                items.sort(function(a, b) {
-                    var aisleDiff = a.Aisle() - b.Aisle();
-                    if (aisleDiff !== 0) return aisleDiff;
-
-                    a = a.Name().toLowerCase();
-                    b = b.Name().toLowerCase();
-
-                    if (a < b) return -1;
-                    if (a > b) return 1;
-                    return 0;
-                });
-                vm.listItems(items);
-            }
+            onEditItem: onEditItem,
+            onEditItemSubmit: onEditItemSubmit,
+            onAddItemSubmit: onAddItemSubmit
         };
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
@@ -201,14 +189,14 @@ app = {
 
         function init() {
             $.get(url('load'), function (listItems) {
-                vm.setItems($.map(listItems, extendItem));
+                vm.listItems($.map(listItems, extendItem).sort(itemComparer));
 
                 $('#items-container ul')
                     .listview({
                         autodividers: true,
                         autodividersSelector: function (li) {
-                            var aisle = $(li).data('item-aisle');
-                            return 'Aisle ' + (aisle === 0 ? 'not set' : aisle);
+                            var aisle = $('#hidAisle', li).val();
+                            return 'Aisle ' + (aisle === '0' || aisle === '' ? 'not set' : aisle);
                         }
                     });
 
@@ -224,7 +212,7 @@ app = {
             cb.parents('.ui-focus').removeClass('ui-focus');
         }
         
-        function editItem(listItem, e) {
+        function onEditItem(listItem, e) {
             var popup = $('#edit-item-container'),
                 form = popup.find('form');
 
@@ -237,7 +225,7 @@ app = {
             e.currentTarget.blur();
         }
         
-        function editItemSubmit() {
+        function onEditItemSubmit() {
             var popup = $('#edit-item-container'),
                 form = popup.find('form');
 
@@ -250,23 +238,33 @@ app = {
                         return;
                     }
 
-                    var container = $('#items-container').hide();
-
                     if (vm.itemToEdit().Quantity() == 0)
                         vm.listItems.remove(vm.itemToEdit());
 
                     popup.popup('close');
                     vm.itemToEdit(null);
 
-                    // redraws all html so refresh will work
-                    vm.setItems(vm.listItems.removeAll());
-                    container.find('ul').listview('refresh');
-
-                    container
-                        .trigger('create')
-                        .slideDown('slow');
+                    vm.listItems.sort(itemComparer);
+                    refreshListview();
                 });
             }
+        }
+
+        function onAddItemSubmit(form) {
+            form = $(form);
+            app.post(form.attr('action'), form.toObject(), function (result) {
+                if (!result.Success) {
+                    form.appendValidationErrors(result.Errors);
+                    return;
+                }
+
+                vm.newItemName(null);
+                form.resetUnobtrusiveValidation();
+
+                vm.listItems.push(extendItem(result.Item));
+                vm.listItems.sort(itemComparer);
+                refreshListview();
+            });
         }
 
 
@@ -280,6 +278,25 @@ app = {
                 return 'item-' + item.Id();
             });
             return item;
+        }
+
+        function itemComparer(a, b) {
+            var aisleDiff = a.Aisle() - b.Aisle();
+            if (aisleDiff !== 0) return aisleDiff;
+
+            a = a.Name().toLowerCase();
+            b = b.Name().toLowerCase();
+
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
+        }
+        
+        function refreshListview() {
+            $('#items-container ul')
+                .listview('refresh')
+                .find('li')
+                .trigger('create');
         }
 
     })();
