@@ -241,8 +241,7 @@ app = {
                 }
 
                 vm.listItems.remove(vm.itemToEdit());
-                if (vm.itemToEdit().Quantity() > 0)
-                    vm.listItems.push(vm.itemToEdit());
+                vm.listItems.push(vm.itemToEdit());
                 vm.itemToEdit(null);
 
                 vm.listItems.sort(itemComparer);
