@@ -202,7 +202,7 @@ app = {
 
                 $('#items-container')
                     .trigger('create')
-                    .slideDown('slow');
+                    .fadeIn('fast');
             });
         }
         
