@@ -10,11 +10,15 @@
 @* This is for the "picked" javascript*@
 @Html.AntiForgeryToken()
 
-@using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit", data_ajax = "false"}))
+@if (CurrentUser.HasShoppingListAccess())
 {
-    <input type="hidden" name="ShoppingListId" value="@Model.Id" />
-    <input type="text" name="Name" placeholder="new item" data-bind="value: newItemName, valueUpdate: 'afterkeydown'" />
-    @Html.ValidationSummary()
+    using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit", data_ajax = "false"}))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ShoppingListId" value="@Model.Id" />
+        <input type="text" name="Name" placeholder="new item" data-bind="value: newItemName, valueUpdate: 'afterkeydown'" />
+        @Html.ValidationSummary()
+    }
 }
 
 <div id="items-container" style="display: none;">
@@ -65,14 +69,6 @@
         @Html.ValidationSummary()
     }
 </div>
-
-@section FooterBarButtons
-{
-    @if (CurrentUser.HasShoppingListAccess())
-    {
-        @Html.ActionLink("Add Item", "AddItem", null, new { data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_iconpos = "notext" })
-    }
-}
 
 @section FooterContent
 {
