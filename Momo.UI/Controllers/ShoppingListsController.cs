@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 using Momo.Common.DataAccess;
 using Momo.Domain;
@@ -9,7 +12,7 @@ using Momo.UI.Models;
 
 namespace Momo.UI.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     public class ShoppingListsController : AppController
     {
         public ShoppingListsController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
@@ -23,7 +26,7 @@ namespace Momo.UI.Controllers
         private readonly IRepository _repository;
         private readonly ICommandExecutor _commandExecutor;
 
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Index(string username)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -39,7 +42,7 @@ namespace Momo.UI.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Show(string username, string shoppinglist)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -53,8 +56,7 @@ namespace Momo.UI.Controllers
             var model = new ShoppingListsShowModel
                         {
                             Id = shoppingList.Id,
-                            Name = shoppingList.Name,
-                            Items = shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Aisle).ThenBy(x => x.Name).ToArray()
+                            Name = shoppingList.Name
                         };
 
             return View(model);
@@ -66,7 +68,7 @@ namespace Momo.UI.Controllers
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult Add(ShoppingListsAddModel model)
         {
             if (!ModelState.IsValid)
@@ -98,7 +100,7 @@ namespace Momo.UI.Controllers
             return View(model);
         }
 
-        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        [ValidateRouteUsername, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult Rename(ShoppingListsRenameModel model)
         {
             model.Username = User.Identity.Name;
@@ -127,7 +129,7 @@ namespace Momo.UI.Controllers
             return View(usernames);
         }
 
-        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        [ValidateRouteUsername, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult StartSharing(string username, string shoppinglist, string shareWith)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -139,7 +141,7 @@ namespace Momo.UI.Controllers
             return RedirectToAction("Share");
         }
 
-        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        [ValidateRouteUsername, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult StopSharing(string username, string shoppinglist, string shareWith)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -152,7 +154,7 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        [ValidateRouteUsername, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult Delete(DeleteShoppingListCommand command)
         {
             ModelState.AddModelErrors(_commandExecutor.Execute(command));
@@ -164,7 +166,7 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult Clear(ClearShoppingListCommand command)
         {
             ModelState.AddModelErrors(_commandExecutor.Execute(command));
@@ -192,7 +194,7 @@ namespace Momo.UI.Controllers
             return View(model);
         }
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult AddItem(ShoppingListsAddItemModel model)
         {
             if (!ModelState.IsValid)
@@ -207,29 +209,8 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult EditItem(ShoppingListsEditItemModel model)
-        {
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
 
-            var result = _commandExecutor.Execute<EditShoppingListItemCommand>(model);
-
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
-            }
-
-            _uow.Commit();
-
-            var shoppingList = result.Data.ShoppingList as ShoppingList;
-
-            return PartialView("_ShowListItems", shoppingList.ShoppingListItems.Where(x => x.Quantity > 0).OrderBy(x => x.Aisle).ThenBy(x => x.Name).ToArray());
-        }
-
-
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public void ChangePicked(int id, bool picked)
         {
             var item = _repository.Get<ShoppingListItem>(id);
@@ -238,7 +219,7 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        [ValidateShoppingListAccess, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
         public ActionResult GetSuggestions(string username, string shoppinglist, string search)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
@@ -258,6 +239,54 @@ namespace Momo.UI.Controllers
                 .ToArray();
 
             return Json(model);
+        }
+
+        public ActionResult Load(string username, string shoppinglist)
+        {
+            var user = _repository.Get<UserProfile>(x => x.Username == username);
+            if (user == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+            if (shoppingList == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var model = shoppingList
+                .ShoppingListItems
+                .Where(x => x.Quantity > 0)
+                .OrderBy(x => x.Aisle)
+                .ThenBy(x => x.Name)
+                .Select(x => new
+                             {
+                                 x.Id,
+                                 x.Name,
+                                 x.Aisle,
+                                 x.Quantity,
+                                 x.Price,
+                                 x.Picked
+                             })
+                .ToArray();
+
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [ValidateShoppingListAccess, System.Web.Mvc.HttpPost, ValidateAntiForgeryToken]
+        public ActionResult EditItem(ShoppingListsEditItemModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new {Errors = ModelState.ToErrorList()});
+
+            var result = _commandExecutor.Execute<EditShoppingListItemCommand>(model);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
+
+            _uow.Commit();
+
+            return Json(new {Success = true});
         }
     }
 }

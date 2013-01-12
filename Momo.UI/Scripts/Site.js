@@ -136,7 +136,7 @@ app = {
     }
 };
 
-(function($) {
+(function(app, $, ko) {
 
     var $window = $(window), $document = $(document);
 
@@ -165,59 +165,121 @@ app = {
 
     /******************************************************/
     // shoppinglists-show
-    (function() {
+    (function () {
+
+        var vm = {
+            listItems: ko.observableArray(),
+            itemToEdit: ko.observable(),
+            onPickedChange: onPickedChange,
+            editItem: editItem,
+            editItemSubmit: editItemSubmit,
+            setItems: function(items) {
+                items.sort(function(a, b) {
+                    var aisleDiff = a.Aisle() - b.Aisle();
+                    if (aisleDiff !== 0) return aisleDiff;
+
+                    a = a.Name().toLowerCase();
+                    b = b.Name().toLowerCase();
+
+                    if (a < b) return -1;
+                    if (a > b) return 1;
+                    return 0;
+                });
+                vm.listItems(items);
+            }
+        };
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
 
         function onInit() {
-            $(this).on('change', '[data-item-id]', function() {
-                var cb = $(this);
-                app.post(document.URL + '/changepicked', { id: cb.data('item-id'), picked: cb.is(':checked') });
-                cb.parents('.ui-focus').removeClass('ui-focus');
-            });
-
-            $(this).on('click', '.ui-li-link-alt', function (e) {
-                var editLink = $(this),
-                    li = editLink.parents('li:first'),
-                    popup = $('#edit-item-container'),
-                    form = popup.find('form');
-
-                form.attr('action', editLink.attr('href'));
-                form.find('#Id').val(li.data('item-id'));
-                form.find('#Name').val(li.data('item-name'));
-                form.find('#Quantity').val(li.data('item-quantity'));
-                form.find('#Aisle').val(li.data('item-aisle'));
-                form.find('#Price').val(li.data('item-price'));
-                form.resetUnobtrusiveValidation();
-
-                popup.show().popup('open');
-                setTimeout(function () { form.find('#Aisle').focus().select(); }, 100);
-
-                this.blur();
-                e.preventDefault();
-                return false;
-            });
-
-            $('#edit-item-container').find('form').submit(function () {
-                var form = $(this);
-
-                if (form.valid()) {
-                    app.post(form.attr('action'), form.toObject(), function (result) {
-                        if (typeof result === 'string') {
-                            $('#items-container').empty().html(result).trigger('create');
-                            $('#edit-item-container').popup('close');
-                        } else {
-                            app.debug(result.Errors);
-                            form.appendValidationErrors(result.Errors);
-                        }
-                    });
-                }
-
-                return false;
-            });
+            ko.applyBindings(vm);
         }
 
         function onShow() {
+            setTimeout(init, 500);
+        }
+
+        function init() {
+            $.get(url('load'), function (listItems) {
+                vm.setItems($.map(listItems, extendItem));
+
+                $('#items-container ul')
+                    .listview({
+                        autodividers: true,
+                        autodividersSelector: function (li) {
+                            var aisle = $(li).data('item-aisle');
+                            return 'Aisle ' + (aisle === 0 ? 'not set' : aisle);
+                        }
+                    });
+
+                $('#items-container')
+                    .trigger('create')
+                    .slideDown('slow');
+            });
+        }
+        
+        function onPickedChange(listItem, e) {
+            var cb = $(e.currentTarget);
+            app.post(url('changepicked'), { id: listItem.Id(), picked: cb.is(':checked') });
+            cb.parents('.ui-focus').removeClass('ui-focus');
+        }
+        
+        function editItem(listItem, e) {
+            var popup = $('#edit-item-container'),
+                form = popup.find('form');
+
+            vm.itemToEdit(listItem);
+            form.resetUnobtrusiveValidation();
+
+            popup.show().popup('open');
+            setTimeout(function () { form.find('[name = "Aisle"]').focus().select(); }, 500);
+
+            e.currentTarget.blur();
+        }
+        
+        function editItemSubmit() {
+            var popup = $('#edit-item-container'),
+                form = popup.find('form');
+
+            if (form.valid()) {
+                app.post(form.attr('action'), form.toObject(), function (result) {
+                    if (!result.Success) {
+                        form
+                            .resetUnobtrusiveValidation()
+                            .appendValidationErrors(result.Errors);
+                        return;
+                    }
+
+                    var container = $('#items-container').hide();
+
+                    if (vm.itemToEdit().Quantity() == 0)
+                        vm.listItems.remove(vm.itemToEdit());
+
+                    popup.popup('close');
+                    vm.itemToEdit(null);
+
+                    // redraws all html so refresh will work
+                    vm.setItems(vm.listItems.removeAll());
+                    container.find('ul').listview('refresh');
+
+                    container
+                        .trigger('create')
+                        .slideDown('slow');
+                });
+            }
+        }
+
+
+        function url(actionAndQuery) {
+            return document.URL + '/' + actionAndQuery;
+        }
+
+        function extendItem(jsItem) {
+            var item = ko.mapping.fromJS(jsItem);
+            item.htmlName = ko.computed(function () {
+                return 'item-' + item.Id();
+            });
+            return item;
         }
 
     })();
@@ -304,4 +366,4 @@ app = {
 
     })();
 
-})(jQuery);
+})(app, jQuery, ko);

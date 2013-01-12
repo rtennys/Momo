@@ -14,7 +14,6 @@ namespace Momo.UI.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ShoppingListItem[] Items { get; set; }
     }
 
     public class ShoppingListsAddModel : AddShoppingListCommand
