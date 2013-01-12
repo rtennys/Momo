@@ -171,6 +171,7 @@ app = {
             listItems: ko.observableArray(),
             itemToEdit: ko.observable(),
             newItemName: ko.observable(),
+            showAll: ko.observable(false),
             onPickedChange: onPickedChange,
             onEditItem: onEditItem,
             onEditItemSubmit: onEditItemSubmit,

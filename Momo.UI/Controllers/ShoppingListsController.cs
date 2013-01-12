@@ -198,7 +198,6 @@ namespace Momo.UI.Controllers
 
             var model = shoppingList
                 .ShoppingListItems
-                .Where(x => x.Quantity > 0)
                 .OrderBy(x => x.Aisle)
                 .ThenBy(x => x.Name)
                 .Select(x => new ShoppingListItemModel(x))

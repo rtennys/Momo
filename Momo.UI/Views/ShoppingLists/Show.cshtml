@@ -26,7 +26,7 @@
         No items
     </div>
     <ul data-bind="foreach: listItems" data-inset="true" data-split-icon="gear" data-split-theme="d">
-        <li data-icon="false">
+        <li data-icon="false" data-bind="visible: $root.showAll() || Quantity() > 0">
             <input type="hidden" data-bind="value: Aisle" id="hidAisle" />
             <a href="#" style="padding: 0;">
                 <fieldset data-role="controlgroup" style="margin: 0;">
@@ -71,6 +71,13 @@
         @Html.ValidationSummary()
     }
 </div>
+
+@section FooterBarButtons
+{
+    <div class="size1of2">
+        <label><input type="checkbox" data-bind="checked: showAll" data-mini="true" /> Show All</label>
+    </div>
+}
 
 @section FooterContent
 {
