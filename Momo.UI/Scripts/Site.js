@@ -184,10 +184,7 @@ app = {
         }
 
         function onShow() {
-            setTimeout(init, 500);
-        }
-
-        function init() {
+            vm.listItems([]);
             $.get(url('load'), function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
 
@@ -216,39 +213,42 @@ app = {
             var popup = $('#edit-item-container'),
                 form = popup.find('form');
 
+            e.currentTarget.blur();
+
             vm.itemToEdit(listItem);
             form.resetUnobtrusiveValidation();
 
-            popup.show().popup('open');
-            setTimeout(function () { form.find('[name = "Aisle"]').focus().select(); }, 500);
-
-            e.currentTarget.blur();
+            popup
+                .show()
+                .one('popupbeforeposition', function () { $('.ui-popup-screen').off(); })
+                .one('popupafteropen', function () { $('[name="Aisle"]', this).focus().select(); })
+                .popup('open');
         }
-        
+
         function onEditItemSubmit() {
             var popup = $('#edit-item-container'),
                 form = popup.find('form');
 
-            if (form.valid()) {
-                app.post(form.attr('action'), form.toObject(), function (result) {
-                    if (!result.Success) {
-                        form
-                            .resetUnobtrusiveValidation()
-                            .appendValidationErrors(result.Errors);
-                        return;
-                    }
+            if (!form.valid()) return;
 
-                    vm.listItems.remove(vm.itemToEdit());
-                    if (vm.itemToEdit().Quantity() > 0)
-                        vm.listItems.push(vm.itemToEdit());
+            app.post(form.attr('action'), form.toObject(), function (result) {
+                if (!result.Success) {
+                    form
+                        .resetUnobtrusiveValidation()
+                        .appendValidationErrors(result.Errors);
+                    return;
+                }
 
-                    popup.popup('close');
-                    vm.itemToEdit(null);
+                vm.listItems.remove(vm.itemToEdit());
+                if (vm.itemToEdit().Quantity() > 0)
+                    vm.listItems.push(vm.itemToEdit());
+                vm.itemToEdit(null);
 
-                    vm.listItems.sort(itemComparer);
-                    refreshListview();
-                });
-            }
+                vm.listItems.sort(itemComparer);
+                refreshListview();
+
+                popup.popup('close');
+            });
         }
 
         function onAddItemSubmit(form) {

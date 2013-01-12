@@ -22,6 +22,9 @@
 }
 
 <div id="items-container" style="display: none;">
+    <div data-bind="visible: listItems().length == 0" style="color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset">
+        No items
+    </div>
     <ul data-bind="foreach: listItems" data-inset="true" data-split-icon="gear" data-split-theme="d">
         <li data-icon="false">
             <input type="hidden" data-bind="value: Aisle" id="hidAisle" />
@@ -40,8 +43,7 @@
     </ul>
 </div>
 
-<div data-bind="with: itemToEdit" id="edit-item-container" data-role="popup" class="ui-content" style="display: none;">
-    <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+<div data-bind="with: itemToEdit" id="edit-item-container" data-role="popup" data-history="false" class="ui-content" style="display: none;">
     @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.onEditItemSubmit", data_ajax = "false"}))
     {
         @Html.AntiForgeryToken()
@@ -65,7 +67,7 @@
                 <input type="text" data-bind="value: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
             </li>
         </ol>
-        <input type="submit" value="Save" />
+        <input type="submit" value="Done" />
         @Html.ValidationSummary()
     }
 </div>
