@@ -21,12 +21,9 @@
     }
 }
 
-<p id="loading-msg"><strong><em>Loading...</em></strong></p>
+<p data-bind="text: noItemsMsg, visible: noItemsVisible" style="color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset;"></p>
 
 <div id="items-container" style="display: none;">
-    <div data-bind="visible: listItems().length == 0" style="color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset">
-        No items
-    </div>
     <ul data-bind="foreach: listItems" data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
         <!-- ko if: showDivider -->
         <li data-role="list-divider">
@@ -82,7 +79,7 @@
 @section FooterBarButtons
 {
     <div class="unit size1of3">
-        <label><input type="checkbox" data-bind="checked: hideZero" data-mini="true" /> Hide Zero</label>
+        <label><input type="checkbox" data-bind="checked: showSaved" data-mini="true" /> Show Saved</label>
     </div>
     <div class="unit size1of3">
         <label><input type="checkbox" data-bind="checked: hidePicked" data-mini="true" /> Hide Checked</label>

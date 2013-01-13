@@ -186,32 +186,42 @@ app = {
     // shoppinglists-show
     (function () {
 
-        var vm = {
-            listItems: ko.observableArray(),
-            itemToEdit: ko.observable(),
-            newItemName: ko.observable(),
-            hideZero: ko.observable(false),
-            hidePicked: ko.observable(false),
-            onPickedChange: onPickedChange,
-            onEditItemClick: onEditItemClick,
-            onEditItemSubmit: onEditItemSubmit,
-            onAddItemSubmit: onAddItemSubmit
-        };
+        var vm;
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
 
         function onInit() {
+            vm = {
+                noItemsMsg: ko.observable(),
+                listItems: ko.observableArray(),
+                itemToEdit: ko.observable(),
+                newItemName: ko.observable(),
+                showSaved: ko.observable(false),
+                hidePicked: ko.observable(false),
+                onPickedChange: onPickedChange,
+                onEditItemClick: onEditItemClick,
+                onEditItemSubmit: onEditItemSubmit,
+                onAddItemSubmit: onAddItemSubmit
+            };
+
+            vm.noItemsVisible = ko.computed(function () {
+                return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
+            });
+
             ko.applyBindings(vm);
         }
 
         function onShow() {
             vm.listItems([]);
-            $('#loading-msg').show();
+            vm.noItemsMsg('Loading...');
+            vm.showSaved(false);
+            vm.hidePicked(false);
+
             $.get(url('loaditems'), function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
 
                 $('#items-container').trigger('create').fadeIn('fast');
-                $('#loading-msg').hide();
+                vm.noItemsMsg('Nothing needed!');
             });
         }
 
@@ -303,7 +313,7 @@ app = {
             });
 
             item.isVisible = ko.computed(function () {
-                if (item.Quantity() == 0 && vm.hideZero()) return false;
+                if (item.Quantity() == 0 && !vm.showSaved()) return false;
                 if (item.Picked() && vm.hidePicked()) return false;
                 return true;
             });
