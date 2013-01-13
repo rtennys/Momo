@@ -193,7 +193,7 @@ app = {
             hideZero: ko.observable(false),
             hidePicked: ko.observable(false),
             onPickedChange: onPickedChange,
-            onEditItem: onEditItem,
+            onEditItemClick: onEditItemClick,
             onEditItemSubmit: onEditItemSubmit,
             onAddItemSubmit: onAddItemSubmit
         };
@@ -214,16 +214,17 @@ app = {
                 $('#loading-msg').hide();
             });
         }
-        
+
         function onPickedChange(listItem, e) {
             var cb = $(e.currentTarget);
             app.post(url('changepicked'), { id: listItem.Id(), picked: cb.is(':checked') });
             cb.parents('.ui-focus').removeClass('ui-focus');
         }
-        
-        function onEditItem(listItem, e) {
+
+        function onEditItemClick(listItem, e) {
             var popup = $('#edit-item-container'),
-                form = popup.find('form');
+                form = popup.find('form'),
+                isQtyClick = $(e.currentTarget).is('span');
 
             e.currentTarget.blur();
 
@@ -233,7 +234,10 @@ app = {
             popup
                 .show()
                 .one('popupbeforeposition', function () { $('.ui-popup-screen').off(); })
-                .one('popupafteropen', function () { $('[name="Aisle"]', this).focus().select(); })
+                .one('popupafteropen', function () {
+                    var field = isQtyClick ? 'Quantity' : 'Aisle';
+                    $('[name="' + field + '"]', this).focus().select();
+                })
                 .popup('open');
         }
 
@@ -273,8 +277,15 @@ app = {
                 vm.newItemName(null);
                 form.resetUnobtrusiveValidation();
 
-                vm.listItems.push(extendItem(result.Item));
-                vm.listItems.sort(itemComparer);
+                var foundItem = vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
+
+                if (foundItem.length > 0) {
+                    ko.mapping.fromJS(result.Item, foundItem[0]);
+                } else {
+                    vm.listItems.push(extendItem(result.Item));
+                    vm.listItems.sort(itemComparer);
+                }
+
                 refreshListview();
             });
         }
@@ -328,12 +339,13 @@ app = {
             if (a > b) return 1;
             return 0;
         }
-        
+
         function refreshListview() {
             $('#items-container ul')
                 .listview('refresh')
                 .find('li')
                 .trigger('create');
+            $('input:checkbox').checkboxradio('refresh');
         }
 
     })();
