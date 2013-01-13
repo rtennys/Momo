@@ -166,29 +166,9 @@ namespace Momo.UI.Controllers
         }
 
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult GetSuggestions(string username, string shoppinglist, string search)
-        {
-            var user = _repository.Get<UserProfile>(x => x.Username == username);
-            if (user == null)
-                return HttpNotFound();
+        /* shoppinglists/show ajax calls */
 
-            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
-            if (shoppingList == null)
-                return HttpNotFound();
-
-            var model = shoppingList
-                .ShoppingListItems
-                .Where(x => x.Name.StartsWith(search, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(x => x.Name)
-                .Take(5)
-                .Select(x => new {x.Name, x.Quantity, x.Aisle, x.Price})
-                .ToArray();
-
-            return Json(model);
-        }
-
-        public ActionResult Load(string username, string shoppinglist)
+        public ActionResult LoadItems(string username, string shoppinglist)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
             if (user == null) return HttpNotFound();
@@ -204,25 +184,6 @@ namespace Momo.UI.Controllers
                 .ToArray();
 
             return Json(model, JsonRequestBehavior.AllowGet);
-        }
-
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult EditItem(EditShoppingListItemCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
-
-            var result = _commandExecutor.Execute(command);
-
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
-            }
-
-            _uow.Commit();
-
-            return Json(new {Success = true});
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
@@ -242,6 +203,25 @@ namespace Momo.UI.Controllers
             _uow.Commit();
 
             return Json(new {Success = true, Item = new ShoppingListItemModel(result.Data.Item)});
+        }
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult EditItem(EditShoppingListItemCommand command)
+        {
+            if (!ModelState.IsValid)
+                return Json(new {Errors = ModelState.ToErrorList()});
+
+            var result = _commandExecutor.Execute(command);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
+
+            _uow.Commit();
+
+            return Json(new {Success = true});
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
