@@ -37,7 +37,7 @@
                     <input type="checkbox" data-bind="checked: Picked, click: $root.onPickedChange, attr: {name: htmlName, id: htmlName}" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
                     <label data-bind="text: Name, attr: {for: htmlName}" style="font-size: .85em; border: 0;"></label>
                 </fieldset>
-                <span data-bind="text: Quantity, click: $root.onEditItemClick" class="ui-li-count" style="z-index: 1;"></span>
+                <span data-bind="text: Quantity @(CurrentUser.HasShoppingListAccess() ? ", click: $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;"></span>
             </a>
             @if (CurrentUser.HasShoppingListAccess())
             {
