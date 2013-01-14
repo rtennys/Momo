@@ -45,6 +45,10 @@
             }
         </li>
     </ul>
+    <p style="text-align: right;">
+        Estimated Total: $<span data-bind="moneyText: estimatedTotal"></span> <br />
+        <small>estimate is based on the prices you have provided</small>
+    </p>
 </div>
 
 <div data-bind="with: itemToEdit" id="edit-item-container" data-role="popup" data-history="false" class="ui-content" style="display: none;">
@@ -68,7 +72,7 @@
             </li>
             <li>
                 <label>Price</label>
-                <input type="text" data-bind="value: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
+                <input type="text" data-bind="moneyValue: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
             </li>
         </ol>
         <input type="submit" value="Done" />

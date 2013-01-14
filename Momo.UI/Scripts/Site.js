@@ -87,6 +87,26 @@ $.fn.toObject = function () {
 };
 
 
+/******************************************************/
+/******************************************************/
+// knockout extensions
+
+ko.bindingHandlers.moneyValue = {
+    init: ko.bindingHandlers.value.init,
+    update: function (element, valueAccessor) {
+        var formattedValue = parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
+        ko.bindingHandlers.value.update(element, function() { return formattedValue; });
+    }
+};
+
+ko.bindingHandlers.moneyText = {
+    init: ko.bindingHandlers.text.init,
+    update: function (element, valueAccessor) {
+        var formattedValue = parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
+        ko.bindingHandlers.text.update(element, function () { return formattedValue; });
+    }
+};
+
 
 /******************************************************/
 /******************************************************/
@@ -206,6 +226,14 @@ app = {
 
             vm.noItemsVisible = ko.computed(function () {
                 return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
+            });
+
+            vm.estimatedTotal = ko.computed(function() {
+                var total = 0.0;
+                $.each(vm.listItems(), function() {
+                    total += parseFloat(this.Quantity()) * parseFloat(this.Price());
+                });
+                return total;
             });
 
             ko.applyBindings(vm);
