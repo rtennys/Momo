@@ -168,6 +168,7 @@ namespace Momo.UI.Controllers
 
         /* shoppinglists/show ajax calls */
 
+        [AllowAnonymous]
         public ActionResult LoadItems(string username, string shoppinglist)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
