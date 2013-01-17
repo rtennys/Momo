@@ -32,9 +32,9 @@ namespace Momo.Domain.Commands
         public decimal? Price { get; set; }
     }
 
-    public class AddShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
+    public class ShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
     {
-        public AddShoppingListItemCommandHandler(IRepository repository, IValidationFacade validationFacade)
+        public ShoppingListItemCommandHandler(IRepository repository, IValidationFacade validationFacade)
         {
             _repository = repository;
             _validationFacade = validationFacade;
@@ -45,6 +45,8 @@ namespace Momo.Domain.Commands
 
         public CommandResult Handle(AddShoppingListItemCommand command)
         {
+            TrimInput(command);
+
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
                 return result;
@@ -63,6 +65,8 @@ namespace Momo.Domain.Commands
 
         public CommandResult Handle(EditShoppingListItemCommand command)
         {
+            TrimInput(command);
+
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
                 return result;
@@ -71,7 +75,7 @@ namespace Momo.Domain.Commands
             var item = shoppingList.ShoppingListItems.Single(x => x.Id == command.Id);
 
             if (shoppingList.ShoppingListItems.Any(x => x.Id != command.Id && string.Equals(x.Name, command.Name, StringComparison.OrdinalIgnoreCase)))
-                return result.Add("Name", "List item name must be unique");
+                return result.Add("Name", "Items must be unique");
 
             item.Name = command.Name;
             item.Quantity = command.Quantity.GetValueOrDefault();
@@ -81,6 +85,11 @@ namespace Momo.Domain.Commands
             result.Data.ShoppingList = shoppingList;
 
             return result;
+        }
+
+        private void TrimInput(AddEditShoppingListItemCommand command)
+        {
+            command.Name = (command.Name ?? "").Trim();
         }
     }
 }
