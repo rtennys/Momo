@@ -242,7 +242,7 @@ app = {
                 newItemName: ko.observable(),
                 showSaved: ko.observable(false),
                 hidePicked: ko.observable(false),
-                onPickedChange: onPickedChange,
+                onItemClick: onItemClick,
                 onEditItemClick: onEditItemClick,
                 onEditItemSubmit: onEditItemSubmit,
                 onAddItemSubmit: onAddItemSubmit
@@ -261,6 +261,7 @@ app = {
             });
 
             $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
+
             ko.applyBindings(vm);
         }
 
@@ -272,16 +273,15 @@ app = {
 
             $.get(url('loaditems'), function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                $('#items-container').show();
+                $('#items-container').show().find(':checkbox').checkboxradio();
 
                 vm.noItemsMsg('Nothing needed!');
             });
         }
 
-        function onPickedChange(listItem, e) {
-            var cb = $(e.currentTarget);
-            app.post(url('changepicked'), { id: listItem.Id(), picked: cb.is(':checked') });
-            cb.parents('.ui-focus').removeClass('ui-focus');
+        function onItemClick(listItem, e) {
+            app.post(url('changepicked'), { id: listItem.Id(), picked: listItem.Picked() });
+            $(e.currentTarget).parents('.ui-focus').removeClass('ui-focus');
         }
 
         function onEditItemClick(listItem, e) {
