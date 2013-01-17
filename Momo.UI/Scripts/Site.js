@@ -260,6 +260,7 @@ app = {
                 return total;
             });
 
+            $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
             ko.applyBindings(vm);
         }
 

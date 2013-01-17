@@ -24,13 +24,16 @@
 <p data-bind="text: noItemsMsg, visible: noItemsVisible" style="color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset;"></p>
 
 <div id="items-container" style="display: none;">
-    <ul data-bind="foreach: listItems" data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+    <ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+        <li style="display: none;"><a href="#">empty item</a></li>
+
+        <!-- ko foreach: listItems -->
         <!-- ko if: showDivider -->
-        <li data-role="list-divider">
+        <li data-bind="css: { 'ui-corner-top': $index() == 0 }" data-role="list-divider">
             Aisle <span data-bind="text: Aisle() == 0 ? 'not set' : Aisle()"></span>
         </li>
         <!-- /ko -->
-        <li data-icon="false" data-bind="visible: isVisible">
+        <li data-bind="visible: isVisible" data-icon="false">
             <input type="hidden" data-bind="value: Aisle" id="hidAisle" />
             <a href="#" style="padding: 0;">
                 <fieldset data-role="controlgroup" style="margin: 0;">
@@ -46,7 +49,11 @@
                 <a href="#" data-bind="click: $root.onEditItemClick">Edit</a>
             }
         </li>
+        <!-- /ko -->
+
+        <li style="display: none;"><a href="#">empty item</a></li>
     </ul>
+
     <p style="text-align: right;">
         Estimated Total: <span data-bind="moneyText: estimatedTotal"></span> <br />
         <small>estimate is based on the prices you have provided</small>
