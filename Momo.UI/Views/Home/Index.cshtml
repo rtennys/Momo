@@ -13,3 +13,11 @@
         <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account", null, new {data_ajax = "false"}) : Html.ActionLink("Sign in", "Login", "Account", null, new {data_ajax = "false"}))</li>
     </ul>
 </nav>
+
+<div class="line">
+    <h3>Example</h3>
+    <p>
+        As an example, check out my personal lists: <br />
+        @Html.ActionLink("Rob Tennyson", "Index", "ShoppingLists", new {username = "robtennyson"}, null)
+    </p>
+</div>
