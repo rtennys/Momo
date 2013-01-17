@@ -345,6 +345,7 @@ app = {
                     ko.mapping.fromJS(result.Item, foundItem[0]);
                 } else {
                     vm.listItems.push(extendItem(result.Item));
+                    $('#items-container :checkbox').checkboxradio();
                     vm.listItems.sort(itemComparer);
                 }
             });
