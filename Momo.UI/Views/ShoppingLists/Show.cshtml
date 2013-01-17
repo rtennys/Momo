@@ -34,10 +34,12 @@
             <input type="hidden" data-bind="value: Aisle" id="hidAisle" />
             <a href="#" style="padding: 0;">
                 <fieldset data-role="controlgroup" style="margin: 0;">
-                    <input type="checkbox" data-bind="checked: Picked, click: $root.onPickedChange, attr: {name: htmlName, id: htmlName}" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
-                    <label data-bind="text: Name, attr: {for: htmlName}" style="font-size: .85em; border: 0;"></label>
+                    <label style="font-size: .85em; border: 0;">
+                        <input type="checkbox" data-bind="checked: Picked, click: $root.onPickedChange" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <span data-bind="text: Name">item text here</span>
+                    </label>
                 </fieldset>
-                <span data-bind="text: Quantity @(CurrentUser.HasShoppingListAccess() ? ", click: $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;"></span>
+                <span data-bind="text: Quantity @(CurrentUser.HasShoppingListAccess() ? ", click: $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;">0</span>
             </a>
             @if (CurrentUser.HasShoppingListAccess())
             {
@@ -46,7 +48,7 @@
         </li>
     </ul>
     <p style="text-align: right;">
-        Estimated Total: $<span data-bind="moneyText: estimatedTotal"></span> <br />
+        Estimated Total: <span data-bind="moneyText: estimatedTotal"></span> <br />
         <small>estimate is based on the prices you have provided</small>
     </p>
 </div>

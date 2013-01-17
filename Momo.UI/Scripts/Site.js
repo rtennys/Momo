@@ -91,21 +91,45 @@ $.fn.toObject = function () {
 /******************************************************/
 // knockout extensions
 
-ko.bindingHandlers.moneyValue = {
-    init: ko.bindingHandlers.value.init,
-    update: function (element, valueAccessor) {
-        var formattedValue = parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
-        ko.bindingHandlers.value.update(element, function() { return formattedValue; });
-    }
-};
+// money
+(function () {
 
-ko.bindingHandlers.moneyText = {
-    init: ko.bindingHandlers.text.init,
-    update: function (element, valueAccessor) {
-        var formattedValue = parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
-        ko.bindingHandlers.text.update(element, function () { return formattedValue; });
+    $.extend(ko.bindingHandlers, {
+        moneyValue: {
+            init: ko.bindingHandlers.value.init,
+            update: function (element, valueAccessor) {
+                var formattedValue = formatValue(valueAccessor);
+                ko.bindingHandlers.value.update(element, function () { return formattedValue; });
+            }
+        },
+        moneyText: {
+            init: ko.bindingHandlers.text.init,
+            update: function (element, valueAccessor) {
+                var formattedValue = formatText(valueAccessor);
+                ko.bindingHandlers.text.update(element, function () { return formattedValue; });
+            }
+        }
+    });
+
+    function formatValue(valueAccessor) {
+        return parseFloat(ko.utils.unwrapObservable(valueAccessor())).toFixed(2);
     }
-};
+
+    function formatText(valueAccessor) {
+        return '$' + addCommas(formatValue(valueAccessor));
+    }
+
+    function addCommas(value) {
+        var rx = /(\d+)(\d{3})/;
+        return value.replace(/^\d+/, function (w) {
+            while (rx.test(w)) {
+                w = w.replace(rx, '$1,$2');
+            }
+            return w;
+        });
+    }
+
+})();
 
 
 /******************************************************/
@@ -247,8 +271,8 @@ app = {
 
             $.get(url('loaditems'), function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
+                $('#items-container').show();
 
-                $('#items-container').trigger('create').fadeIn('fast');
                 vm.noItemsMsg('Nothing needed!');
             });
         }
@@ -274,7 +298,10 @@ app = {
                 .one('popupbeforeposition', function () { $('.ui-popup-screen').off(); })
                 .one('popupafteropen', function () {
                     var field = isQtyClick ? 'Quantity' : 'Aisle';
-                    $('[name="' + field + '"]', this).focus().select();
+                    var element = $('[name="' + field + '"]', this);
+                    setTimeout(function() {
+                        element.focus().select();
+                    }, 200);
                 })
                 .popup('open');
         }
@@ -293,14 +320,10 @@ app = {
                     return;
                 }
 
-                vm.listItems.remove(vm.itemToEdit());
-                vm.listItems.push(vm.itemToEdit());
-                vm.listItems.sort(itemComparer);
-                refreshListview();
-
+                popup.popup('close');
                 vm.itemToEdit(null);
 
-                popup.popup('close');
+                vm.listItems.sort(itemComparer);
             });
         }
 
@@ -323,8 +346,6 @@ app = {
                     vm.listItems.push(extendItem(result.Item));
                     vm.listItems.sort(itemComparer);
                 }
-
-                refreshListview();
             });
         }
 
@@ -348,13 +369,13 @@ app = {
 
             item.showDivider = ko.computed(function () {
                 var idx = vm.listItems.indexOf(item),
-                    aisle = item.Aisle();
+                    aisle = +item.Aisle();
 
                 if (idx < 0) return false;
 
-                if (idx < 1 || vm.listItems()[idx - 1].Aisle() != aisle) {
+                if (idx < 1 || +vm.listItems()[idx - 1].Aisle() != aisle) {
                     var items = vm.listItems().filter(function(value) {
-                        return value.Aisle() === aisle && value.isVisible();
+                        return +value.Aisle() === aisle && value.isVisible();
                     });
 
                     return items.length > 0;
@@ -376,14 +397,6 @@ app = {
             if (a < b) return -1;
             if (a > b) return 1;
             return 0;
-        }
-
-        function refreshListview() {
-            $('#items-container ul')
-                .listview('refresh')
-                .find('li')
-                .trigger('create');
-            $('input:checkbox').checkboxradio('refresh');
         }
 
     })();

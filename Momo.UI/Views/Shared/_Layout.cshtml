@@ -12,14 +12,14 @@
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
     </head>
-    <body id="top">
+    <body class="ui-mobile-viewport ui-overlay-d">
 
         @* prefetch the icons for faster page load *@
         <div class="ui-icon" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
         <div class="ui-icon-loading" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
 
-        <div data-role="page" data-theme="d" data-url="@Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)" class="@("{0}-{1}".F(Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]))">
-            <div data-role="header" data-theme="d">
+        <div data-role="page" data-theme="d" data-url="@Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)" class="ui-page ui-body-d ui-page-footer-fixed @("{0}-{1}".F(Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]))">
+            <div data-role="header" data-theme="d" class="ui-header ui-bar-d">
                 @{
                     var parts = Request.Url.AbsolutePath.Split('/');
                     parts = parts.Take(parts.Length - 1).ToArray();
@@ -31,10 +31,10 @@
                 <h1>@ViewBag.Title</h1>
                 <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-ajax="false" class="ui-btn-right">Home</a>
             </div>
-            <div data-role="content">
+            <div data-role="content" class="ui-content">
                 @RenderBody()
             </div>
-            <div data-role="footer" data-theme="d" data-position="fixed" data-tap-toggle="false">
+            <div data-role="footer" data-theme="d" data-position="fixed" data-tap-toggle="false" class="ui-footer ui-bar-d ui-footer-fixed">
                 <div class="line" style="text-align: center; position: relative; height: 40px;">
                     <a href="#" class="footer-toggle">...</a>
                     @RenderSection("FooterBarButtons", required: false)
