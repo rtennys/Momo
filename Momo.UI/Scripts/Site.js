@@ -210,11 +210,13 @@ app = {
 
     $document.on('click', '.footer-toggle', function (e) {
         e.preventDefault();
-        $('.site-footer').slideToggle();
+        $('.site-footer').slideToggle('slow');
         this.blur();
     });
 
     $(function() {
+
+        if ($('.screenSize').length == 0) return;
 
         function setSize() {
             $('.screenSize').text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
@@ -226,15 +228,49 @@ app = {
 
     });
 
+
+    /******************************************************/
+    // shoppinglists-index
+    (function() {
+
+        var vm;
+
+        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-index');
+
+        function onInit() {
+            vm = {
+                noItemsMsg: ko.observable(),
+                shoppingLists: ko.observableArray(),
+                sharedLists: ko.observableArray()
+            };
+
+            ko.applyBindings(vm, this);
+        }
+
+        function onShow() {
+            var page = $(this);
+            vm.noItemsMsg('Loading...');
+            app.post(page.data('url'), {}, function (result) {
+                vm.shoppingLists($.map(result.ShoppingLists, ko.mapping.fromJS));
+                vm.sharedLists($.map(result.SharedLists, ko.mapping.fromJS));
+                page.find('[data-role="listview"]').listview('refresh');
+                vm.noItemsMsg('No shopping lists found');
+            });
+        }
+
+    })();
+
+
     /******************************************************/
     // shoppinglists-show
     (function () {
 
-        var vm;
+        var vm, page;
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
 
         function onInit() {
+            page = $(this);
             vm = {
                 noItemsMsg: ko.observable(),
                 listItems: ko.observableArray(),
@@ -262,7 +298,7 @@ app = {
 
             $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
 
-            ko.applyBindings(vm);
+            ko.applyBindings(vm, this);
         }
 
         function onShow() {
@@ -271,9 +307,9 @@ app = {
             vm.showSaved(false);
             vm.hidePicked(false);
 
-            $.get(url('loaditems'), function (listItems) {
+            app.post(page.data('url'), {}, function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                $('#items-container').show().find(':checkbox').checkboxradio();
+                $('#items-container', page).show().find(':checkbox').checkboxradio();
 
                 vm.noItemsMsg('Nothing needed!');
             });
@@ -353,7 +389,7 @@ app = {
 
 
         function url(actionAndQuery) {
-            return document.URL + '/' + actionAndQuery;
+            return page.data('url') + '/' + actionAndQuery;
         }
 
         function extendItem(jsItem) {

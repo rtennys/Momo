@@ -30,13 +30,16 @@ namespace Momo.UI.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            var model = new ShoppingListsIndexModel
+            if (Request.HttpMethod == "GET")
+                return View();
+
+            var model = new
                         {
-                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).ToArray(),
-                            SharedLists = user.SharedLists.OrderBy(x => x.Name).ToArray()
+                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new {x.Name, Url = Url.Action("Show", new {shoppinglist = x.Name})}).ToArray(),
+                            SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new {x.Name, Url = Url.Action("Show", new {username = x.UserProfile.Username, shoppinglist = x.Name})}).ToArray()
                         };
 
-            return View(model);
+            return Json(model);
         }
 
         [AllowAnonymous]
@@ -50,7 +53,17 @@ namespace Momo.UI.Controllers
             if (shoppingList == null)
                 return HttpNotFound();
 
-            return View(new ShoppingListsShowModel {Id = shoppingList.Id, Name = shoppingList.Name});
+            if (Request.HttpMethod == "GET")
+                return View(new ShoppingListsShowModel {Id = shoppingList.Id, Name = shoppingList.Name});
+
+            var model = shoppingList
+                .ShoppingListItems
+                .OrderBy(x => x.Aisle)
+                .ThenBy(x => x.Name)
+                .Select(x => new ShoppingListItemModel(x))
+                .ToArray();
+
+            return Json(model);
         }
 
 
@@ -167,25 +180,6 @@ namespace Momo.UI.Controllers
 
 
         /* shoppinglists/show ajax calls */
-
-        [AllowAnonymous]
-        public ActionResult LoadItems(string username, string shoppinglist)
-        {
-            var user = _repository.Get<UserProfile>(x => x.Username == username);
-            if (user == null) return HttpNotFound();
-
-            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
-            if (shoppingList == null) return HttpNotFound();
-
-            var model = shoppingList
-                .ShoppingListItems
-                .OrderBy(x => x.Aisle)
-                .ThenBy(x => x.Name)
-                .Select(x => new ShoppingListItemModel(x))
-                .ToArray();
-
-            return Json(model, JsonRequestBehavior.AllowGet);
-        }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult AddItem(AddShoppingListItemCommand command)

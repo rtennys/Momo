@@ -7,10 +7,10 @@
 <nav>
     <ul data-role="listview" data-inset="true">
         @if (Request.IsAuthenticated) {
-        <li>@Html.ActionLink("Shopping Lists", "Index", "ShoppingLists", null, new {data_ajax = "false"})</li>
+        <li>@Html.ActionLink("Shopping Lists", "Index", "ShoppingLists")</li>
         }
-        <li>@Html.ActionLink("About", "About", "Home", null, new {data_ajax = "false"})</li>
-        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account", null, new {data_ajax = "false"}) : Html.ActionLink("Sign in", "Login", "Account", null, new {data_ajax = "false"}))</li>
+        <li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
     </ul>
 </nav>
 

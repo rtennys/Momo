@@ -37,7 +37,7 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 
 /* site look & feel */
 .ui-footer a.footer-toggle { display: block; position: absolute; top: 0; bottom: 0; right: 0; padding: 0 15px; color: #333; text-decoration: none; letter-spacing: 2px; }
-.site-footer { font-size: 0.85em; display: none; }
+.site-footer { font-size: 0.85em; }
 .site-footer p { margin-left: 10px; }
 .site-footer p.screenSize { font-size: 0.85em; }
 
@@ -47,6 +47,8 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 .google-login { background-image: url('images/google.png'); }
 .myopenid-login { background-image: url('images/myopenid.png'); }
 .yahoo-login { background-image: url('images/yahoo.png'); }
+
+.msg-container { color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 
 @media only screen and (min-width: 768px) {
     body.ui-mobile-viewport, div.ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }

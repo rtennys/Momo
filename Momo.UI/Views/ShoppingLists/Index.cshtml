@@ -1,30 +1,28 @@
-﻿@model ShoppingListsIndexModel
-
-@{
+﻿@{
     ViewBag.Title = Request.RequestContext.RouteData.Values["username"];
 }
 
-<ul data-role="listview" data-inset="true">
-    @if (Model.ShoppingLists.Length == 0)
-    {
-        <li><em style="font-size: .85em;">No lists yet</em></li>
-    }
-    @foreach (var shoppingList in Model.ShoppingLists)
-    {
-        <li>@Html.ActionLink(@shoppingList.Name, "Show", new {shoppingList = shoppingList.Name}, new {data_ajax = "false"})</li>
-    }
+
+<p data-bind="text: noItemsMsg, visible: shoppingLists().length == 0 && sharedLists().length == 0" class="msg-container"></p>
+
+
+<ul data-bind="foreach: shoppingLists" data-role="listview" data-inset="true">
+    <li>
+        <a data-bind="text: Name, attr: {href: Url}" href="#">loading...</a>
+    </li>
 </ul>
 
-@if (Model.SharedLists.Length > 0)
-{
-    <ul data-role="listview" data-inset="true">
-        <li data-role="list-divider">Shared Lists</li>
-        @foreach (var shoppingList in Model.SharedLists)
-        {
-            <li>@Html.ActionLink(shoppingList.UserProfile.Username + "/" + @shoppingList.Name, "Show", new {username = shoppingList.UserProfile.Username, shoppingList = shoppingList.Name}, new {data_ajax = "false"})</li>
-        }
-    </ul>
-}
+
+<ul data-bind="if: sharedLists().length > 0" data-role="listview" data-inset="true">
+    <li data-role="list-divider">Shared Lists</li>
+    <!-- ko foreach: sharedLists -->
+    <li>
+        <a data-bind="text: Name, attr: {href: Url}" href="#">loading...</a>
+    </li>
+    <!-- /ko -->
+</ul>
+
+
 
 @section FooterBarButtons
 {

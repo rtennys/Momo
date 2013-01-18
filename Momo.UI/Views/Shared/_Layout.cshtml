@@ -25,7 +25,7 @@
                     parts = parts.Take(parts.Length - 1).ToArray();
                     if (parts.Length > 1)
                     {
-                        <a href="@string.Join("/", parts)" data-icon="arrow-l" data-ajax="false" class="ui-btn-left">@(parts.Last())</a>
+                        <a href="@string.Join("/", parts)" data-icon="arrow-l" class="ui-btn-left">@(parts.Last())</a>
                     }
                 }
                 <h1>@ViewBag.Title</h1>
@@ -39,22 +39,20 @@
                     <a href="#" class="footer-toggle">...</a>
                     @RenderSection("FooterBarButtons", required: false)
                 </div>
-                <div class="line site-footer">
+                <div class="line site-footer" style="display: none; width: 100%;">
                     <div class="line">
                         @RenderSection("FooterContent", required: false)
                     </div>
-                    <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
-                    @Html.Partial("_LoginPartial")
-                    @if (Request.IsLocal) { <p class="screenSize"></p> }
+                    <div class="line">
+                        <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
+                        @Html.Partial("_LoginPartial")
+                        @if (Request.IsLocal) { <p class="screenSize"></p> }
+                    </div>
                 </div>
             </div>
         </div>
 
         @Scripts.Render("~/bundles/common")
-
-        <script type="text/javascript">
-            app.webroot = '@Url.Content("~/")';
-        </script>
 
     </body>
 </html>
