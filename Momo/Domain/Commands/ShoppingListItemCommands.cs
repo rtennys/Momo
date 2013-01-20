@@ -32,7 +32,15 @@ namespace Momo.Domain.Commands
         public decimal? Price { get; set; }
     }
 
-    public class ShoppingListItemCommandHandler : ICommandHandler<AddShoppingListItemCommand>, ICommandHandler<EditShoppingListItemCommand>
+    public class DeleteShoppingListItemCommand : ICommand
+    {
+        public int Id { get; set; }
+    }
+
+    public class ShoppingListItemCommandHandler :
+        ICommandHandler<AddShoppingListItemCommand>,
+        ICommandHandler<EditShoppingListItemCommand>,
+        ICommandHandler<DeleteShoppingListItemCommand>
     {
         public ShoppingListItemCommandHandler(IRepository repository, IValidationFacade validationFacade)
         {
@@ -83,6 +91,17 @@ namespace Momo.Domain.Commands
             item.Price = command.Price.GetValueOrDefault();
 
             result.Data.ShoppingList = shoppingList;
+
+            return result;
+        }
+
+        public CommandResult Handle(DeleteShoppingListItemCommand command)
+        {
+            var result = _validationFacade.Validate(command);
+            if (result.AnyErrors())
+                return result;
+
+            _repository.Remove<ShoppingListItem>(command.Id);
 
             return result;
         }

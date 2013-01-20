@@ -222,6 +222,25 @@ namespace Momo.UI.Controllers
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
+        {
+            if (!ModelState.IsValid)
+                return Json(new {Errors = ModelState.ToErrorList()});
+
+            var result = _commandExecutor.Execute(command);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
+
+            _uow.Commit();
+
+            return Json(new {Success = true});
+        }
+
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public void ChangePicked(int id, bool picked)
         {
             var item = _repository.Get<ShoppingListItem>(id);

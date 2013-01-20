@@ -88,8 +88,13 @@
                 <input type="text" data-bind="moneyValue: Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
             </li>
         </ol>
+
         <input type="submit" value="Done" />
         @Html.ValidationSummary()
+
+        <p style="margin-top: 25px;">
+            <input data-bind="click: $root.onForgetItemClick" type="button" value="Forget this item" data-icon="delete" />
+        </p>
     }
 </div>
 

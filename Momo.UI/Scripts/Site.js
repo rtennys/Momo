@@ -304,7 +304,8 @@ app = {
                 onItemClick: onItemClick,
                 onEditItemClick: onEditItemClick,
                 onEditItemSubmit: onEditItemSubmit,
-                onAddItemSubmit: onAddItemSubmit
+                onAddItemSubmit: onAddItemSubmit,
+                onForgetItemClick: onForgetItemClick
             };
 
             vm.noItemsVisible = ko.computed(function () {
@@ -410,6 +411,16 @@ app = {
                     vm.listItems.sort(itemComparer);
                 }
             });
+        }
+
+        function onForgetItemClick(listItem) {
+            if (!confirm('Delete this item from the list?')) return;
+
+            app.post(url('deleteitem'), { id: listItem.Id() });
+
+            $('#edit-item-container').popup('close');
+            vm.itemToEdit(null);
+            vm.listItems.remove(listItem);
         }
 
 
