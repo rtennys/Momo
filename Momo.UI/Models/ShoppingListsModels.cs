@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Mvc;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
 
@@ -10,12 +11,20 @@ namespace Momo.UI.Models
         public string Name { get; set; }
     }
 
-    public class ShoppingListsAddModel : AddShoppingListCommand
+    public class ShoppingListsRenameModel : RenameShoppingListCommand
     {
     }
 
-    public class ShoppingListsRenameModel : RenameShoppingListCommand
+    public class ShoppingListModel
     {
+        public ShoppingListModel(ShoppingList list, UrlHelper urlHelper)
+        {
+            Name = list.Name;
+            Url = urlHelper.Action("Show", "ShoppingLists", new {username = list.UserProfile.Username, shoppinglist = list.Name});
+        }
+
+        public string Name { get; set; }
+        public string Url { get; set; }
     }
 
     public class ShoppingListItemModel

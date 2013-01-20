@@ -66,7 +66,7 @@ namespace Momo.Domain.Commands
             if (user.ShoppingLists.Any(x => string.Equals(x.Name, command.Name, StringComparison.OrdinalIgnoreCase)))
                 result.Add(command.GetName(x => x.Name), "Name Must Be Unique");
             else
-                user.AddShoppingList(command.Name);
+                result.Data.ShoppingList = user.AddShoppingList(command.Name);
 
             return result;
         }

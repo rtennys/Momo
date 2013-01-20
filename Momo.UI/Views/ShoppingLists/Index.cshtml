@@ -3,6 +3,17 @@
 }
 
 
+@if (CurrentUser.IsRouteUsername())
+{
+    using (Html.BeginForm("add", null, FormMethod.Post, new {data_bind = "submit: onNewListSubmit", data_ajax = "false"}))
+    {
+        @Html.AntiForgeryToken()
+        <input type="text" name="Name" placeholder="new list" data-bind="value: newListName, valueUpdate: 'afterkeydown'" />
+        @Html.ValidationSummary()
+    }
+}
+
+
 <p data-bind="text: noItemsMsg, visible: shoppingLists().length == 0 && sharedLists().length == 0" class="msg-container"></p>
 
 
@@ -21,13 +32,3 @@
     </li>
     <!-- /ko -->
 </ul>
-
-
-
-@section FooterBarButtons
-{
-    @if (CurrentUser.IsRouteUsername())
-    {
-        @Html.ActionLink("New List", "Add", null, new {data_role = "button", data_icon = "plus", data_mini = "true", data_inline = "true", data_iconpos = "notext"})
-    }
-}

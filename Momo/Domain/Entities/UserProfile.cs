@@ -30,9 +30,11 @@ namespace Momo.Domain.Entities
             get { return _sharedLists.AsReadOnly(); }
         }
 
-        protected internal virtual void AddShoppingList(string name)
+        protected internal virtual ShoppingList AddShoppingList(string name)
         {
-            _shoppingLists.Add(new ShoppingList(this, name));
+            var list = new ShoppingList(this, name);
+            _shoppingLists.Add(list);
+            return list;
         }
 
         protected internal virtual void Remove(ShoppingList shoppingList)

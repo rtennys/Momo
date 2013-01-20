@@ -35,8 +35,8 @@ namespace Momo.UI.Controllers
 
             var model = new
                         {
-                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new {x.Name, Url = Url.Action("Show", new {shoppinglist = x.Name})}).ToArray(),
-                            SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new {x.Name, Url = Url.Action("Show", new {username = x.UserProfile.Username, shoppinglist = x.Name})}).ToArray()
+                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray(),
+                            SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray()
                         };
 
             return Json(model);
@@ -67,23 +67,25 @@ namespace Momo.UI.Controllers
         }
 
 
-        public ActionResult Add()
-        {
-            return View();
-        }
-
         [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Add(ShoppingListsAddModel model)
+        public ActionResult Add(AddShoppingListCommand command)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return Json(new {Errors = ModelState.ToErrorList()});
 
-            ModelState.AddModelErrors(_commandExecutor.Execute<AddShoppingListCommand>(model));
-            if (!ModelState.IsValid)
-                return View(model);
+            var result = _commandExecutor.Execute(command);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
 
             _uow.Commit();
-            return RedirectToAction("Index");
+
+            var list = result.Data.ShoppingList;
+
+            return Json(new {Success = true, ShoppingList = new ShoppingListModel(list, Url)});
         }
 
 

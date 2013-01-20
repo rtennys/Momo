@@ -233,28 +233,51 @@ app = {
     // shoppinglists-index
     (function() {
 
-        var vm;
+        var vm, page;
 
         $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-index');
 
         function onInit() {
+            page = $(this);
+
             vm = {
                 noItemsMsg: ko.observable(),
                 shoppingLists: ko.observableArray(),
-                sharedLists: ko.observableArray()
+                sharedLists: ko.observableArray(),
+                newListName: ko.observable(),
+                onNewListSubmit: onNewListSubmit
             };
 
             ko.applyBindings(vm, this);
         }
 
         function onShow() {
-            var page = $(this);
             vm.noItemsMsg('Loading...');
             app.post(page.data('url'), {}, function (result) {
                 vm.shoppingLists($.map(result.ShoppingLists, ko.mapping.fromJS));
                 vm.sharedLists($.map(result.SharedLists, ko.mapping.fromJS));
-                page.find('[data-role="listview"]').listview('refresh');
+                $('[data-role="listview"]', page).listview('refresh');
                 vm.noItemsMsg('No shopping lists found');
+            });
+        }
+        
+        function onNewListSubmit(form) {
+            form = $(form);
+            app.post(form.attr('action'), form.toObject(), function (result) {
+                if (!result.Success) {
+                    form
+                        .resetUnobtrusiveValidation()
+                        .appendValidationErrors(result.Errors);
+
+                    return;
+                }
+
+                vm.newListName(null);
+                form.resetUnobtrusiveValidation();
+                $(':text', page).get(0).blur();
+
+                vm.shoppingLists.push(ko.mapping.fromJS(result.ShoppingList));
+                $('[data-role="listview"]', page).listview('refresh');
             });
         }
 
@@ -309,7 +332,9 @@ app = {
 
             app.post(page.data('url'), {}, function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                $('#items-container', page).show().find(':checkbox').checkboxradio();
+
+                $('#items-container :checkbox', page).checkboxradio();
+                $('#items-container', page).show();
 
                 vm.noItemsMsg('Nothing needed!');
             });

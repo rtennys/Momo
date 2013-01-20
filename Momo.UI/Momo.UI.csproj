@@ -259,7 +259,6 @@
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\string.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\password.cshtml" />
-    <Content Include="Views\ShoppingLists\Add.cshtml" />
     <Content Include="Views\ShoppingLists\Index.cshtml" />
     <Content Include="Views\ShoppingLists\Show.cshtml" />
     <Content Include="Views\ShoppingLists\Rename.cshtml" />
