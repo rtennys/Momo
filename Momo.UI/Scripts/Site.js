@@ -299,8 +299,8 @@ app = {
                 listItems: ko.observableArray(),
                 itemToEdit: ko.observable(),
                 newItemName: ko.observable(),
-                showSaved: ko.observable(false),
-                hidePicked: ko.observable(false),
+                hideZeros: ko.observable(true),
+                hidePicked: ko.observable(true),
                 onItemClick: onItemClick,
                 onEditItemClick: onEditItemClick,
                 onEditItemSubmit: onEditItemSubmit,
@@ -328,8 +328,8 @@ app = {
         function onShow() {
             vm.listItems([]);
             vm.noItemsMsg('Loading...');
-            vm.showSaved(false);
-            vm.hidePicked(false);
+            vm.hideZeros(true);
+            vm.hidePicked(true);
 
             app.post(page.data('url'), {}, function (listItems) {
                 vm.listItems($.map(listItems, extendItem).sort(itemComparer));
@@ -436,7 +436,7 @@ app = {
             });
 
             item.isVisible = ko.computed(function () {
-                if (item.Quantity() == 0 && !vm.showSaved()) return false;
+                if (item.Quantity() == 0 && vm.hideZeros()) return false;
                 if (item.Picked() && vm.hidePicked()) return false;
                 return true;
             });
