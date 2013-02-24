@@ -8,27 +8,27 @@
     using (Html.BeginForm("add", null, FormMethod.Post, new {data_bind = "submit: onNewListSubmit", data_ajax = "false"}))
     {
         @Html.AntiForgeryToken()
-        <input type="text" name="Name" placeholder="new list" data-bind="value: newListName, valueUpdate: 'afterkeydown'" />
+        <input type="text" name="Name" placeholder="new list" data-bind="'value': newListName, 'valueUpdate': 'afterkeydown'" />
         @Html.ValidationSummary()
     }
 }
 
 
-<p data-bind="text: noItemsMsg, visible: shoppingLists().length == 0 && sharedLists().length == 0" class="msg-container"></p>
+<p data-bind="'text': noItemsMsg, 'visible': shoppingLists().length == 0 && sharedLists().length == 0" class="msg-container"></p>
 
 
-<ul data-bind="foreach: shoppingLists" data-role="listview" data-inset="true">
+<ul data-bind="'foreach': shoppingLists" data-role="listview" data-inset="true">
     <li>
-        <a data-bind="text: Name, attr: {href: Url}" href="#">loading...</a>
+        <a data-bind="'text': Name, 'attr': {'href': Url}" href="#">loading...</a>
     </li>
 </ul>
 
 
-<ul data-bind="if: sharedLists().length > 0" data-role="listview" data-inset="true">
+<ul data-bind="'if': sharedLists().length > 0" data-role="listview" data-inset="true">
     <li data-role="list-divider">Shared Lists</li>
     <!-- ko foreach: sharedLists -->
     <li>
-        <a data-bind="text: Name, attr: {href: Url}" href="#">loading...</a>
+        <a data-bind="'text': Name, 'attr': {'href': Url}" href="#">loading...</a>
     </li>
     <!-- /ko -->
 </ul>
