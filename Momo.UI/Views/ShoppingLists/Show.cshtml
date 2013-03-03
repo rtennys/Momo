@@ -34,8 +34,9 @@
             Aisle <span data-bind="'text': Aisle() == 0 ? 'not set' : Aisle()"></span>
         </li>
         <!-- /ko -->
-        <li data-bind="'visible': isVisible" data-icon="false">
-            <input type="hidden" data-bind="'value': Aisle" id="hidAisle" />
+
+        <!-- ko if: isVisible -->
+        <li data-icon="false">
             <a href="#" style="padding: 0;">
                 <!-- ko template: {name: 'cb-tmpl'} --><!-- /ko -->
                 <span data-bind="'text': Quantity @(CurrentUser.HasShoppingListAccess() ? ", 'click': $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;">0</span>
@@ -45,6 +46,7 @@
                 <a href="#" data-bind="'click': $root.onEditItemClick">Edit</a>
             }
         </li>
+        <!-- /ko -->
 
         <!-- /ko -->
 

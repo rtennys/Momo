@@ -139,8 +139,6 @@ $.fn.toObject = function () {
 app = {
     webroot: '/', // override in _Layout for dynamic web root
 
-    modules: {}, // add modules here for consistency and convenience in the debugger
-
     debug: function(message) {
         if (window.console && 'debug' in window.console)
             console.debug(message);
@@ -322,6 +320,10 @@ app = {
 
             $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
 
+            var runCheckboxradio = new app.Delayed(function () { $('#items-container :checkbox', page).checkboxradio(); }, 10);
+            vm.hideZeros.subscribe(runCheckboxradio.execute);
+            vm.hidePicked.subscribe(runCheckboxradio.execute);
+
             ko.applyBindings(vm, this);
         }
 
@@ -407,7 +409,7 @@ app = {
                     ko.mapping.fromJS(result.Item, foundItem[0]);
                 } else {
                     vm.listItems.push(extendItem(result.Item));
-                    $('#items-container :checkbox').checkboxradio();
+                    $('#items-container :checkbox', page).checkboxradio();
                     vm.listItems.sort(itemComparer);
                 }
             });
