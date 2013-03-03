@@ -36,7 +36,7 @@
         <!-- /ko -->
 
         <!-- ko if: isVisible -->
-        <li data-icon="false">
+        <li data-bind="'css': { 'faded': Picked() || Quantity() == 0 }" data-icon="false">
             <a href="#" style="padding: 0;">
                 <!-- ko template: {name: 'cb-tmpl'} --><!-- /ko -->
                 <span data-bind="'text': Quantity @(CurrentUser.HasShoppingListAccess() ? ", 'click': $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;">0</span>
