@@ -1,58 +1,56 @@
 ﻿@using Momo.Common
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
 
-        <title>@(ViewBag.HeaderTitle ?? ViewBag.Title) - @App["name"]</title>
+    <title>@(ViewBag.HeaderTitle ?? ViewBag.Title) - @App["name"]</title>
 
-        @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")
-    </head>
-    <body class="ui-mobile-viewport ui-overlay-d">
+    @Styles.Render("~/Content/themes/base/jquery-ui")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
 
-        @* prefetch the icons for faster page load *@
-        <div class="ui-icon" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
-        <div class="ui-icon-loading" style="position: absolute; top: 0; left: -999px;">&nbsp;</div>
-
-        <div data-role="page" data-theme="d" data-url="@Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)" class="ui-page ui-body-d ui-page-footer-fixed @("{0}-{1}".F(Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]))">
-            <div data-role="header" data-theme="d" class="ui-header ui-bar-d">
-                @{
-                    var parts = Request.Url.AbsolutePath.Split('/');
-                    parts = parts.Take(parts.Length - 1).ToArray();
-                    if (parts.Length > 1)
-                    {
-                        <a href="@string.Join("/", parts)" data-icon="arrow-l" class="ui-btn-left">@(parts.Last())</a>
-                    }
+    <div data-role="page" data-theme="d" data-url="@Request.Url.GetComponents(UriComponents.PathAndQuery, UriFormat.UriEscaped)" class="ui-page ui-body-d ui-page-footer-fixed @("{0}-{1}".F(Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]))">
+        <div data-role="header" data-theme="d" class="ui-header ui-bar-d">
+            @{
+                var parts = Request.Url.AbsolutePath.Split('/');
+                parts = parts.Take(parts.Length - 1).ToArray();
+                if (parts.Length > 1)
+                {
+                    <a href="@string.Join("/", parts)" data-icon="arrow-l" class="ui-btn-left">@(parts.Last())</a>
                 }
-                <h1>@ViewBag.Title</h1>
-                <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-ajax="false" class="ui-btn-right">Home</a>
+            }
+            <h1>@ViewBag.Title</h1>
+            <a href="@Url.Action("Index", "Home")" data-icon="home" data-iconpos="notext" data-ajax="false" class="ui-btn-right">Home</a>
+        </div>
+        <div data-role="content" class="ui-content">
+            @RenderBody()
+        </div>
+        <div data-role="footer" data-theme="d" data-position="fixed" data-tap-toggle="false" class="ui-footer ui-bar-d ui-footer-fixed">
+            <div class="line" style="text-align: center; position: relative; height: 40px;">
+                <a href="#" class="footer-toggle">...</a>
+                @RenderSection("FooterBarButtons", required: false)
             </div>
-            <div data-role="content" class="ui-content">
-                @RenderBody()
-            </div>
-            <div data-role="footer" data-theme="d" data-position="fixed" data-tap-toggle="false" class="ui-footer ui-bar-d ui-footer-fixed">
-                <div class="line" style="text-align: center; position: relative; height: 40px;">
-                    <a href="#" class="footer-toggle">...</a>
-                    @RenderSection("FooterBarButtons", required: false)
+            <div class="line site-footer" style="display: none; width: 100%;">
+                <div class="line">
+                    @RenderSection("FooterContent", required: false)
                 </div>
-                <div class="line site-footer" style="display: none; width: 100%;">
-                    <div class="line">
-                        @RenderSection("FooterContent", required: false)
-                    </div>
-                    <div class="line">
-                        <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
-                        @Html.Partial("_LoginPartial")
-                        @if (Request.IsLocal) { <p class="screenSize"></p> }
-                    </div>
+                <div class="line">
+                    <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
+                    @Html.Partial("_LoginPartial")
+                    @if (Request.IsLocal) { <p class="screenSize"></p> }
                 </div>
             </div>
         </div>
+    </div>
 
-        @Scripts.Render("~/bundles/common")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/js")
+    @RenderSection("scripts", required: false)
 
-    </body>
+</body>
 </html>

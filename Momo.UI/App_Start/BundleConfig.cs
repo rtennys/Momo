@@ -5,23 +5,29 @@ namespace Momo.UI
 {
     public class BundleConfig
     {
-        // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/common").Include(
+
+            bundles.Add(new Bundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery.mobile-{version}.js",
-                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery-migrate-{version}.js",
+                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/jquery.unobtrusive*",
+                "~/Scripts/jquery.validate*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 "~/Scripts/knockout-{version}.js",
                 "~/Scripts/knockout.mapping-latest.js",
+                "~/Scripts/toastr.js",
                 "~/Scripts/Site.js"));
 
+
+            bundles.Add(new Bundle("~/Content/themes/base/jquery-ui").Include("~/Content/themes/base/jquery-ui.css"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/jquery.mobile-{version}.css",
+                "~/Content/toastr.css",
                 "~/Content/site.css"));
         }
     }
