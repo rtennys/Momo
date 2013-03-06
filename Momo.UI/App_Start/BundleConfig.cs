@@ -13,20 +13,20 @@ namespace Momo.UI
             bundles.Add(new Bundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery-migrate-{version}.js",
-                "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery.unobtrusive*",
                 "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
+                "~/Scripts/bootstrap.js",
                 "~/Scripts/knockout-{version}.js",
                 "~/Scripts/knockout.mapping-latest.js",
                 "~/Scripts/toastr.js",
                 "~/Scripts/Site.js"));
 
 
-            bundles.Add(new Bundle("~/Content/themes/base/jquery-ui").Include("~/Content/themes/base/jquery-ui.css"));
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/bootstrap.css",
+                "~/Content/bootstrap-responsive.css",
                 "~/Content/toastr.css",
                 "~/Content/site.css"));
         }

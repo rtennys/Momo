@@ -1,46 +1,4 @@
-﻿html, body { margin: 0; padding: 0; }
-body { font-size: 0.875em; }
-form, fieldset, table, tr, th, td, img, input, button, select, textarea, optgroup, option { font-family: inherit; font-size: inherit; font-style: inherit; font-weight: inherit; }
-
-/* grids */
-.line:before, .line:after, .lastUnit:before, .lastUnit:after { content: ""; display: table; }
-.line:after, .lastUnit:after { clear: both; }
-.line { zoom: 1; }
-.line.spaced { margin-top: 35px; }
-.unit { float: left; }
-.unitRight { float: right; }
-.size1of1 { float: none; }
-.size1of2 { width: 50%; }
-.size1of3 { width: 33.33333%; }
-.size2of3 { width: 66.66666%; }
-.size1of4 { width: 25%; }
-.size3of4 { width: 75%; }
-.size1of5 { width: 20%; }
-.size2of5 { width: 40%; }
-.size3of5 { width: 60%; }
-.size4of5 { width: 80%; }
-.lastUnit { display: table-cell; float: none; width: auto; *display: block; *zoom: 1; _position: relative; _left: -3px; _margin-right: -3px; }
-
-/* forms */
-form ol { list-style: none; padding: 0; }
-form ol li { padding: 0; margin-bottom: 10px; }
-form ol li label { display: block; margin-bottom: -0.4em; font-weight: bold; }
-form ol li input.input-validation-error { border: 1px solid #e80c4d !important; }
-form .validation-summary-errors { color: #e80c4d; font-weight: bold; }
-form .validation-summary-valid { display: none; }
-
-/* placeholder */
-::-webkit-input-placeholder { color: lightgray !important; font-style: italic !important; }
-:-moz-placeholder { color: lightgray !important; font-style: italic !important; }
-:-ms-input-placeholder { color: lightgray !important; font-style: italic !important; }
-input.placeholder { color: lightgray !important; font-style: italic !important; }
-
-/* site look & feel */
-.ui-footer a.footer-toggle { display: block; position: absolute; top: 0; bottom: 0; right: 0; padding: 0 15px; color: #333; text-decoration: none; letter-spacing: 2px; }
-.site-footer { font-size: 0.85em; }
-.site-footer p { margin-left: 10px; }
-.site-footer p.screenSize { font-size: 0.85em; }
-
+﻿/* auth buttons */
 .login-button { margin-right: 15px; margin-bottom: 15px; width: 60px; height: 60px; background-color: transparent; background-size: 60px 60px; cursor: pointer; border: none; }
 .facebook-login { background-image: url('images/facebook.png'); }
 .microsoft-login { background-image: url('images/microsoft.png'); }
@@ -48,12 +6,23 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 .myopenid-login { background-image: url('images/myopenid.png'); }
 .yahoo-login { background-image: url('images/yahoo.png'); }
 
-.msg-container { color: #777; font-style: italic; border: solid 1px #bbb; padding: 15px; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 
-li.faded span { opacity: .6; }
+/* site look & feel */
 
-@media only screen and (min-width: 768px) {
-    body.ui-mobile-viewport, div.ui-mobile-viewport { width: 768px; margin-left: auto; margin-right: auto; position: relative; }
-    .ui-mobile-viewport .ui-header, .ui-mobile-viewport .ui-footer { border-width: 1px; border-style: solid; border-color: transparent; border-radius: 8px;  }
-    .ui-mobile-viewport .ui-header-fixed, .ui-mobile-viewport .ui-footer-fixed { position: absolute; }
+
+
+/* Large desktop */
+@media (min-width: 1200px) {
+}
+     
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) {
+}
+     
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+}
+     
+/* Landscape phones and down */
+@media (max-width: 480px) {
 }

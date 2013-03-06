@@ -137,7 +137,117 @@ $.fn.toObject = function () {
 // application namespace
 
 app = {
-    webroot: '/', // override in _Layout for dynamic web root
+    urls: {}, // add urls in cshtml that will be needed in the script
+
+    viewModel: {}, // put current view model here for consistency
+
+    logger: (function () {
+        if (!toastr) throw 'toastr plugin not referenced';
+
+        toastr.options.timeOut = 3000;
+        toastr.options.positionClass = 'toast-bottom-right';
+
+        return {
+            error: function (message, title) {
+                toastr.error(message, title);
+                log('Error: ' + message);
+            },
+            info: function (message, title) {
+                toastr.info(message, title);
+                log('Info: ' + message);
+            },
+            success: function (message, title) {
+                toastr.success(message, title);
+                log('Success: ' + message);
+            },
+            warning: function (message, title) {
+                toastr.warning(message, title);
+                log('Warning: ' + message);
+            },
+            logonly: log
+        };
+
+        function log() {
+            var console = window.console;
+            !!console && console.log && console.log.apply && console.log.apply(console, arguments);
+        }
+
+    })(),
+
+    ajax: function (method, url, data, callback, type) {
+        // shift arguments if data argument was omitted
+        if ($.isFunction(data)) {
+            type = type || callback;
+            callback = data;
+            data = undefined;
+        }
+
+        return jQuery
+            .ajax({ 'url': url, 'type': method || 'POST', 'dataType': type, 'data': data, 'cache': false })
+            .done(function (result) {
+                if (typeof callback === 'function') {
+                    callback(result);
+                }
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                app.logger.error('Try reloading the page before trying again', errorThrown || textStatus);
+            });
+    },
+
+    get: function (url, data, callback, type) {
+        return app.ajax('GET', url, data, callback, type);
+    },
+
+    post: function (url, data, callback, type) {
+        return app.ajax('POST', url, data, callback, type);
+    },
+
+    createDialogForm: function (loadUrl, callback) {
+        var _dialog = $('<div style="min-width: 550px; font-size: .85em;">').hide().appendTo($('body'));
+
+        _dialog.on('submit', 'form', function (e) {
+            var form = $(this);
+
+            e.preventDefault();
+
+            $.validator.unobtrusive.parse(form);
+            if (!form.valid()) {
+                reposition();
+                return false;
+            }
+
+            app.post(form.attr('action'), form.serializeArray(), function (result) {
+                if (typeof result == 'string') {
+                    _dialog.html(result);
+                    reposition();
+                } else {
+                    _dialog.dialog('close');
+                    callback(result);
+                }
+            });
+
+            return false;
+        });
+
+        _dialog
+            .dialog({ modal: true, width: 'auto', close: function () { _dialog.remove(); } })
+            .append($('<p>').text('Loading...'))
+            .load(loadUrl, function (response, status, xhr) {
+                if (status != "error") {
+                    reposition();
+                    return;
+                }
+
+                app.logger.error(xhr.statusText, xhr.status);
+            });
+
+        function reposition() {
+            // forces it to re-position considering any new content
+            _dialog.dialog('option', 'position', _dialog.dialog('option', 'position'));
+        }
+
+        return _dialog;
+    },
 
     debug: function(message) {
         if (window.console && 'debug' in window.console)
@@ -165,14 +275,6 @@ app = {
         };
     })(),
 
-    post: function (url, data, callback) {
-        $.post(url, $.extend({}, { '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() }, data), function (returnedData) {
-            if (typeof callback === "function") {
-                callback(returnedData);
-            }
-        });
-    },
-
     Delayed: function (callback, millisecondsToDelay) {
         /// <summary>
         ///     Use this to delay executing some code for specified period of time.
@@ -197,20 +299,9 @@ app = {
     }
 };
 
-(function(app, $, ko) {
+(function() {
 
-    var $window = $(window), $document = $(document);
-
-    $document.on('click', '.smooth-scroll', function(e) {
-        e.preventDefault();
-        $('html, body').animate({ scrollTop: $(this.hash).offset().top }, 800);
-    });
-
-    $document.on('click', '.footer-toggle', function (e) {
-        e.preventDefault();
-        $('.site-footer').slideToggle('slow');
-        this.blur();
-    });
+    var $window = $(window);
 
     $(function() {
 
@@ -222,259 +313,7 @@ app = {
 
         setSize();
         $window.resize(setSize);
-        $document.on('pageshow', '.ui-page', setSize);
 
     });
 
-
-    /******************************************************/
-    // shoppinglists-index
-    (function() {
-
-        var vm, page;
-
-        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-index');
-
-        function onInit() {
-            page = $(this);
-
-            vm = {
-                noItemsMsg: ko.observable(),
-                shoppingLists: ko.observableArray(),
-                sharedLists: ko.observableArray(),
-                newListName: ko.observable(),
-                onNewListSubmit: onNewListSubmit
-            };
-
-            ko.applyBindings(vm, this);
-        }
-
-        function onShow() {
-            vm.noItemsMsg('Loading...');
-            app.post(page.data('url'), {}, function (result) {
-                vm.shoppingLists($.map(result.ShoppingLists, ko.mapping.fromJS));
-                vm.sharedLists($.map(result.SharedLists, ko.mapping.fromJS));
-                $('[data-role="listview"]', page).listview('refresh');
-                vm.noItemsMsg('No shopping lists found');
-            });
-        }
-        
-        function onNewListSubmit(form) {
-            form = $(form);
-            app.post(form.attr('action'), form.toObject(), function (result) {
-                if (!result.Success) {
-                    form
-                        .resetUnobtrusiveValidation()
-                        .appendValidationErrors(result.Errors);
-
-                    return;
-                }
-
-                vm.newListName(null);
-                form.resetUnobtrusiveValidation();
-                $(':text', page).get(0).blur();
-
-                vm.shoppingLists.push(ko.mapping.fromJS(result.ShoppingList));
-                $('[data-role="listview"]', page).listview('refresh');
-            });
-        }
-
-    })();
-
-
-    /******************************************************/
-    // shoppinglists-show
-    (function () {
-
-        var vm, page;
-
-        $document.on({ pageinit: onInit, pageshow: onShow }, '.shoppinglists-show');
-
-        function onInit() {
-            page = $(this);
-            vm = {
-                noItemsMsg: ko.observable(),
-                listItems: ko.observableArray(),
-                itemToEdit: ko.observable(),
-                newItemName: ko.observable(),
-                hideZeros: ko.observable(true),
-                hidePicked: ko.observable(true),
-                onItemClick: onItemClick,
-                onEditItemClick: onEditItemClick,
-                onEditItemSubmit: onEditItemSubmit,
-                onAddItemSubmit: onAddItemSubmit,
-                onForgetItemClick: onForgetItemClick
-            };
-
-            vm.noItemsVisible = ko.computed(function () {
-                return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
-            });
-
-            vm.estimatedTotal = ko.computed(function() {
-                var total = 0.0;
-                $.each(vm.listItems(), function() {
-                    total += parseFloat(this.Quantity()) * parseFloat(this.Price());
-                });
-                return total;
-            });
-
-            $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
-
-            var runCheckboxradio = new app.Delayed(function () { $('#items-container :checkbox', page).checkboxradio(); }, 10);
-            vm.hideZeros.subscribe(runCheckboxradio.execute);
-            vm.hidePicked.subscribe(runCheckboxradio.execute);
-
-            ko.applyBindings(vm, this);
-        }
-
-        function onShow() {
-            vm.listItems([]);
-            vm.noItemsMsg('Loading...');
-            vm.hideZeros(true);
-            vm.hidePicked(true);
-
-            app.post(page.data('url'), {}, function (listItems) {
-                vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-
-                $('#items-container :checkbox', page).checkboxradio();
-                $('#items-container', page).show();
-
-                vm.noItemsMsg('Nothing needed!');
-            });
-        }
-
-        function onItemClick(listItem, e) {
-            app.post(url('changepicked'), { id: listItem.Id(), picked: listItem.Picked() });
-            $(e.currentTarget).parents('.ui-focus').removeClass('ui-focus');
-        }
-
-        function onEditItemClick(listItem, e) {
-            var popup = $('#edit-item-container'),
-                form = popup.find('form'),
-                isQtyClick = $(e.currentTarget).is('span');
-
-            e.currentTarget.blur();
-
-            vm.itemToEdit(listItem);
-            form.resetUnobtrusiveValidation();
-
-            popup
-                .show()
-                .one('popupbeforeposition', function () { $('.ui-popup-screen').off(); })
-                .one('popupafteropen', function () {
-                    var field = isQtyClick ? 'Quantity' : 'Aisle';
-                    var element = $('[name="' + field + '"]', this);
-                    setTimeout(function() {
-                        element.focus().select();
-                    }, 200);
-                })
-                .popup('open');
-        }
-
-        function onEditItemSubmit() {
-            var popup = $('#edit-item-container'),
-                form = popup.find('form');
-
-            if (!form.valid()) return;
-
-            app.post(form.attr('action'), form.toObject(), function (result) {
-                if (!result.Success) {
-                    form
-                        .resetUnobtrusiveValidation()
-                        .appendValidationErrors(result.Errors);
-                    return;
-                }
-
-                popup.popup('close');
-                vm.itemToEdit(null);
-
-                vm.listItems.sort(itemComparer);
-            });
-        }
-
-        function onAddItemSubmit(form) {
-            form = $(form);
-            app.post(form.attr('action'), form.toObject(), function (result) {
-                if (!result.Success) {
-                    form.appendValidationErrors(result.Errors);
-                    return;
-                }
-
-                vm.newItemName(null);
-                form.resetUnobtrusiveValidation();
-
-                var foundItem = vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
-
-                if (foundItem.length > 0) {
-                    ko.mapping.fromJS(result.Item, foundItem[0]);
-                } else {
-                    vm.listItems.push(extendItem(result.Item));
-                    $('#items-container :checkbox', page).checkboxradio();
-                    vm.listItems.sort(itemComparer);
-                }
-            });
-        }
-
-        function onForgetItemClick(listItem) {
-            if (!confirm('Delete this item from the list?')) return;
-
-            app.post(url('deleteitem'), { id: listItem.Id() });
-
-            $('#edit-item-container').popup('close');
-            vm.itemToEdit(null);
-            vm.listItems.remove(listItem);
-        }
-
-
-        function url(actionAndQuery) {
-            return page.data('url') + '/' + actionAndQuery;
-        }
-
-        function extendItem(jsItem) {
-            var item = ko.mapping.fromJS(jsItem);
-
-            item.htmlName = ko.computed(function () {
-                return 'item-' + item.Id();
-            });
-
-            item.isVisible = ko.computed(function () {
-                if (item.Quantity() == 0 && vm.hideZeros()) return false;
-                if (item.Picked() && vm.hidePicked()) return false;
-                return true;
-            });
-
-            item.showDivider = ko.computed(function () {
-                var idx = vm.listItems.indexOf(item),
-                    aisle = +item.Aisle();
-
-                if (idx < 0) return false;
-
-                if (idx < 1 || +vm.listItems()[idx - 1].Aisle() != aisle) {
-                    var items = vm.listItems().filter(function(value) {
-                        return +value.Aisle() === aisle && value.isVisible();
-                    });
-
-                    return items.length > 0;
-                }
-
-                return false;
-            });
-
-            return item;
-        }
-
-        function itemComparer(a, b) {
-            var aisleDiff = a.Aisle() - b.Aisle();
-            if (aisleDiff !== 0) return aisleDiff;
-
-            a = a.Name().toLowerCase();
-            b = b.Name().toLowerCase();
-
-            if (a < b) return -1;
-            if (a > b) return 1;
-            return 0;
-        }
-
-    })();
-
-})(app, jQuery, ko);
+})();
