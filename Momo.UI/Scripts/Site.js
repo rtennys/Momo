@@ -313,7 +313,7 @@ app = {
             vm.estimatedTotal = ko.computed(function() {
                 var total = 0.0;
                 $.each(vm.listItems(), function() {
-                    total += parseFloat(this.Quantity()) * parseFloat(this.Price());
+                    total += this.Picked() ? 0 : parseFloat(this.Quantity()) * parseFloat(this.Price());
                 });
                 return total;
             });
