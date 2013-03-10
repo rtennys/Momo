@@ -318,8 +318,6 @@ app = {
                 return total;
             });
 
-            $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
-
             var runCheckboxradio = new app.Delayed(function () { $('#items-container :checkbox', page).checkboxradio(); }, 10);
             vm.hideZeros.subscribe(runCheckboxradio.execute);
             vm.hidePicked.subscribe(runCheckboxradio.execute);
@@ -409,9 +407,10 @@ app = {
                     ko.mapping.fromJS(result.Item, foundItem[0]);
                 } else {
                     vm.listItems.push(extendItem(result.Item));
-                    $('#items-container :checkbox', page).checkboxradio();
                     vm.listItems.sort(itemComparer);
                 }
+
+                $('#items-container :checkbox', page).checkboxradio();
             });
         }
 

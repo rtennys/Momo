@@ -31,7 +31,8 @@ namespace Momo.UI
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/jquery.mobile-{version}.js",
                 "~/Scripts/knockout-{version}.js",
-                "~/Scripts/knockout.mapping-latest.js"));
+                "~/Scripts/knockout.mapping-latest.js",
+                "~/Scripts/toastr.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/minimized").Include(
                 "~/Scripts/Site.js"));

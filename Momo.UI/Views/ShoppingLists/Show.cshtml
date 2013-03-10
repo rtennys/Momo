@@ -30,7 +30,7 @@
         <!-- ko foreach: listItems -->
 
         <!-- ko if: showDivider -->
-        <li data-bind="'css': { 'ui-corner-top': $index() == 0 }" data-role="list-divider">
+        <li data-bind="'css': { 'ui-first-child': $index() == 0 }" data-role="list-divider">
             Aisle <span data-bind="'text': Aisle() == 0 ? 'not set' : Aisle()"></span>
         </li>
         <!-- /ko -->
