@@ -5,24 +5,36 @@ namespace Momo.UI
 {
     public class BundleConfig
     {
-        // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
+            RegisterCss(bundles);
+            RegisterJavascript(bundles);
+        }
 
-            bundles.Add(new ScriptBundle("~/bundles/common").Include(
-                "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery.mobile-{version}.js",
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/knockout-{version}.js",
-                "~/Scripts/knockout.mapping-latest.js",
-                "~/Scripts/Site.js"));
-
+        private static void RegisterCss(BundleCollection bundles)
+        {
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/jquery.mobile-{version}.css",
+                "~/Content/toastr.css",
                 "~/Content/site.css"));
+        }
+
+        private static void RegisterJavascript(BundleCollection bundles)
+        {
+            bundles.Add(new Bundle("~/bundles/modernizr").Include(
+                "~/Scripts/modernizr-*"));
+
+            bundles.Add(new Bundle("~/bundles/unminimized").Include(
+                "~/Scripts/jquery-{version}.js",
+                "~/Scripts/jquery-migrate-{version}.js",
+                "~/Scripts/jquery.unobtrusive*",
+                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.mobile-{version}.js",
+                "~/Scripts/knockout-{version}.js",
+                "~/Scripts/knockout.mapping-latest.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/minimized").Include(
+                "~/Scripts/Site.js"));
         }
     }
 }
