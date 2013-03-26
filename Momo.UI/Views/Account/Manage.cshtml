@@ -5,19 +5,19 @@
 
 <p>@ViewBag.StatusMessage</p>
 
-<div class="line">
+<div class="row">
     <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
 
     @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
 </div>
 
 
-<div class="line spaced">
+<div class="row spaced">
     @Html.Action("RemoveExternalLogins")
 </div>
 
 
-<div class="line spaced">
+<div class="row spaced">
     <h3>Add an external login</h3>
     @Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl })
 </div>

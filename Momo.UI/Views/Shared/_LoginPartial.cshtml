@@ -1,6 +1,6 @@
 ﻿@if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", data_ajax = "false"}))
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm"}))
     {
         @Html.AntiForgeryToken()
         <p><a href="#sign-out" onclick=" $(this).parents('form:first').submit() ">Sign Out</a></p>
@@ -8,5 +8,5 @@
 }
 else
 {
-    <p>@Html.ActionLink("Sign in", "Login", "Account", new {returnUrl = Request.RawUrl}, new {data_ajax = "false"})</p>
+    <p>@Html.ActionLink("Sign in", "Login", "Account", new {returnUrl = Request.RawUrl}, null)</p>
 }

@@ -17,24 +17,17 @@
 <p data-bind="'text': noItemsMsg, 'visible': shoppingLists().length == 0 && sharedLists().length == 0"></p>
 
 
-<ul class="nav nav-tabs nav-stacked">
+<!-- ko foreach: shoppingLists -->
+<p><a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a></p>
+<!-- /ko -->
 
-    <!-- ko foreach: shoppingLists -->
-    <li>
-        <a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a>
-    </li>
+<!-- ko if: sharedLists().length > 0 -->
+    <p><strong>Shared Lists</strong></p>
+    <!-- ko foreach: sharedLists -->
+    <p><a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a></p>
     <!-- /ko -->
+<!-- /ko -->
 
-    <!-- ko if: sharedLists().length > 0 -->
-        <li class="nav-header">Shared Lists</li>
-        <!-- ko foreach: sharedLists -->
-        <li>
-            <a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a>
-        </li>
-        <!-- /ko -->
-    <!-- /ko -->
-
-</ul>
 
 
 @section scripts

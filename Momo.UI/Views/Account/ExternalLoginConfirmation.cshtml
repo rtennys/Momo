@@ -9,7 +9,7 @@
     signing in.
 </p>
 
-@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {data_ajax = "false"}))
+@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new {ViewBag.ReturnUrl}))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ExternalLoginData)

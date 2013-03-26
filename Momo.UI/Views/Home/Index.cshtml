@@ -4,20 +4,11 @@
     ViewBag.Title = "Home";
 }
 
-<nav>
-    <ul data-role="listview" data-inset="true">
-        @if (Request.IsAuthenticated) {
-        <li>@Html.ActionLink("Shopping Lists", "Index", "ShoppingLists")</li>
-        }
-        <li>@Html.ActionLink("About", "About", "Home")</li>
-        <li>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</li>
-    </ul>
-</nav>
+@if (Request.IsAuthenticated) {
+<p>@Html.ActionLink("My Shopping Lists", "Index", "ShoppingLists")</p>
+}
+<p>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</p>
 
-<div class="line">
-    <h3>Example</h3>
-    <p>
-        As an example, check out my personal lists: <br />
-        @Html.ActionLink("Rob Tennyson", "Index", "ShoppingLists", new {username = "robtennyson"}, null)
-    </p>
-</div>
+<p>
+    As an example, check out this website author's personal lists: @Html.ActionLink("Rob Tennyson", "Index", "ShoppingLists", new {username = "robtennyson"}, null)
+</p>

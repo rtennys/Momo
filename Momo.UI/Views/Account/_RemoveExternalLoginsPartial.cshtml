@@ -12,7 +12,7 @@
                 <td>
                     @if (ViewBag.ShowRemoveButton)
                     {
-                        using (Html.BeginForm("Disassociate", "Account", FormMethod.Post, new {data_ajax = "false"}))
+                        using (Html.BeginForm("Disassociate", "Account"))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("provider", externalLogin.Provider)

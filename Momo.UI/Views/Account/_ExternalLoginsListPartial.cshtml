@@ -1,7 +1,7 @@
 ﻿@using Momo.Common
 @model ICollection<AuthenticationClientData>
 
-@using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}, FormMethod.Post, new {data_ajax = "false"}))
+@using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}))
 {
     @Html.AntiForgeryToken()
     <p>
