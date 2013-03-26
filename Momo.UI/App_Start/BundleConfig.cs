@@ -17,7 +17,6 @@ namespace Momo.UI
                 "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
-                "~/Scripts/bootstrap.js",
                 "~/Scripts/knockout-{version}.js",
                 "~/Scripts/knockout.mapping-latest.js",
                 "~/Scripts/toastr.js",
@@ -25,8 +24,6 @@ namespace Momo.UI
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.css",
-                "~/Content/bootstrap-responsive.css",
                 "~/Content/toastr.css",
                 "~/Content/site.css"));
         }
