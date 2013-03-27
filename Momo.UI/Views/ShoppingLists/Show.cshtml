@@ -7,12 +7,10 @@
     ViewBag.Title = Model.Name;
 }
 
-@* This is for the "picked" javascript*@
-@Html.AntiForgeryToken()
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit", data_ajax = "false"}))
+    using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit"}))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="ShoppingListId" value="@Model.Id" />
@@ -21,53 +19,41 @@
     }
 }
 
-<p data-bind="'text': noItemsMsg, 'visible': noItemsVisible" class="msg-container"></p>
+<div data-bind="'text': noItemsMsg, 'visible': noItemsVisible"></div>
 
-<div id="items-container" style="display: none;">
-    <ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
-        <li style="display: none;"><a href="#">empty item</a></li>
+<div data-bind="foreach: listItems">
 
-        <!-- ko foreach: listItems -->
-
-        <!-- ko if: showDivider -->
-        <li data-bind="'css': { 'ui-corner-top': $index() == 0 }" data-role="list-divider">
-            Aisle <span data-bind="'text': Aisle() == 0 ? 'not set' : Aisle()"></span>
-        </li>
-        <!-- /ko -->
-
-        <!-- ko if: isVisible -->
-        <li data-bind="'css': { 'faded': Picked() || Quantity() == 0 }" data-icon="false">
-            <a href="#" style="padding: 0;">
-                <!-- ko template: {name: 'cb-tmpl'} --><!-- /ko -->
-                <span data-bind="'text': Quantity @(CurrentUser.HasShoppingListAccess() ? ", 'click': $root.onEditItemClick" : "")" class="ui-li-count" style="z-index: 1;">0</span>
-            </a>
-            @if (CurrentUser.HasShoppingListAccess())
-            {
-                <a href="#" data-bind="'click': $root.onEditItemClick">Edit</a>
-            }
-        </li>
-        <!-- /ko -->
-
-        <!-- /ko -->
-
-        <li style="display: none;"><a href="#">empty item</a></li>
-    </ul>
-
-    <p style="text-align: right;">
-        Estimated Total: <span data-bind="'moneyText': estimatedTotal"></span> <br />
-        <small>estimate is based on the prices you have provided</small>
+    <!-- ko 'if': showDivider -->
+    <p style="font-weight: bold;">
+        Aisle <span data-bind="'text': Aisle() == 0 ? 'not set' : Aisle()"></span>
     </p>
+    <!-- /ko -->
+
+    <!-- ko 'if': isVisible -->
+    <div data-bind="'css': { 'faded': Picked() || Quantity() == 0 }" class="mobileAccessible">
+        <div class="row">
+            <div class="span11">
+                <input type="checkbox" data-bind="'checked': Picked, 'click': $root.onItemClick" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                <!-- ko 'text': Name --><!-- /ko -->
+            </div>
+            <div class="span1 clickable" style="text-align: center;" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
+                <span data-bind="'text': Quantity ">0</span>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
 </div>
 
-<script id="cb-tmpl" type="text/html">
-    <label data-bind="'attr': { 'for': htmlName }" style="font-size: .85em; border: 0; margin: 0;">
-        <input type="checkbox" data-bind="'checked': Picked, 'click': $root.onItemClick, 'attr': { 'name': htmlName, 'id': htmlName }" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
-        <!-- ko text: Name --><!-- /ko -->
-    </label>
-</script>
+<p style="text-align: right;">
+    Estimated Total: <span data-bind="'moneyText': estimatedTotal"></span> <br />
+    <small>estimate is based on the prices you have provided</small>
+</p>
 
-<div data-bind="'with': itemToEdit" id="edit-item-container" data-role="popup" data-history="false" class="ui-content" style="display: none;">
-    @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.onEditItemSubmit", data_ajax = "false"}))
+
+
+<div data-bind="'with': itemToEdit" id="edit-item-container" style="display: none;">
+    @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.onEditItemSubmit"}))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" value="@Model.Id" name="ShoppingListId" />
@@ -100,45 +86,59 @@
     }
 </div>
 
-@section FooterBarButtons
-{
-    <div class="unit size2of5">
-        <label><input type="checkbox" data-bind="'checked': hideZeros" checked="checked" /> Hide Zeros</label>
-    </div>
-    <div class="unit size2of5">
-        <label><input type="checkbox" data-bind="'checked': hidePicked" checked="checked" /> Hide Checked</label>
-    </div>
-}
 
 @section FooterContent
 {
+    <div class="row">
+        <div class="span6"><label><input type="checkbox" data-bind="'checked': hideZeros" checked="checked" /> Hide Zeros</label></div>
+        <div class="span6"><label><input type="checkbox" data-bind="'checked': hidePicked" checked="checked" /> Hide Checked</label></div>
+    </div>
 
     @if (CurrentUser.HasShoppingListAccess())
     {
-        using (Html.BeginForm("Clear", null, FormMethod.Post, new { data_ajax = "false" }))
+        using (Html.BeginForm("Clear", null))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.Id)
+            <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <p>
-                <input type="submit" value="Set all to Zero" data-icon="refresh" data-mini="true" data-inline="true" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
+                <input type="submit" value="Set all to Zero" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
             </p>
         }
     }
 
     @if (CurrentUser.IsRouteUsername())
     {
-        <p>
-            @Html.ActionLink("Rename", "Rename", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
-            @Html.ActionLink("Sharing", "Share", null, new { data_role = "button", data_icon = "gear", data_mini = "true", data_inline = "true", data_ajax = "false" })
-        </p>
-        using (Html.BeginForm("Delete", null, FormMethod.Post, new { data_ajax = "false" }))
+        using (Html.BeginForm("Rename", null, FormMethod.Get))
+        {
+            <p><input type="submit" value="Rename" /></p>
+        }
+        using (Html.BeginForm("Sharing", null, FormMethod.Get))
+        {
+            <p><input type="submit" value="Sharing" /></p>
+        }
+        using (Html.BeginForm("Delete", null))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(m => m.Id)
+            <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <p>
-                <input type="submit" value="Delete This List" data-icon="delete" data-mini="true" data-inline="true" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
+                <input type="submit" value="Delete This List" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
             </p>
         }
     }
 
+}
+
+
+
+@section scripts
+{
+    <script>
+        $.extend(app.urls, {
+            show: '@Url.Action("Show")',
+            changePicked: '@Url.Action("ChangePicked")',
+            deleteItem: '@Url.Action("DeleteItem")'
+        });
+    </script>
+
+    @Scripts.Render("~/Scripts/Site.ShoppingLists.Show.js")
 }

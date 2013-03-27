@@ -1,63 +1,42 @@
 ﻿(function(app, $, ko) {
 
-    var vm, page;
+    var vm = app.viewModel = {
+        noItemsMsg: ko.observable('Loading...'),
+        listItems: ko.observableArray([]),
+        itemToEdit: ko.observable(),
+        newItemName: ko.observable(),
+        hideZeros: ko.observable(true),
+        hidePicked: ko.observable(true),
+        onItemClick: onItemClick,
+        onEditItemClick: onEditItemClick,
+        onEditItemSubmit: onEditItemSubmit,
+        onAddItemSubmit: onAddItemSubmit,
+        onForgetItemClick: onForgetItemClick
+    };
 
-    function onInit() {
-        page = $(this);
-        vm = {
-            noItemsMsg: ko.observable(),
-            listItems: ko.observableArray(),
-            itemToEdit: ko.observable(),
-            newItemName: ko.observable(),
-            hideZeros: ko.observable(true),
-            hidePicked: ko.observable(true),
-            onItemClick: onItemClick,
-            onEditItemClick: onEditItemClick,
-            onEditItemSubmit: onEditItemSubmit,
-            onAddItemSubmit: onAddItemSubmit,
-            onForgetItemClick: onForgetItemClick
-        };
+    vm.noItemsVisible = ko.computed(function () {
+        return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
+    });
 
-        vm.noItemsVisible = ko.computed(function() {
-            return vm.listItems().filter(function(item) { return item.isVisible(); }).length == 0;
+    vm.estimatedTotal = ko.computed(function () {
+        var total = 0.0;
+        $.each(vm.listItems(), function () {
+            total += this.Picked() ? 0 : parseFloat(this.Quantity()) * parseFloat(this.Price());
         });
+        return total;
+    });
 
-        vm.estimatedTotal = ko.computed(function() {
-            var total = 0.0;
-            $.each(vm.listItems(), function() {
-                total += parseFloat(this.Quantity()) * parseFloat(this.Price());
-            });
-            return total;
-        });
+    ko.applyBindings(vm);
 
-        $('#items-container ul').removeClass('ui-corner-all').addClass('ui-corner-top');
+    app.post(app.urls.show, function (listItems) {
+        vm.listItems($.map(listItems, extendItem).sort(itemComparer));
+        vm.noItemsMsg('Nothing needed!');
+    });
 
-        var runCheckboxradio = new app.Delayed(function() { $('#items-container :checkbox', page).checkboxradio(); }, 10);
-        vm.hideZeros.subscribe(runCheckboxradio.execute);
-        vm.hidePicked.subscribe(runCheckboxradio.execute);
-
-        ko.applyBindings(vm, this);
-    }
-
-    function onShow() {
-        vm.listItems([]);
-        vm.noItemsMsg('Loading...');
-        vm.hideZeros(true);
-        vm.hidePicked(true);
-
-        app.post(page.data('url'), {}, function(listItems) {
-            vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-
-            $('#items-container :checkbox', page).checkboxradio();
-            $('#items-container', page).show();
-
-            vm.noItemsMsg('Nothing needed!');
-        });
-    }
 
     function onItemClick(listItem, e) {
-        app.post(url('changepicked'), { id: listItem.Id(), picked: listItem.Picked() });
-        $(e.currentTarget).parents('.ui-focus').removeClass('ui-focus');
+        app.post(app.urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+        return true;
     }
 
     function onEditItemClick(listItem, e) {
@@ -89,7 +68,7 @@
 
         if (!form.valid()) return;
 
-        app.post(form.attr('action'), form.toObject(), function(result) {
+        app.post(form.attr('action'), form.serializeArray(), function (result) {
             if (!result.Success) {
                 form
                     .resetUnobtrusiveValidation()
@@ -106,7 +85,7 @@
 
     function onAddItemSubmit(form) {
         form = $(form);
-        app.post(form.attr('action'), form.toObject(), function(result) {
+        app.post(form.attr('action'), form.serializeArray(), function (result) {
             if (!result.Success) {
                 form.appendValidationErrors(result.Errors);
                 return;
@@ -115,13 +94,12 @@
             vm.newItemName(null);
             form.resetUnobtrusiveValidation();
 
-            var foundItem = vm.listItems().filter(function(item) { return item.Id() === result.Item.Id; });
+            var foundItem = vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
 
             if (foundItem.length > 0) {
                 ko.mapping.fromJS(result.Item, foundItem[0]);
             } else {
                 vm.listItems.push(extendItem(result.Item));
-                $('#items-container :checkbox', page).checkboxradio();
                 vm.listItems.sort(itemComparer);
             }
         });
@@ -130,7 +108,7 @@
     function onForgetItemClick(listItem) {
         if (!confirm('Delete this item from the list?')) return;
 
-        app.post(url('deleteitem'), { id: listItem.Id() });
+        app.post(app.urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
 
         $('#edit-item-container').popup('close');
         vm.itemToEdit(null);
@@ -138,16 +116,8 @@
     }
 
 
-    function url(actionAndQuery) {
-        return page.data('url') + '/' + actionAndQuery;
-    }
-
     function extendItem(jsItem) {
         var item = ko.mapping.fromJS(jsItem);
-
-        item.htmlName = ko.computed(function() {
-            return 'item-' + item.Id();
-        });
 
         item.isVisible = ko.computed(function() {
             if (item.Quantity() == 0 && vm.hideZeros()) return false;
@@ -162,7 +132,7 @@
             if (idx < 0) return false;
 
             if (idx < 1 || +vm.listItems()[idx - 1].Aisle() != aisle) {
-                var items = vm.listItems().filter(function(value) {
+                var items = vm.listItems().filter(function (value) {
                     return +value.Aisle() === aisle && value.isVisible();
                 });
 

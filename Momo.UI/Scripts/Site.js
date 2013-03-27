@@ -72,20 +72,6 @@ $.fn.appendValidationErrors = function (errors) {
     });
 };
 
-$.fn.toObject = function () {
-    /// <summary>Only call on form elements or form input elements</summary>
-
-    var obj = {};
-
-    this.each(function () {
-        $.map($(this).serializeArray(), function (n) {
-            obj[n.name] = n.value;
-        });
-    });
-
-    return obj;
-};
-
 
 /******************************************************/
 /******************************************************/
