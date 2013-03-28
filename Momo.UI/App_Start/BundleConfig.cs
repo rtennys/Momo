@@ -11,8 +11,6 @@ namespace Momo.UI
 
 
             bundles.Add(new Bundle("~/bundles/jquery").Include(
-                "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery-migrate-{version}.js",
                 "~/Scripts/jquery.unobtrusive*",
                 "~/Scripts/jquery.validate*"));
 

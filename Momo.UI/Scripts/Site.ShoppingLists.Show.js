@@ -12,7 +12,12 @@
         onEditItemSubmit: onEditItemSubmit,
         onAddItemSubmit: onAddItemSubmit,
         onForgetItemClick: onForgetItemClick
-    };
+    },
+        editDialog = $('#edit-item-container').dialog({
+            autoOpen: false,
+            modal: true,
+            width: 'auto'
+        });
 
     vm.noItemsVisible = ko.computed(function () {
         return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
@@ -42,29 +47,28 @@
     function onEditItemClick(listItem, e) {
         var popup = $('#edit-item-container'),
             form = popup.find('form'),
-            isQtyClick = $(e.currentTarget).is('span');
+            isQtyEdit = $('[data-bind*="Quantity"]', e.currentTarget).length > 0;
 
         e.currentTarget.blur();
 
         vm.itemToEdit(listItem);
         form.resetUnobtrusiveValidation();
 
-        popup
-            .show()
-            .one('popupbeforeposition', function() { $('.ui-popup-screen').off(); })
-            .one('popupafteropen', function() {
-                var field = isQtyClick ? 'Quantity' : 'Aisle';
-                var element = $('[name="' + field + '"]', this);
-                setTimeout(function() {
+        editDialog
+            .one('dialogopen', function () {
+                var field = isQtyEdit ? 'Quantity' : 'Aisle';
+                var element = $('[name="' + field + '"]', editDialog);
+                app.logger.logonly(field);
+                app.logger.logonly(element);
+                setTimeout(function () {
                     element.focus().select();
                 }, 200);
             })
-            .popup('open');
+            .dialog('open');
     }
 
     function onEditItemSubmit() {
-        var popup = $('#edit-item-container'),
-            form = popup.find('form');
+        var form = editDialog.find('form');
 
         if (!form.valid()) return;
 
@@ -76,7 +80,7 @@
                 return;
             }
 
-            popup.popup('close');
+            editDialog.dialog('close');
             vm.itemToEdit(null);
 
             vm.listItems.sort(itemComparer);

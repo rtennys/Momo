@@ -74,6 +74,7 @@ select { width: 80%; padding: 0.4em; border: solid 1px #aaa; border-radius: 0.6e
 .validation-summary-valid { display: none; }
 
 input[type="submit"],
+input[type="button"],
 button { border-radius: 6px; padding: 2px 8px; }
 
 /* placeholder */
