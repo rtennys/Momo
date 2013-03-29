@@ -10,30 +10,28 @@
     @Html.Hidden("username")
     @Html.Hidden("shoppinglist")
     <ol>
-        <li>@Html.TextBox("shareWith")</li>
+        <li>@Html.TextBox("shareWith", "", new {placeholder = "Username"})</li>
     </ol>
-    <input type="submit" value="Add" id="start-sharing" />
+    <input type="submit" value="Add" />
 }
 
-<ul data-role="listview" data-inset="true" style="margin-top: 50px">
-    <li data-role="list-divider">Currently Shared With</li>
-    @if (Model.Length == 0)
+<p style="margin-top: 50px;">Currently Shared With</p>
+@if (Model.Length == 0)
+{
+    <p><em>Not being shared</em></p>
+}
+
+@foreach (var username in Model)
+{
+    using (Html.BeginForm("StopSharing", null))
     {
-        <li><em>Not being shared</em></li>
+        @Html.AntiForgeryToken()
+        @Html.Hidden("username")
+        @Html.Hidden("shoppinglist")
+        @Html.Hidden("shareWith", username)
+        <div class="mobileAccessible">
+            <input type="submit" value="Remove" style="margin-right: 25px;" />
+            @Html.ActionLink(username, "Index", "ShoppingLists", new {username}, null)
+        </div>
     }
-    @foreach (var username in Model)
-    {
-        <li data-icon="delete" title="remove">
-            <a href="#" onclick="$(this).children('form').submit();">
-                @username
-                @using (Html.BeginForm("StopSharing", null, FormMethod.Post, new {data_ajax = "false", style = "display: inline;"}))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("username")
-                    @Html.Hidden("shoppinglist")
-                    @Html.Hidden("shareWith", username)
-                }
-            </a>
-        </li>
-    }
-</ul>
+}

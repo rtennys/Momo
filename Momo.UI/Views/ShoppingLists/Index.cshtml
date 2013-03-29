@@ -8,7 +8,9 @@
     using (Html.BeginForm("add", null, FormMethod.Post, new {data_bind = "submit: onNewListSubmit"}))
     {
         @Html.AntiForgeryToken()
-        <input type="text" name="Name" placeholder="new list" data-bind="'value': newListName, 'valueUpdate': 'afterkeydown'" />
+        <ol>
+            <li><input type="text" name="Name" placeholder="new list" data-bind="'value': newListName, 'valueUpdate': 'afterkeydown'" /></li>
+        </ol>
         @Html.ValidationSummary()
     }
 }

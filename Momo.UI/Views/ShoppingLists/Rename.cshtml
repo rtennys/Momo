@@ -4,7 +4,7 @@
     ViewBag.Title = "Rename";
 }
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new {data_ajax = "false"}))
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)

@@ -119,7 +119,8 @@ namespace Momo.UI.Controllers
                 return View(model);
 
             _uow.Commit();
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Show", new {username = model.Username, shoppingList = model.Name});
         }
 
         [ValidateRouteUsername]

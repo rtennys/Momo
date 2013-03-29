@@ -29,19 +29,21 @@
     <div class="row">
         <div class="pg-content">
             <footer>
+
                 @if (IsSectionDefined("FooterContent"))
                 {
                     <div class="row">
                         @RenderSection("FooterContent", false)
                     </div>
                 }
+
                 <div class="row" style="@(IsSectionDefined("FooterContent") ? "margin-top: 50px" : "")">
                     <p><a href="@Url.Action("Index", "Home")">Home</a></p>
                     <p><a href="@Url.Action("About", "Home")">About</a></p>
-                    @Html.Partial("_LoginPartial")
                     <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
                     @if (Request.IsLocal) { <p class="screenSize"></p> }
                 </div>
+
             </footer>
         </div>
     </div>

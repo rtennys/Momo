@@ -6,7 +6,11 @@
 <p>@ViewBag.StatusMessage</p>
 
 <div class="row">
-    <p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+    @using (Html.BeginForm("LogOff", "Account"))
+    {
+        @Html.AntiForgeryToken()
+        <p>You're signed in as <strong>@User.Identity.Name</strong>. <input type="submit" value="Sign Out"/></p>
+    }
 
     @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
 </div>

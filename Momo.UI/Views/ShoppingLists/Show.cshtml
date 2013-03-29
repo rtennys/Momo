@@ -7,6 +7,7 @@
     ViewBag.Title = Model.Name;
 }
 
+<p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): <strong>@Model.Name</strong></p>
 
 @if (CurrentUser.HasShoppingListAccess())
 {
@@ -14,7 +15,9 @@
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="ShoppingListId" value="@Model.Id" />
-        <input type="text" name="Name" placeholder="new item" data-bind="'value': newItemName, 'valueUpdate': 'afterkeydown'" />
+        <ol>
+            <li><input type="text" name="Name" placeholder="new item" data-bind="'value': newItemName, 'valueUpdate': 'afterkeydown'" /></li>
+        </ol>
         @Html.ValidationSummary()
     }
 }
@@ -91,7 +94,7 @@
 {
     <div class="row">
         <div class="span6"><label><input type="checkbox" data-bind="'checked': hideZeros" checked="checked" /> Hide Zeros</label></div>
-        <div class="span6"><label><input type="checkbox" data-bind="'checked': hidePicked" checked="checked" /> Hide Checked</label></div>
+        <div class="span6" style="text-align: right;"><label><input type="checkbox" data-bind="'checked': hidePicked" checked="checked" /> Hide Checked</label></div>
     </div>
 
     @if (CurrentUser.HasShoppingListAccess())
@@ -112,7 +115,7 @@
         {
             <p><input type="submit" value="Rename" /></p>
         }
-        using (Html.BeginForm("Sharing", null, FormMethod.Get))
+        using (Html.BeginForm("Share", null, FormMethod.Get))
         {
             <p><input type="submit" value="Sharing" /></p>
         }
