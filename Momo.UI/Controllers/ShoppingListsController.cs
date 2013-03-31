@@ -34,10 +34,10 @@ namespace Momo.UI.Controllers
                 return View();
 
             var model = new
-                        {
-                            ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray(),
-                            SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray()
-                        };
+            {
+                ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray(),
+                SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray()
+            };
 
             return Json(model);
         }
@@ -98,10 +98,10 @@ namespace Momo.UI.Controllers
                 return HttpNotFound();
 
             var model = new ShoppingListsRenameModel
-                        {
-                            Id = shoppingList.Id,
-                            Name = shoppingList.Name
-                        };
+            {
+                Id = shoppingList.Id,
+                Name = shoppingList.Name
+            };
 
             return View(model);
         }
@@ -247,6 +247,21 @@ namespace Momo.UI.Controllers
             var item = _repository.Get<ShoppingListItem>(id);
             item.Picked = picked;
             _uow.Commit();
+        }
+
+        [ValidateShoppingListAccess]
+        public ActionResult Autocomplete(string username, string shoppinglist, string term)
+        {
+            var model = _repository
+                .Find<ShoppingListItem>()
+                .Where(x => x.ShoppingList.UserProfile.Username == username)
+                .Where(x => x.ShoppingList.Name == shoppinglist)
+                .Where(x => x.Name.Contains(term))
+                .OrderBy(x => x.Name)
+                .Select(x => new {label = x.Name + " - aisle " + x.Aisle, value = x.Name})
+                .ToArray();
+
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
     }
 }

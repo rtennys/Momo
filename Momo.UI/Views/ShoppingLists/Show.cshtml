@@ -16,7 +16,7 @@
         @Html.AntiForgeryToken()
         <input type="hidden" name="ShoppingListId" value="@Model.Id" />
         <ol>
-            <li><input type="text" name="Name" placeholder="new item" data-bind="'value': newItemName, 'valueUpdate': 'afterkeydown'" /></li>
+            <li><input type="text" id="txtAddItem" name="Name" placeholder="new item" data-bind="'value': newItemName, 'valueUpdate': 'afterkeydown'" /></li>
         </ol>
         @Html.ValidationSummary()
     }
@@ -24,7 +24,7 @@
 
 <div data-bind="'text': noItemsMsg, 'visible': noItemsVisible"></div>
 
-<div data-bind="foreach: listItems">
+<div data-bind="foreach: listItems" id="items-container" style="display: none;">
 
     <!-- ko 'if': showDivider -->
     <p style="font-weight: bold;">
@@ -139,7 +139,8 @@
         $.extend(app.urls, {
             show: '@Url.Action("Show")',
             changePicked: '@Url.Action("ChangePicked")',
-            deleteItem: '@Url.Action("DeleteItem")'
+            deleteItem: '@Url.Action("DeleteItem")',
+            autocomplete: '@Url.Action("Autocomplete")'
         });
     </script>
 

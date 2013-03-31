@@ -33,9 +33,28 @@
 
     ko.applyBindings(vm);
 
-    app.post(app.urls.show, function (listItems) {
-        vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-        vm.noItemsMsg('Nothing needed!');
+    $(function() {
+        setTimeout(function() {
+
+            app.post(app.urls.show, function (listItems) {
+                vm.listItems($.map(listItems, extendItem).sort(itemComparer));
+                vm.noItemsMsg('Nothing needed!');
+
+                $('#items-container').show();
+
+                var txtAddItem = $('#txtAddItem');
+                txtAddItem.autocomplete({
+                    delay: 500,
+                    minLength: 3,
+                    source: app.urls.autocomplete,
+                    select: function (e, ui) {
+                        txtAddItem.val(ui.item.value);
+                        txtAddItem.parents('form:first').submit();
+                    }
+                });
+            });
+
+        }, 500);
     });
 
 
