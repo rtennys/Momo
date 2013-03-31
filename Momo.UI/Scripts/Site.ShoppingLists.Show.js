@@ -7,7 +7,7 @@
         newItemName: ko.observable(),
         hideZeros: ko.observable(true),
         hidePicked: ko.observable(true),
-        onItemClick: onItemClick,
+        onChangePicked: onChangePicked,
         onEditItemClick: onEditItemClick,
         onEditItemSubmit: onEditItemSubmit,
         onAddItemSubmit: onAddItemSubmit,
@@ -58,7 +58,7 @@
     });
 
 
-    function onItemClick(listItem, e) {
+    function onChangePicked(listItem, e) {
         app.post(app.urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
         return true;
     }

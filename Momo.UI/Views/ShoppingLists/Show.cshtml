@@ -35,9 +35,11 @@
     <!-- ko 'if': isVisible -->
     <div data-bind="'css': { 'faded': Picked() || Quantity() == 0 }" class="mobileAccessible">
         <div class="row">
-            <div class="span11 clickable" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
-                <input type="checkbox" data-bind="'checked': Picked, 'click': $root.onItemClick" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
-                <!-- ko 'text': Name --><!-- /ko -->
+            <div class="span1 clickable" style="text-align: center;">
+                <input type="checkbox" data-bind="'checked': Picked@(CurrentUser.HasShoppingListAccess() ? ", 'click': $root.onChangePicked" : "")" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+            </div>
+            <div class="span10 clickable" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
+                <span data-bind="'text': Name "></span>
             </div>
             <div class="span1 clickable" style="text-align: center;" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
                 <span data-bind="'text': Quantity ">0</span>
