@@ -99,10 +99,20 @@
 
     @if (CurrentUser.HasShoppingListAccess())
     {
-        using (Html.BeginForm("Clear", null))
+        using (Html.BeginForm("Clear", "ShoppingLists"))
         {
             @Html.AntiForgeryToken()
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
+            <input type="hidden" name="CheckedOnly" value="True" />
+            <p>
+                <input type="submit" value="Set checked to Zero" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set checked quantities to zero?'); " />
+            </p>
+        }
+        using (Html.BeginForm("Clear", "ShoppingLists"))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
+            <input type="hidden" name="CheckedOnly" value="False" />
             <p>
                 <input type="submit" value="Set all to Zero" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
             </p>
@@ -111,15 +121,15 @@
 
     @if (CurrentUser.IsRouteUsername())
     {
-        using (Html.BeginForm("Rename", null, FormMethod.Get))
+        using (Html.BeginForm("Rename", "ShoppingLists", FormMethod.Get))
         {
             <p><input type="submit" value="Rename" /></p>
         }
-        using (Html.BeginForm("Share", null, FormMethod.Get))
+        using (Html.BeginForm("Share", "ShoppingLists", FormMethod.Get))
         {
             <p><input type="submit" value="Sharing" /></p>
         }
-        using (Html.BeginForm("Delete", null))
+        using (Html.BeginForm("Delete", "ShoppingLists"))
         {
             @Html.AntiForgeryToken()
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />

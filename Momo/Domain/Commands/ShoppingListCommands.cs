@@ -42,6 +42,8 @@ namespace Momo.Domain.Commands
 
         [Required]
         public int Id { get; set; }
+
+        public bool CheckedOnly { get; set; }
     }
 
     public class ShoppingListCommandHandler : ICommandHandler<AddShoppingListCommand>, ICommandHandler<RenameShoppingListCommand>, ICommandHandler<DeleteShoppingListCommand>, ICommandHandler<ClearShoppingListCommand>
@@ -119,7 +121,7 @@ namespace Momo.Domain.Commands
             if (shoppingList == null)
                 result.Add(command.GetName(x => x.Id), "Shopping List Not Found");
             else
-                shoppingList.Clear();
+                shoppingList.Clear(command.CheckedOnly);
 
             return result;
         }

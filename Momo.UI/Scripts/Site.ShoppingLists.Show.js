@@ -75,13 +75,8 @@
 
         editDialog
             .one('dialogopen', function () {
-                var field = isQtyEdit ? 'Quantity' : 'Aisle';
-                var element = $('[name="' + field + '"]', editDialog);
-                app.logger.logonly(field);
-                app.logger.logonly(element);
-                setTimeout(function () {
-                    element.focus().select();
-                }, 200);
+                var field = isQtyEdit ? 'Quantity' : 'Aisle', element = $('[name="' + field + '"]', editDialog);
+                setTimeout(function () { element.focus().select(); }, 200);
             })
             .dialog('open');
     }

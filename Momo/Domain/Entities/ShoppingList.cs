@@ -59,9 +59,9 @@ namespace Momo.Domain.Entities
             return item;
         }
 
-        protected internal virtual void Clear()
+        protected internal virtual void Clear(bool checkedOnly)
         {
-            foreach (var item in _shoppingListItems)
+            foreach (var item in _shoppingListItems.Where(x => !checkedOnly || x.Picked))
             {
                 item.Quantity = 0;
                 item.Picked = false;
