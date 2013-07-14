@@ -128,7 +128,7 @@
 
         app.post(app.urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
 
-        $('#edit-item-container').popup('close');
+        $('#edit-item-container').dialog('close');
         vm.itemToEdit(null);
         vm.listItems.remove(listItem);
     }
