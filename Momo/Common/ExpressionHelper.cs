@@ -16,7 +16,20 @@ namespace Momo.Common
 
         public static string GetName<T>(Expression<Func<T, object>> propertyExpression)
         {
-            return propertyExpression.Body.As<MemberExpression>().Member.Name;
+            var body = propertyExpression.Body;
+
+            var memberExpression = body as MemberExpression;
+            if (memberExpression == null)
+            {
+                var unaryExpression = body as UnaryExpression;
+                if (unaryExpression != null)
+                    memberExpression = unaryExpression.Operand as MemberExpression;
+            }
+
+            if (memberExpression == null)
+                throw new Exception("Unknown property type: '{0}'".F(body));
+
+            return memberExpression.Member.Name;
         }
 
         public static string GetName<T>(this T _, Expression<Func<T, object>> propertyExpression)

@@ -83,7 +83,7 @@ namespace Momo.Common
         }
 
         /// <summary>Raw switching of the kind... no time conversion</summary>
-        public static DateTime Local(this DateTime date, DateTimeKind kind = DateTimeKind.Utc)
+        public static DateTime Local(this DateTime date)
         {
             return date.ToKind(DateTimeKind.Local);
         }
@@ -92,6 +92,22 @@ namespace Momo.Common
         public static DateTime ToKind(this DateTime date, DateTimeKind kind)
         {
             return date.Kind == kind ? date : new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond, kind);
+        }
+
+
+        public static string ToIso8601String(this DateTime dateTime)
+        {
+            return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+        }
+
+        public static string ToIso8601String(this DateTimeOffset dateTimeOffset)
+        {
+            return dateTimeOffset.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+        }
+
+        public static string ToIso8601String(this TimeSpan timeSpan)
+        {
+            return timeSpan.ToString("HH:mm:ss.fffffffZ");
         }
 
 

@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <MSBuildCommunityTasksPath>$(SolutionDir)\Build</MSBuildCommunityTasksPath>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,11 +60,15 @@
     <Compile Include="Common\DataAccess\JsonRepository.cs" />
     <Compile Include="Common\DataAccess\XmlRepository.cs" />
     <Compile Include="Common\DateExtensionMethods.cs" />
+    <Compile Include="Common\DynamicTypeBuilder.cs" />
     <Compile Include="Common\EnumHelper.cs" />
     <Compile Include="Common\ExpressionHelper.cs" />
     <Compile Include="Common\ExtensionMethods.cs" />
     <Compile Include="Common\Ioc.cs" />
     <Compile Include="Common\JsonHelper.cs" />
+    <Compile Include="Common\LambdaEqualityComparer.cs" />
+    <Compile Include="Common\PrincipalExtensions.cs" />
+    <Compile Include="Common\ThreadHelper.cs" />
     <Compile Include="Common\TimerHelper.cs" />
     <Compile Include="Domain\Command.cs" />
     <Compile Include="Domain\CommandResult.cs" />
@@ -85,7 +89,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <Import Project="$(SolutionDir)\Build\MSBuild.Community.Tasks.targets" />
+  <Import Project="$(SolutionDir)\.build\MSBuild.Community.Tasks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="AfterBuild">
@@ -95,6 +99,6 @@
     <GitVersion LocalPath="$(SolutionDir)">
       <Output TaskParameter="CommitHash" PropertyName="Revision" />
     </GitVersion>
-    <AssemblyInfo CodeLanguage="CS" OutputFile="$(SolutionDir)\GlobalAssemblyInfo.cs" AssemblyCompany="Iroh Services, LLC" AssemblyProduct="Codename: Momo" AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Iroh Services, LLC" AssemblyTrademark="Iroh Services" AssemblyConfiguration="$(Configuration)" AssemblyVersion="1.0.0.0" AssemblyFileVersion="1.0.0.0" AssemblyInformationalVersion="1.0.0.$(Revision)" />
+    <AssemblyInfo CodeLanguage="CS" OutputFile="$(SolutionDir)\GlobalAssemblyInfo.cs" AssemblyCompany="Rob Tennyson" AssemblyProduct="Codename: Momo" AssemblyCopyright="Copyright © $([System.DateTime]::Now.ToString(`yyyy`)) Rob Tennyson" AssemblyTrademark="Rob Tennyson" AssemblyConfiguration="$(Configuration)" AssemblyVersion="1.0.0.0" AssemblyFileVersion="1.0.0.0" AssemblyInformationalVersion="1.0.0.$(Revision)" />
   </Target>
 </Project>
