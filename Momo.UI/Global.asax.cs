@@ -9,6 +9,7 @@ using System.Web.Routing;
 using Momo.Common;
 using Momo.UI.Controllers;
 using StructureMap;
+using StructureMap.Web.Pipeline;
 using WebMatrix.WebData;
 using log4net.Config;
 
@@ -44,7 +45,7 @@ namespace Momo.UI
 
         protected void Application_EndRequest()
         {
-            ObjectFactory.ReleaseAndDisposeAllHttpScopedObjects();
+            HttpContextLifecycle.DisposeAndClearAll();
 
             if (Context.Response.StatusCode == 404) HandleNotFoundResponse();
         }

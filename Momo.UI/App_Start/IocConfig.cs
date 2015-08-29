@@ -6,14 +6,18 @@ using Momo.Common.DataAccess;
 using Momo.Domain;
 using Momo.UI.Infrastructure;
 using StructureMap;
+using StructureMap.Graph;
+using StructureMap.Web;
 
 namespace Momo.UI
 {
     public static class IocConfig
     {
+        public static Container Container { get; private set; }
+
         public static void Initialize()
         {
-            ObjectFactory.Initialize(x =>
+            Container = new Container(x =>
             {
                 x.For<INHibernateSessionFactoryHelper>().Singleton().Use<NHibernateSessionFactoryHelper>();
 
@@ -30,10 +34,10 @@ namespace Momo.UI
                 });
             });
 
-            DependencyResolver.SetResolver(new StructureMapDependencyResolver(ObjectFactory.Container));
-            GlobalConfiguration.Configuration.DependencyResolver = new StructureMapDependencyResolver(ObjectFactory.Container);
+            DependencyResolver.SetResolver(new StructureMapDependencyResolver(Container));
+            GlobalConfiguration.Configuration.DependencyResolver = new StructureMapDependencyResolver(Container);
 
-            Ioc.Initialize(new StructureMapDependencyResolver(ObjectFactory.Container));
+            Ioc.Initialize(new StructureMapDependencyResolver(Container));
         }
     }
 }
