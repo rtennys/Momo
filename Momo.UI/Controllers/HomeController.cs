@@ -19,5 +19,10 @@ namespace Momo.UI.Controllers
         {
             return View();
         }
+
+        public ActionResult Throw(string msg = null)
+        {
+            throw new Exception(msg ?? "throwing an exception for your pleasure");
+        }
     }
 }

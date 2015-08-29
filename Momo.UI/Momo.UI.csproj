@@ -78,10 +78,6 @@
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="LowercaseRoutesMVC4">
       <HintPath>..\packages\LowercaseRoutesMVC4.0.4.1\lib\LowercaseRoutesMVC4.dll</HintPath>
     </Reference>
@@ -222,6 +218,7 @@
     <Compile Include="Controllers\AppController.cs" />
     <Compile Include="Controllers\AuthorizeActivityAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PingController.cs" />
     <Compile Include="Controllers\ShoppingListsController.cs" />
     <Compile Include="Controllers\ValidateShoppingListAccessAttribute.cs" />
     <Compile Include="Controllers\ValidateRouteUsername.cs" />
@@ -302,6 +299,7 @@
     <Content Include="Views\Home\NotFound.cshtml" />
     <Content Include="Views\ShoppingLists\Share.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Ping\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

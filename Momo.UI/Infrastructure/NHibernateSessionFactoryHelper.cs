@@ -21,18 +21,16 @@ namespace Momo.UI.Infrastructure
     {
         private ISessionFactory _currentSessionFactory;
 
-        public ISessionFactory CurrentSessionFactory
-        {
-            get { return _currentSessionFactory ?? (_currentSessionFactory = CreateSessionFactory()); }
-        }
+        public ISessionFactory CurrentSessionFactory { get { return _currentSessionFactory ?? (_currentSessionFactory = CreateSessionFactory()); } }
 
         private static ISessionFactory CreateSessionFactory()
         {
             var entityBaseType = typeof(EntityBase);
+            var logType = typeof(Log);
 
             var autoPersistenceModel = AutoMap
                 .AssemblyOf<EntityBase>()
-                .Where(entityBaseType.IsAssignableFrom)
+                .Where(x => entityBaseType.IsAssignableFrom(x) || x == logType)
                 .Conventions.Add<MyIdConvention>()
                 .Conventions.Add<MyForeignKeyConvention>()
                 .Conventions.Add<MyCollectionConvention>()

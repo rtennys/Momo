@@ -8,18 +8,19 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Momo.Common;
 using Momo.UI.Controllers;
-using StructureMap;
 using StructureMap.Web.Pipeline;
 using WebMatrix.WebData;
-using log4net.Config;
 
 namespace Momo.UI
 {
     public class MvcApplication : HttpApplication
     {
+        private static Logger _logger;
+
         protected void Application_Start()
         {
-            XmlConfigurator.Configure();
+            Logger.Initialize();
+            _logger = Logger.For<MvcApplication>();
 
             var version = Assembly
                 .GetExecutingAssembly()
@@ -52,6 +53,8 @@ namespace Momo.UI
 
         private void HandleNotFoundResponse()
         {
+            _logger.Error("\"{0}\" not found", Request.RawUrl);
+
             Response.Clear();
 
             var routeData = new RouteData();
@@ -59,8 +62,8 @@ namespace Momo.UI
             routeData.Values["action"] = "NotFound";
 
             Ioc.Resolve<HomeController>()
-               .As<IController>()
-               .Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+                .As<IController>()
+                .Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
         }
     }
 }

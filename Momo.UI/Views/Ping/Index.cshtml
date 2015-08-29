@@ -1,0 +1,35 @@
+﻿@model PingIndexModel
+@{
+    ViewBag.Title = "Ping";
+}
+
+@section head {
+    <style type="text/css">
+        .errors { margin: 15px 0; }
+        .errors label { font-weight: bold; }
+        .errors div { margin-bottom: 10px; }
+    </style>
+}
+
+@if (Model.LatestError == null)
+{
+    <p>No Errors!</p>
+    return;
+}
+
+<div class="errors">
+    @Html.LabelFor(m => m.LatestError.Date)
+    <div>@Model.LatestError.Date.ToString()</div>
+    @Html.LabelFor(m => m.LatestError.Level)
+    <div>@Model.LatestError.Level</div>
+    @Html.LabelFor(m => m.LatestError.Logger)
+    <div>@Model.LatestError.Logger</div>
+    @Html.LabelFor(m => m.LatestError.Thread)
+    <div>@Model.LatestError.Thread</div>
+    @Html.LabelFor(m => m.LatestError.Username)
+    <div>@Model.LatestError.Username</div>
+    @Html.LabelFor(m => m.LatestError.Message)
+    <div style="white-space: pre-wrap;">@Model.LatestError.Message</div>
+    @Html.LabelFor(m => m.LatestError.Exception)
+    <textarea style="white-space: pre; width: 100%;" rows="10">@Model.LatestError.Exception</textarea>
+</div>

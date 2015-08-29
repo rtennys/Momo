@@ -44,4 +44,15 @@ create table dbo.ShoppingListToUserProfile (
     UserProfileId int not null constraint FK_ShoppingListToUserProfile_UserProfileId foreign key references UserProfile (Id)
 );
 
+create table dbo.[Log] (
+    [Id] int identity(1, 1) not null,
+    [Date] datetimeoffset not null,
+    [Level] nvarchar(50) not null,
+    [Logger] nvarchar(255) not null,
+    [Thread] nvarchar(255) not null,
+    [Username] nvarchar(255) not null,
+    [Message] nvarchar(max) not null,
+    [Exception] nvarchar(max) null
+);
+
 GO
