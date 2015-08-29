@@ -4,10 +4,10 @@
   <PropertyGroup>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$([System.IO.Path]::GetFullPath('.'))</SolutionDir>
     <StagingDir>$([System.IO.Path]::GetFullPath('..\stage'))</StagingDir>
-    <MSBuildCommunityTasksPath>$(SolutionDir)\Build</MSBuildCommunityTasksPath>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\.build</MSBuildCommunityTasksPath>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)\Build\MSBuild.Community.Tasks.targets" />
+  <Import Project="$(SolutionDir)\.build\MSBuild.Community.Tasks.targets" />
 
   <Target Name="Deploy" DependsOnTargets="
           BuildProject;
