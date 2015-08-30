@@ -11,25 +11,34 @@
     </style>
 }
 
-@if (Model.LatestError == null)
+@if (Model.LastError == null)
 {
     <p>No Errors!</p>
     return;
 }
 
 <div class="errors">
-    @Html.LabelFor(m => m.LatestError.Date)
-    <div>@Model.LatestError.Date.ToString()</div>
-    @Html.LabelFor(m => m.LatestError.Level)
-    <div>@Model.LatestError.Level</div>
-    @Html.LabelFor(m => m.LatestError.Logger)
-    <div>@Model.LatestError.Logger</div>
-    @Html.LabelFor(m => m.LatestError.Thread)
-    <div>@Model.LatestError.Thread</div>
-    @Html.LabelFor(m => m.LatestError.Username)
-    <div>@Model.LatestError.Username</div>
-    @Html.LabelFor(m => m.LatestError.Message)
-    <div style="white-space: pre-wrap;">@Model.LatestError.Message</div>
-    @Html.LabelFor(m => m.LatestError.Exception)
-    <textarea style="white-space: pre; width: 100%;" rows="10">@Model.LatestError.Exception</textarea>
+    @Html.LabelFor(m => m.LastError.Id)
+    <div>@Model.LastError.Id</div>
+
+    @Html.LabelFor(m => m.LastError.Date)
+    <div>@Model.LastError.Date.ToString()</div>
+
+    @Html.LabelFor(m => m.LastError.Level)
+    <div>@Model.LastError.Level</div>
+
+    @Html.LabelFor(m => m.LastError.Logger)
+    <div>@Model.LastError.Logger</div>
+
+    @Html.LabelFor(m => m.LastError.Thread)
+    <div>@Model.LastError.Thread</div>
+
+    @Html.LabelFor(m => m.LastError.Username)
+    <div>@Model.LastError.Username</div>
+
+    @Html.LabelFor(m => m.LastError.Message)
+    <div style="white-space: pre-wrap;">@Model.LastError.Message</div>
+
+    @Html.LabelFor(m => m.LastError.Exception)
+    <textarea style="white-space: pre; width: 100%;" rows="10">@Model.LastError.Exception</textarea>
 </div>

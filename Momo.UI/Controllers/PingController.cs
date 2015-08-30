@@ -22,7 +22,7 @@ namespace Momo.UI.Controllers
 
             var model = new PingIndexModel
             {
-                LatestError = _repository.Find<Log>()
+                LastError = _repository.Find<Log>()
                     .Where(x => errorLevels.Contains(x.Level))
                     .OrderByDescending(x => x.Date)
                     .FirstOrDefault()
@@ -38,6 +38,6 @@ namespace Momo.UI.Controllers
 
     public class PingIndexModel
     {
-        public Log LatestError { get; set; }
+        public Log LastError { get; set; }
     }
 }
