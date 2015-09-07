@@ -12,10 +12,13 @@ namespace Momo.UI
                 "~/Scripts/jquery.validate*"));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
-                "~/Scripts/knockout-{version}.js",
-                "~/Scripts/knockout.mapping-latest.js",
                 "~/Scripts/toastr.js",
                 "~/Scripts/Site.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
+                "~/Scripts/knockout-{version}.js",
+                "~/Scripts/knockout.mapping-latest.js",
+                "~/Scripts/Site-knockout.js"));
 
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
