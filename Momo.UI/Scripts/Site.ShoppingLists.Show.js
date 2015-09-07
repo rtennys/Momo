@@ -1,65 +1,73 @@
-﻿(function(app, $, ko) {
+﻿(function(app, $) {
 
-    var vm = app.viewModel = {
-        noItemsMsg: ko.observable('Loading...'),
-        listItems: ko.observableArray([]),
-        itemToEdit: ko.observable(),
-        newItemName: ko.observable(),
-        hideZeros: ko.observable(true),
-        hidePicked: ko.observable(true),
-        onChangePicked: onChangePicked,
-        onEditItemClick: onEditItemClick,
-        onEditItemSubmit: onEditItemSubmit,
-        onAddItemSubmit: onAddItemSubmit,
-        onForgetItemClick: onForgetItemClick
-    },
-        editDialog = $('#edit-item-container').dialog({
+    var _vm, _urls, _editDialog;
+
+    app.modules.shoppingListsShow = { init: _init };
+
+    function _init(urls) {
+        _urls = urls;
+
+        _vm = {
+            noItemsMsg: ko.observable('Loading...'),
+            listItems: ko.observableArray([]),
+            itemToEdit: ko.observable(),
+            newItemName: ko.observable(),
+            hideZeros: ko.observable(true),
+            hidePicked: ko.observable(true),
+            onChangePicked: onChangePicked,
+            onEditItemClick: onEditItemClick,
+            onEditItemSubmit: onEditItemSubmit,
+            onAddItemSubmit: onAddItemSubmit,
+            onForgetItemClick: onForgetItemClick
+        };
+
+        _editDialog = $('#edit-item-container').dialog({
             autoOpen: false,
             modal: true,
             width: 'auto'
         });
 
-    vm.noItemsVisible = ko.computed(function () {
-        return vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
-    });
-
-    vm.estimatedTotal = ko.computed(function () {
-        var total = 0.0;
-        $.each(vm.listItems(), function () {
-            total += this.Picked() ? 0 : parseFloat(this.Quantity()) * parseFloat(this.Price());
+        _vm.noItemsVisible = ko.computed(function () {
+            return _vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
         });
-        return total;
-    });
 
-    ko.applyBindings(vm);
-
-    $(function() {
-        setTimeout(function() {
-
-            app.post(app.urls.show, function (listItems) {
-                vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                vm.noItemsMsg('Nothing needed!');
-
-                $('#items-container').show();
-
-                var txtAddItem = $('#txtAddItem');
-                txtAddItem.autocomplete({
-                    delay: 500,
-                    minLength: 3,
-                    source: app.urls.autocomplete,
-                    select: function (e, ui) {
-                        txtAddItem.val(ui.item.value);
-                        txtAddItem.parents('form:first').submit();
-                    }
-                });
+        _vm.estimatedTotal = ko.computed(function () {
+            var total = 0.0;
+            $.each(_vm.listItems(), function () {
+                total += this.Picked() ? 0 : parseFloat(this.Quantity()) * parseFloat(this.Price());
             });
+            return total;
+        });
 
-        }, 500);
-    });
+        ko.applyBindings(_vm);
 
+        $(function () {
+            setTimeout(function () {
 
-    function onChangePicked(listItem, e) {
-        app.post(app.urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+                app.post(_urls.show, function (listItems) {
+                    _vm.listItems($.map(listItems, extendItem).sort(itemComparer));
+                    _vm.noItemsMsg('Nothing needed!');
+
+                    $('#items-container').show();
+
+                    var txtAddItem = $('#txtAddItem');
+                    txtAddItem.autocomplete({
+                        delay: 500,
+                        minLength: 3,
+                        source: _urls.autocomplete,
+                        select: function (e, ui) {
+                            txtAddItem.val(ui.item.value);
+                            txtAddItem.parents('form:first').submit();
+                        }
+                    });
+                });
+
+            }, 500);
+        });
+    }
+
+    function onChangePicked(listItem) {
+        app.post(_urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
         return true;
     }
 
@@ -70,19 +78,19 @@
 
         e.currentTarget.blur();
 
-        vm.itemToEdit(listItem);
+        _vm.itemToEdit(listItem);
         form.resetUnobtrusiveValidation();
 
-        editDialog
+        _editDialog
             .one('dialogopen', function () {
-                var field = isQtyEdit ? 'Quantity' : 'Aisle', element = $('[name="' + field + '"]', editDialog);
+                var field = isQtyEdit ? 'Quantity' : 'Aisle', element = $('[name="' + field + '"]', _editDialog);
                 setTimeout(function () { element.focus().select(); }, 200);
             })
             .dialog('open');
     }
 
     function onEditItemSubmit() {
-        var form = editDialog.find('form');
+        var form = _editDialog.find('form');
 
         if (!form.valid()) return;
 
@@ -94,10 +102,10 @@
                 return;
             }
 
-            editDialog.dialog('close');
-            vm.itemToEdit(null);
+            _editDialog.dialog('close');
+            _vm.itemToEdit(null);
 
-            vm.listItems.sort(itemComparer);
+            _vm.listItems.sort(itemComparer);
         });
     }
 
@@ -109,16 +117,16 @@
                 return;
             }
 
-            vm.newItemName(null);
+            _vm.newItemName(null);
             form.resetUnobtrusiveValidation();
 
-            var foundItem = vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
+            var foundItem = _vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
 
             if (foundItem.length > 0) {
                 ko.mapping.fromJS(result.Item, foundItem[0]);
             } else {
-                vm.listItems.push(extendItem(result.Item));
-                vm.listItems.sort(itemComparer);
+                _vm.listItems.push(extendItem(result.Item));
+                _vm.listItems.sort(itemComparer);
             }
         });
     }
@@ -126,11 +134,11 @@
     function onForgetItemClick(listItem) {
         if (!confirm('Delete this item from the list?')) return;
 
-        app.post(app.urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+        app.post(_urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
 
         $('#edit-item-container').dialog('close');
-        vm.itemToEdit(null);
-        vm.listItems.remove(listItem);
+        _vm.itemToEdit(null);
+        _vm.listItems.remove(listItem);
     }
 
 
@@ -138,19 +146,19 @@
         var item = ko.mapping.fromJS(jsItem);
 
         item.isVisible = ko.computed(function() {
-            if (item.Quantity() == 0 && vm.hideZeros()) return false;
-            if (item.Picked() && vm.hidePicked()) return false;
+            if (item.Quantity() == 0 && _vm.hideZeros()) return false;
+            if (item.Picked() && _vm.hidePicked()) return false;
             return true;
         });
 
         item.showDivider = ko.computed(function() {
-            var idx = vm.listItems.indexOf(item),
+            var idx = _vm.listItems.indexOf(item),
                 aisle = +item.Aisle();
 
             if (idx < 0) return false;
 
-            if (idx < 1 || +vm.listItems()[idx - 1].Aisle() != aisle) {
-                var items = vm.listItems().filter(function (value) {
+            if (idx < 1 || +_vm.listItems()[idx - 1].Aisle() != aisle) {
+                var items = _vm.listItems().filter(function (value) {
                     return +value.Aisle() === aisle && value.isVisible();
                 });
 
@@ -175,4 +183,4 @@
         return 0;
     }
 
-})(app, jQuery, ko);
+})(app, jQuery);

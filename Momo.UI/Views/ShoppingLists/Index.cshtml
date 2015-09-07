@@ -44,10 +44,6 @@
 @section scripts
 {
     <script>
-        $.extend(app.urls, {
-            index: '@Url.Action("Index")'
-        });
+        app.modules.shoppingListsIndex.init();
     </script>
-
-    @Scripts.Render("~/Scripts/Site.ShoppingLists.Index.js")
 }

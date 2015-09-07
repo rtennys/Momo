@@ -78,9 +78,7 @@ $.fn.appendValidationErrors = function (errors) {
 // application namespace
 
 app = {
-    urls: {}, // add urls in cshtml that will be needed in the script
-
-    viewModel: {}, // put current view model here for consistency
+    modules: {},
 
     logger: (function () {
         if (!toastr) throw 'toastr plugin not referenced';

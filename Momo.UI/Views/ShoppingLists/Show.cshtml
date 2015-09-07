@@ -150,13 +150,11 @@
     @Scripts.Render("~/bundles/knockout")
 
     <script>
-        $.extend(app.urls, {
+        app.modules.shoppingListsShow.init({
             show: '@Url.Action("Show")',
             changePicked: '@Url.Action("ChangePicked")',
             deleteItem: '@Url.Action("DeleteItem")',
             autocomplete: '@Url.Action("Autocomplete")'
         });
     </script>
-
-    @Scripts.Render("~/Scripts/Site.ShoppingLists.Show.js")
 }
