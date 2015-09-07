@@ -9,17 +9,17 @@ namespace Momo.UI
         {
             filters.Add(new MyHandleErrorAttribute());
         }
+    }
 
-        public class MyHandleErrorAttribute : HandleErrorAttribute
+    public class MyHandleErrorAttribute : HandleErrorAttribute
+    {
+        public override void OnException(ExceptionContext filterContext)
         {
-            public override void OnException(ExceptionContext filterContext)
-            {
-                var exception = filterContext.Exception;
-                if (exception != null)
-                    Logger.For(this).Error(exception.Message, exception);
+            var exception = filterContext.Exception;
+            if (exception != null)
+                Logger.For(this).Error(exception.Message, exception);
 
-                base.OnException(filterContext);
-            }
+            base.OnException(filterContext);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Momo.UI
 
         private void HandleNotFoundResponse()
         {
-            _logger.Error("\"{0}\" not found", Request.RawUrl);
+            _logger.Warn("\"{0}\" not found", Request.RawUrl);
 
             Response.Clear();
 
