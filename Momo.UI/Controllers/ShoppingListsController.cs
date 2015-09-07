@@ -30,16 +30,13 @@ namespace Momo.UI.Controllers
             if (user == null)
                 return HttpNotFound();
 
-            if (Request.HttpMethod == "GET")
-                return View();
-
-            var model = new
+            var model = new ShoppingListsIndexModel
             {
                 ShoppingLists = user.ShoppingLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray(),
                 SharedLists = user.SharedLists.OrderBy(x => x.Name).Select(x => new ShoppingListModel(x, Url)).ToArray()
             };
 
-            return Json(model);
+            return View(model);
         }
 
         [AllowAnonymous]

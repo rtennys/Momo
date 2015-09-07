@@ -5,6 +5,12 @@ using Momo.Domain.Entities;
 
 namespace Momo.UI.Models
 {
+    public class ShoppingListsIndexModel
+    {
+        public ShoppingListModel[] ShoppingLists { get; set; }
+        public ShoppingListModel[] SharedLists { get; set; }
+    }
+
     public class ShoppingListsShowModel
     {
         public int Id { get; set; }

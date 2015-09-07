@@ -1,41 +1,48 @@
-﻿@{
+﻿@using Momo.Domain.Commands
+@model ShoppingListsIndexModel
+
+@{
     ViewBag.Title = Request.RequestContext.RouteData.Values["username"];
+    var addHtmlHelper = Html.HtmlHelperFor<AddShoppingListCommand>();
 }
 
 
 @if (CurrentUser.IsRouteUsername())
 {
-    using (Html.BeginForm("add", null, FormMethod.Post, new {data_bind = "submit: onNewListSubmit"}))
+    using (Html.BeginForm("add", null, FormMethod.Post, new {id = "addListForm"}))
     {
         @Html.AntiForgeryToken()
         <ol>
-            <li><input type="text" name="Name" placeholder="new list" data-bind="'value': newListName, 'valueUpdate': 'afterkeydown'" /></li>
+            <li>@addHtmlHelper.TextBoxFor(m => m.Name, new {placeholder = "new list"})</li>
         </ol>
         @Html.ValidationSummary()
     }
 }
 
 
-<p data-bind="'text': noItemsMsg, 'visible': shoppingLists().length == 0 && sharedLists().length == 0"></p>
+<div id="myShoppingLists">
+    <p id="noLists" style="@(Model.ShoppingLists.Length == 0 && Model.SharedLists.Length == 0 ? "" : "display: none;")">No shopping lists found</p>
+    @foreach (var shoppingListModel in Model.ShoppingLists)
+    {
+        <p><a href="@shoppingListModel.Url">@shoppingListModel.Name</a></p>
+    }
+</div>
 
 
-<!-- ko foreach: shoppingLists -->
-<p><a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a></p>
-<!-- /ko -->
-
-<!-- ko if: sharedLists().length > 0 -->
-    <p><strong>Shared Lists</strong></p>
-    <!-- ko foreach: sharedLists -->
-    <p><a data-bind="'text': Name, 'attr': {'href': Url}" href="#"></a></p>
-    <!-- /ko -->
-<!-- /ko -->
-
+@if (Model.SharedLists.Length > 0)
+{
+    <div id="sharedShoppingLists">
+        <p><strong>Shared Lists</strong></p>
+        @foreach (var shoppingListModel in Model.SharedLists)
+        {
+            <p><a href="@shoppingListModel.Url">@shoppingListModel.Name</a></p>
+        }
+    </div>
+}
 
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/knockout")
-
     <script>
         $.extend(app.urls, {
             index: '@Url.Action("Index")'
