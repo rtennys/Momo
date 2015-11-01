@@ -67,6 +67,7 @@ form ol li label.checkbox { display: inline; }
 input[type="text"],
 input[type="date"],
 input[type="password"],
+input[type="number"],
 textarea,
 select { width: 80%; padding: 0.4em; border: solid 1px #aaa; border-radius: 0.6em; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 .input-validation-error { border: 1px solid #e80c4d !important; }
@@ -76,6 +77,10 @@ select { width: 80%; padding: 0.4em; border: solid 1px #aaa; border-radius: 0.6e
 input[type="submit"],
 input[type="button"],
 button { border-radius: 6px; padding: 2px 8px; }
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance:textfield; }
+
 
 /* placeholder */
 ::-webkit-input-placeholder { color: lightgray !important; font-style: italic !important; }

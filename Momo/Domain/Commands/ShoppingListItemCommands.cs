@@ -17,6 +17,8 @@ namespace Momo.Domain.Commands
 
     public class AddShoppingListItemCommand : AddEditShoppingListItemCommand
     {
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
+        public int? Quantity { get; set; }
     }
 
     public class EditShoppingListItemCommand : AddEditShoppingListItemCommand
@@ -65,8 +67,6 @@ namespace Momo.Domain.Commands
             if (item.Quantity <= 0) item.Quantity = 1;
 
             item.Picked = false;
-
-            result.Data.Item = item;
 
             return result;
         }

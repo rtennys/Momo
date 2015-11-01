@@ -14,8 +14,7 @@ namespace Momo.UI
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
                 "~/Scripts/toastr.js",
                 "~/Scripts/Site.js",
-                "~/Scripts/Site.ShoppingLists.Index.js",
-                "~/Scripts/Site.ShoppingLists.Show.js"));
+                "~/Scripts/Site.*"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                 "~/Scripts/knockout-{version}.js",

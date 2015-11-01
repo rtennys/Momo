@@ -4,7 +4,7 @@
     ViewBag.Title = "Share";
 }
 
-@using (Html.BeginForm("StartSharing", null, FormMethod.Post, new {data_ajax = "false"}))
+@using (Html.BeginForm("StartSharing", null, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.Hidden("username")

@@ -1,23 +1,19 @@
 ﻿(function(app, $) {
 
-    var _vm, _urls, _editDialog;
+    var _vm, _editDialog;
 
-    app.modules.shoppingListsShow = { init: _init };
+    app.modules.shoppingListsShow = { init: init };
 
-    function _init(urls) {
-        _urls = urls;
-
+    function init() {
         _vm = {
             noItemsMsg: ko.observable('Loading...'),
             listItems: ko.observableArray([]),
             itemToEdit: ko.observable(),
-            newItemName: ko.observable(),
             hideZeros: ko.observable(true),
             hidePicked: ko.observable(true),
             onChangePicked: onChangePicked,
             onEditItemClick: onEditItemClick,
             onEditItemSubmit: onEditItemSubmit,
-            onAddItemSubmit: onAddItemSubmit,
             onForgetItemClick: onForgetItemClick
         };
 
@@ -41,33 +37,17 @@
 
         ko.applyBindings(_vm);
 
-        $(function () {
-            setTimeout(function () {
-
-                app.post(_urls.show, function (listItems) {
-                    _vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                    _vm.noItemsMsg('Nothing needed!');
-
-                    $('#items-container').show();
-
-                    var txtAddItem = $('#txtAddItem');
-                    txtAddItem.autocomplete({
-                        delay: 500,
-                        minLength: 3,
-                        source: _urls.autocomplete,
-                        select: function (e, ui) {
-                            txtAddItem.val(ui.item.value);
-                            txtAddItem.parents('form:first').submit();
-                        }
-                    });
-                });
-
-            }, 500);
-        });
+        setTimeout(function () {
+            app.post(app.urls.show, function (listItems) {
+                _vm.listItems($.map(listItems, extendItem).sort(itemComparer));
+                _vm.noItemsMsg('Nothing needed!');
+                $('#items-container').show();
+            });
+        }, 500);
     }
 
     function onChangePicked(listItem) {
-        app.post(_urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+        app.post(app.urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
         return true;
     }
 
@@ -109,32 +89,10 @@
         });
     }
 
-    function onAddItemSubmit(form) {
-        form = $(form);
-        app.post(form.attr('action'), form.serializeArray(), function (result) {
-            if (!result.Success) {
-                form.appendValidationErrors(result.Errors);
-                return;
-            }
-
-            _vm.newItemName(null);
-            form.resetUnobtrusiveValidation();
-
-            var foundItem = _vm.listItems().filter(function (item) { return item.Id() === result.Item.Id; });
-
-            if (foundItem.length > 0) {
-                ko.mapping.fromJS(result.Item, foundItem[0]);
-            } else {
-                _vm.listItems.push(extendItem(result.Item));
-                _vm.listItems.sort(itemComparer);
-            }
-        });
-    }
-
     function onForgetItemClick(listItem) {
         if (!confirm('Delete this item from the list?')) return;
 
-        app.post(_urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+        app.post(app.urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
 
         $('#edit-item-container').dialog('close');
         _vm.itemToEdit(null);

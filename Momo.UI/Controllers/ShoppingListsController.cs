@@ -51,7 +51,7 @@ namespace Momo.UI.Controllers
                 return HttpNotFound();
 
             if (Request.HttpMethod == "GET")
-                return View(new ShoppingListsShowModel {Id = shoppingList.Id, Name = shoppingList.Name});
+                return View(new ShoppingListsShowModel {Id = shoppingList.Id});
 
             var model = shoppingList
                 .ShoppingListItems
@@ -61,28 +61,6 @@ namespace Momo.UI.Controllers
                 .ToArray();
 
             return Json(model);
-        }
-
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Add(AddShoppingListCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
-
-            var result = _commandExecutor.Execute(command);
-
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
-            }
-
-            _uow.Commit();
-
-            var list = result.Data.ShoppingList;
-
-            return Json(new {Success = true, ShoppingList = new ShoppingListModel(list, Url)});
         }
 
 
@@ -182,25 +160,6 @@ namespace Momo.UI.Controllers
         /* shoppinglists/show ajax calls */
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult AddItem(AddShoppingListItemCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
-
-            var result = _commandExecutor.Execute(command);
-
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
-            }
-
-            _uow.Commit();
-
-            return Json(new {Success = true, Item = new ShoppingListItemModel(result.Data.Item)});
-        }
-
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditItem(EditShoppingListItemCommand command)
         {
             if (!ModelState.IsValid)
@@ -244,21 +203,6 @@ namespace Momo.UI.Controllers
             var item = _repository.Get<ShoppingListItem>(id);
             item.Picked = picked;
             _uow.Commit();
-        }
-
-        [ValidateShoppingListAccess]
-        public ActionResult Autocomplete(string username, string shoppinglist, string term)
-        {
-            var model = _repository
-                .Find<ShoppingListItem>()
-                .Where(x => x.ShoppingList.UserProfile.Username == username)
-                .Where(x => x.ShoppingList.Name == shoppinglist)
-                .Where(x => x.Name.Contains(term))
-                .OrderBy(x => x.Name)
-                .Select(x => new {label = x.Name + " - aisle " + x.Aisle, value = x.Name})
-                .ToArray();
-
-            return Json(model, JsonRequestBehavior.AllowGet);
         }
     }
 }

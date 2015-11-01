@@ -3,22 +3,16 @@
 
 @{
     var routeData = Request.RequestContext.RouteData;
-    ViewBag.HeaderTitle = "{0}/{1}".F(routeData.Values["username"], routeData.Values["shoppinglist"]);
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = "{0}/{1}".F(routeData.Values["username"], routeData.Values["shoppinglist"]);
 }
 
-<p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): <strong>@Model.Name</strong></p>
+<p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): <strong>@routeData.Values["shoppinglist"]</strong></p>
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    using (Html.BeginForm("additem", null, FormMethod.Post, new {data_bind = "submit: onAddItemSubmit"}))
+    using (Html.BeginForm("Index", "AddListItem", FormMethod.Get))
     {
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="ShoppingListId" value="@Model.Id" />
-        <ol>
-            <li><input type="text" id="txtAddItem" name="Name" placeholder="new item" data-bind="'value': newItemName, 'valueUpdate': 'afterkeydown'" /></li>
-        </ol>
-        @Html.ValidationSummary()
+        <p><input type="submit" value="Add Items" /></p>
     }
 }
 
@@ -150,11 +144,11 @@
     @Scripts.Render("~/bundles/knockout")
 
     <script>
-        app.modules.shoppingListsShow.init({
-            show: '@Url.Action("Show")',
-            changePicked: '@Url.Action("ChangePicked")',
-            deleteItem: '@Url.Action("DeleteItem")',
-            autocomplete: '@Url.Action("Autocomplete")'
+        $(function() {
+            app.urls.show = '@Url.Action("Show")';
+            app.urls.changePicked = '@Url.Action("ChangePicked")';
+            app.urls.deleteItem = '@Url.Action("DeleteItem")';
+            app.modules.shoppingListsShow.init();
         });
     </script>
 }

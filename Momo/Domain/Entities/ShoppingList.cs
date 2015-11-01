@@ -52,7 +52,7 @@ namespace Momo.Domain.Entities
 
             if (item == null)
             {
-                item = new ShoppingListItem(this, name);
+                item = new ShoppingListItem(this, name.ToTitleCase());
                 _shoppingListItems.Add(item);
             }
 

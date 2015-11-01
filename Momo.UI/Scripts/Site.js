@@ -80,6 +80,8 @@ $.fn.appendValidationErrors = function (errors) {
 app = {
     modules: {},
 
+    urls: {},
+
     logger: (function () {
         if (!toastr) throw 'toastr plugin not referenced';
 
@@ -238,7 +240,7 @@ app = {
     }
 };
 
-(function() {
+(function (window, $) {
 
     var $window = $(window);
 
@@ -255,4 +257,4 @@ app = {
 
     });
 
-})();
+})(window, jQuery);

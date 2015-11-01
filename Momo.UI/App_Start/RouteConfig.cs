@@ -21,7 +21,11 @@ namespace Momo.UI
 
             routes.MapRouteLowercase("shopping lists add", "add", new {controller = "shoppinglists", action = "add"});
             routes.MapRouteLowercase("shopping lists index", "{username}", new {controller = "shoppinglists", action = "index"});
+
+            // is this used?
             routes.MapRouteLowercase("shopping lists edit item", "{username}/{shoppinglist}/{id}", new {controller = "shoppinglists", action = "edititem"}, new {id = @"^\d+$"});
+
+            routes.MapRouteLowercase("shopping list add item", "{username}/{shoppinglist}/add/{action}", new {controller = "addlistitem", action = "index"});
             routes.MapRouteLowercase("shopping lists", "{username}/{shoppinglist}/{action}/{id}", new {controller = "shoppinglists", action = "show", id = UrlParameter.Optional});
         }
     }

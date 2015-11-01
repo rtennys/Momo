@@ -219,6 +219,7 @@
     <Compile Include="Controllers\AuthorizeActivityAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PingController.cs" />
+    <Compile Include="Controllers\AddListItemController.cs" />
     <Compile Include="Controllers\ShoppingListsController.cs" />
     <Compile Include="Controllers\ValidateShoppingListAccessAttribute.cs" />
     <Compile Include="Controllers\ValidateRouteUsername.cs" />
@@ -265,6 +266,7 @@
     <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\Site-knockout.js" />
     <Content Include="Scripts\Site.js" />
+    <Content Include="Scripts\Site.AddListItem.Index.js" />
     <Content Include="Scripts\Site.ShoppingLists.Index.js" />
     <Content Include="Scripts\Site.ShoppingLists.Show.js" />
     <Content Include="Scripts\toastr.js" />
@@ -301,6 +303,7 @@
     <Content Include="Views\ShoppingLists\Share.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Ping\Index.cshtml" />
+    <Content Include="Views\AddListItem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

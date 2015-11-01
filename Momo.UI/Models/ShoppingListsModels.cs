@@ -14,7 +14,6 @@ namespace Momo.UI.Models
     public class ShoppingListsShowModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 
     public class ShoppingListsRenameModel : RenameShoppingListCommand
