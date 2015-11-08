@@ -13,6 +13,8 @@ namespace Momo.Domain.Commands
 
         [Required]
         public string Name { get; set; }
+
+        public int? Aisle { get; set; }
     }
 
     public class AddShoppingListItemCommand : AddEditShoppingListItemCommand
@@ -28,8 +30,6 @@ namespace Momo.Domain.Commands
 
         [Required, Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
         public int? Quantity { get; set; }
-
-        public int? Aisle { get; set; }
 
         public decimal? Price { get; set; }
     }
@@ -66,6 +66,7 @@ namespace Momo.Domain.Commands
 
             item.Picked = false;
             item.Quantity = Math.Max(1, command.Quantity.GetValueOrDefault());
+            item.Aisle = command.Aisle.GetValueOrDefault();
 
             return result;
         }

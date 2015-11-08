@@ -11,10 +11,7 @@
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    using (Html.BeginForm("Index", "AddListItem", FormMethod.Get))
-    {
-        <p><input type="submit" value="Add Items" /></p>
-    }
+    @Html.ActionLink("Add Items", "Index", "AddListItem")
 }
 
 <p id="nothingNeededMsg" style="@(Model.ListItems.Any(x => !x.Picked && x.Quantity > 0) ? "display: none" : "")">

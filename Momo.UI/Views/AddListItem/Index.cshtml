@@ -20,24 +20,43 @@
 }
 
 
-<div id="searchResultContainer"></div>
+<div class="row">
+    <div class="span1">&nbsp;</div>
+    <div class="span1">Qty</div>
+    <div class="span9">Name</div>
+    <div class="span1">Aisle</div>
+</div>
+<hr/>
+
+<div id="noSearchResults" class="row" style="margin-bottom: 50px;">
+    <div class="span1">&nbsp;</div>
+    <div class="span1">&nbsp;</div>
+    <div class="span10"><em>no results</em></div>
+</div>
+
+<div id="searchResultContainer" style="margin-bottom: 50px;"></div>
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "addItemFormTemplate", style = "display: none; margin: 15px 0;", @class = "not-on-list"}))
 {
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="shoppingListId" value="@Model.ShoppingListId" />
-    <input type="hidden" name="name" />
-
-    <input type="submit" value="add" />
-    <label>
-        <input type="number" name="quantity" style="width: 25px" />
-        <span name="name"></span>
-        <span>-</span>
-        <span name="aisle"></span>
-        <span class="on-list-check">&#x2714;</span>
-    </label>
+    <div class="row">
+        <div class="span1">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="shoppingListId" value="@Model.ShoppingListId" />
+            <input type="hidden" name="name" />
+            <input type="submit" value="add" />
+        </div>
+        <div class="span1">
+            <input type="number" name="quantity" />
+        </div>
+        <div class="span9">
+            <span name="name"></span>
+            <span class="on-list-check">&#x2714;</span>
+        </div>
+        <div class="span1">
+            <input type="number" name="aisle" />
+        </div>
+    </div>
 }
-
 
 @section scripts
 {

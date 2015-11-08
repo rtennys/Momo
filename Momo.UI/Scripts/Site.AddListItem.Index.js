@@ -1,12 +1,13 @@
 ﻿(function (app, $) {
 
-    var _searchForm, _searchDelay, _searchInput, _searchResultContainer, _addItemFormTemplate;
+    var _searchForm, _searchDelay, _searchInput, _searchResultContainer, _noSearchResults, _addItemFormTemplate;
 
     app.modules.addListItemIndex = { init: init };
 
     function init() {
         _addItemFormTemplate = $('#addItemFormTemplate');
         _searchResultContainer = $('#searchResultContainer');
+        _noSearchResults = $('#noSearchResults');
 
         _searchForm = $('#searchForm');
         _searchForm.submit(onSearchFormSubmit);
@@ -20,7 +21,13 @@
 
     function search() {
         _searchResultContainer.html('');
-        if (_searchInput.val().length < 3) return;
+        _noSearchResults.hide();
+
+        if (_searchInput.val().length < 3) {
+            _noSearchResults.show();
+            return;
+        }
+
         app.post(_searchForm.attr('action'), _searchForm.serializeArray(), function (result) {
             for (var i = 0; i < result.length; i++) {
                 addSearchResult(result[i]);
@@ -33,7 +40,7 @@
         addItemForm.find('input[name="quantity"]').val(result.Quantity);
         addItemForm.find('input[name="name"]').val(result.Name);
         addItemForm.find('span[name="name"]').text(result.Name);
-        addItemForm.find('span[name="aisle"]').text(result.Aisle);
+        addItemForm.find('input[name="aisle"]').val(result.Aisle);
         if (result.OnList)
             addItemForm.removeClass("not-on-list");
         addItemForm.submit(onAddItem);
@@ -45,7 +52,7 @@
         var form = $(this);
         app.post(form.attr('action'), form.serializeArray(), function () {
             form.removeClass("not-on-list");
-            _searchInput.focus().select();
+            setTimeout(function () { _searchInput.focus().select(); }, 100);
         });
     }
 
