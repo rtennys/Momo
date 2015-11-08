@@ -1,21 +1,14 @@
-﻿(function(app, $) {
-
-    var _vm, _editDialog;
+﻿(function (app, $) {
+    var _editDialog;
 
     app.modules.shoppingListsShow = { init: init };
 
     function init() {
-        _vm = {
-            noItemsMsg: ko.observable('Loading...'),
-            listItems: ko.observableArray([]),
-            itemToEdit: ko.observable(),
-            hideZeros: ko.observable(true),
-            hidePicked: ko.observable(true),
-            onChangePicked: onChangePicked,
-            onEditItemClick: onEditItemClick,
-            onEditItemSubmit: onEditItemSubmit,
-            onForgetItemClick: onForgetItemClick
-        };
+        $(':checkbox[name="picked"]').click(onChangePicked);
+        $('#hideZeros').click(onHideZeros);
+        $('#hidePicked').click(onHidePicked);
+        $('.list-item-name').click(onNameClicked);
+        $('.list-item-quantity').click(onQuantityClicked);
 
         _editDialog = $('#edit-item-container').dialog({
             autoOpen: false,
@@ -23,54 +16,44 @@
             width: 'auto'
         });
 
-        _vm.noItemsVisible = ko.computed(function () {
-            return _vm.listItems().filter(function (item) { return item.isVisible(); }).length == 0;
-        });
-
-        _vm.estimatedTotal = ko.computed(function () {
-            var total = 0.0;
-            $.each(_vm.listItems(), function () {
-                total += this.Picked() ? 0 : parseFloat(this.Quantity()) * parseFloat(this.Price());
-            });
-            return total;
-        });
-
-        ko.applyBindings(_vm);
-
-        setTimeout(function () {
-            app.post(app.urls.show, function (listItems) {
-                _vm.listItems($.map(listItems, extendItem).sort(itemComparer));
-                _vm.noItemsMsg('Nothing needed!');
-                $('#items-container').show();
-            });
-        }, 500);
+        $('#editItemForm', _editDialog).submit(onEditItemSubmit);
     }
 
-    function onChangePicked(listItem) {
-        app.post(app.urls.changePicked, { id: listItem.Id(), picked: listItem.Picked(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
-        return true;
+    function onChangePicked() {
+        var $this = $(this);
+        var picked = $this.is(':checked');
+
+        app.post(app.urls.changePicked, { id: $this.data('id'), picked: picked, '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
+
+        if (picked)
+            $this.closest('.item-container').addClass('picked');
+        else
+            $this.closest('.item-container').removeClass('picked');
+
+        showHideAisle($this.closest('.aisle-container'));
     }
 
-    function onEditItemClick(listItem, e) {
-        var popup = $('#edit-item-container'),
-            form = popup.find('form'),
-            isQtyEdit = $('[data-bind*="Quantity"]', e.currentTarget).length > 0;
-
-        e.currentTarget.blur();
-
-        _vm.itemToEdit(listItem);
-        form.resetUnobtrusiveValidation();
-
-        _editDialog
-            .one('dialogopen', function () {
-                var field = isQtyEdit ? 'Quantity' : 'Aisle', element = $('[name="' + field + '"]', _editDialog);
-                setTimeout(function () { element.focus().select(); }, 200);
-            })
-            .dialog('open');
+    function onHideZeros() {
+        $('#items-container').toggleClass('hide-zero');
+        showHideAisles();
     }
 
-    function onEditItemSubmit() {
-        var form = _editDialog.find('form');
+    function onHidePicked() {
+        $('#items-container').toggleClass('hide-picked');
+        showHideAisles();
+    }
+
+    function onNameClicked(e) {
+        openEditDialog(e, false);
+    }
+
+    function onQuantityClicked(e) {
+        openEditDialog(e, true);
+    }
+
+    function onEditItemSubmit(e) {
+        e.preventDefault();
+        var form = $(this);
 
         if (!form.valid()) return;
 
@@ -82,63 +65,41 @@
                 return;
             }
 
-            _editDialog.dialog('close');
-            _vm.itemToEdit(null);
-
-            _vm.listItems.sort(itemComparer);
+            (window || document).location.reload(true);
         });
     }
 
-    function onForgetItemClick(listItem) {
-        if (!confirm('Delete this item from the list?')) return;
-
-        app.post(app.urls.deleteItem, { id: listItem.Id(), '__RequestVerificationToken': $('[name="__RequestVerificationToken"]').val() });
-
-        $('#edit-item-container').dialog('close');
-        _vm.itemToEdit(null);
-        _vm.listItems.remove(listItem);
+    function showHideAisles() {
+        $('.aisle-container').each(function () {
+            showHideAisle($(this));
+        });
     }
 
-
-    function extendItem(jsItem) {
-        var item = ko.mapping.fromJS(jsItem);
-
-        item.isVisible = ko.computed(function() {
-            if (item.Quantity() == 0 && _vm.hideZeros()) return false;
-            if (item.Picked() && _vm.hidePicked()) return false;
-            return true;
-        });
-
-        item.showDivider = ko.computed(function() {
-            var idx = _vm.listItems.indexOf(item),
-                aisle = +item.Aisle();
-
-            if (idx < 0) return false;
-
-            if (idx < 1 || +_vm.listItems()[idx - 1].Aisle() != aisle) {
-                var items = _vm.listItems().filter(function (value) {
-                    return +value.Aisle() === aisle && value.isVisible();
-                });
-
-                return items.length > 0;
-            }
-
-            return false;
-        });
-
-        return item;
+    function showHideAisle(aisle) {
+        if (aisle.children('.item-container:not(.zero,.picked)').length === 0)
+            aisle.addClass('nothing-needed');
+        else
+            aisle.removeClass('nothing-needed');
     }
 
-    function itemComparer(a, b) {
-        var aisleDiff = a.Aisle() - b.Aisle();
-        if (aisleDiff !== 0) return aisleDiff;
+    function openEditDialog(e, isQtyEdit) {
+        var itemContainer = $(e.currentTarget).closest('.item-container');
 
-        a = a.Name().toLowerCase();
-        b = b.Name().toLowerCase();
+        e.currentTarget.blur();
 
-        if (a < b) return -1;
-        if (a > b) return 1;
-        return 0;
+        $('[name="Id"]', _editDialog).val(itemContainer.data('id'));
+        $('[name="Name"]', _editDialog).val(itemContainer.data('name'));
+        $('[name="Quantity"]', _editDialog).val(itemContainer.data('quantity'));
+        $('[name="Aisle"]', _editDialog).val(itemContainer.data('aisle'));
+
+        $('form', _editDialog).resetUnobtrusiveValidation();
+
+        _editDialog
+            .one('dialogopen', function () {
+                var field = isQtyEdit ? 'Quantity' : 'Aisle', element = $('[name="' + field + '"]', _editDialog);
+                setTimeout(function () { element.focus().select(); }, 100);
+            })
+            .dialog('open');
     }
 
 })(app, jQuery);

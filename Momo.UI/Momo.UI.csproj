@@ -260,11 +260,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\knockout-3.3.0.debug.js" />
-    <Content Include="Scripts\knockout-3.3.0.js" />
-    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
-    <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\Site-knockout.js" />
     <Content Include="Scripts\Site.js" />
     <Content Include="Scripts\Site.AddListItem.Index.js" />
     <Content Include="Scripts\Site.ShoppingLists.Index.js" />
@@ -304,6 +299,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Ping\Index.cshtml" />
     <Content Include="Views\AddListItem\Index.cshtml" />
+    <Content Include="Views\ShoppingLists\_EditListItemForm.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

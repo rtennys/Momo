@@ -16,12 +16,6 @@ namespace Momo.UI
                 "~/Scripts/Site.js",
                 "~/Scripts/Site.*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
-                "~/Scripts/knockout-{version}.js",
-                "~/Scripts/knockout.mapping-latest.js",
-                "~/Scripts/Site-knockout.js"));
-
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/toastr.css",
                 "~/Content/site.css"));

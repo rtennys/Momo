@@ -1,4 +1,5 @@
 ﻿@using Momo.Common
+@using Momo.Domain.Commands
 @model ShoppingListsShowModel
 
 @{
@@ -16,81 +17,49 @@
     }
 }
 
-<div data-bind="'text': noItemsMsg, 'visible': noItemsVisible"></div>
-
-<div data-bind="foreach: listItems" id="items-container" style="display: none;">
-
-    <!-- ko 'if': showDivider -->
-    <p style="font-weight: bold;">
-        Aisle <span data-bind="'text': Aisle() == 0 ? 'not set' : Aisle()"></span>
-    </p>
-    <!-- /ko -->
-
-    <!-- ko 'if': isVisible -->
-    <div data-bind="'css': { 'faded': Picked() || Quantity() == 0 }" class="mobileAccessible">
-        <div class="row">
-            <div class="span1 clickable" style="text-align: center;">
-                <input type="checkbox" data-bind="'checked': Picked@(CurrentUser.HasShoppingListAccess() ? ", 'click': $root.onChangePicked" : "")" @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
-            </div>
-            <div class="span10 clickable" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
-                <span data-bind="'text': Name "></span>
-            </div>
-            <div class="span1 clickable" style="text-align: center;" data-bind="@(CurrentUser.HasShoppingListAccess() ? "'click': $root.onEditItemClick" : "")">
-                <span data-bind="'text': Quantity ">0</span>
-            </div>
-        </div>
-    </div>
-    <!-- /ko -->
-
-</div>
-
-<p style="text-align: right;">
-    Estimated Total: <span data-bind="'moneyText': estimatedTotal"></span> <br />
-    <small>estimate is based on the prices you have provided</small>
+<p id="nothingNeededMsg" style="@(Model.ListItems.Any(x => !x.Picked && x.Quantity > 0) ? "display: none" : "")">
+    Nothing needed!
 </p>
 
-
-
-<div data-bind="'with': itemToEdit" id="edit-item-container" style="display: none;">
-    @using (Html.BeginForm("edititem", null, FormMethod.Post, new {data_bind = "submit: $root.onEditItemSubmit"}))
+<div id="items-container" class="hide-zero hide-picked">
+    @foreach (var lookup in Model.ListItems.ToLookup(x => x.Aisle))
     {
-        @Html.AntiForgeryToken()
-        <input type="hidden" value="@Model.Id" name="ShoppingListId" />
-        <input type="hidden" data-bind="'value': Id" name="Id" />
-        <ol>
-            <li>
-                <label>Name</label>
-                <input type="text" data-bind="'value': Name" placeholder="Name" name="Name" data-val-required="Name is required." data-val="true" autocomplete="off" />
-            </li>
-            <li>
-                <label>Quantity</label>
-                <input type="text" data-bind="'value': Quantity" placeholder="Quantity" name="Quantity" data-val-range-min="0" data-val-range-max="2147483647" data-val-range="Quantity must be ae positive number" data-val-number="Quantity must be a number." data-val="true" autocomplete="off" />
-            </li>
-            <li>
-                <label>Aisle</label>
-                <input type="text" data-bind="'value': Aisle" placeholder="Aisle" name="Aisle" data-val-number="Aisle must be a number." data-val="true" autocomplete="off" />
-            </li>
-            <li>
-                <label>Price</label>
-                <input type="text" data-bind="'moneyValue': Price" placeholder="Price" name="Price" data-val-number="Price must be a number." data-val="true" autocomplete="off" />
-            </li>
-        </ol>
+        <div class="aisle-container @(Model.Css(lookup))">
+            <p>
+                <strong>Aisle @(lookup.Key == 0 ? "not set" : lookup.Key.ToString())</strong>
+            </p>
 
-        <input type="submit" value="Done" />
-        @Html.ValidationSummary()
-
-        <p style="margin-top: 25px;">
-            <input data-bind="'click': $root.onForgetItemClick" type="button" value="Forget this item" data-icon="delete" />
-        </p>
+            @foreach (var listItem in lookup)
+            {
+                <div class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
+                    <div class="row">
+                        <div class="span1 clickable" style="text-align: center;">
+                            <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        </div>
+                        <div class="span10 clickable list-item-name">
+                            @listItem.Name
+                        </div>
+                        <div class="span1 clickable list-item-quantity" style="text-align: center;">
+                            @listItem.Quantity
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
 </div>
+
+@if (CurrentUser.HasShoppingListAccess())
+{
+    @Html.Partial("_EditListItemForm", new EditShoppingListItemCommand {ShoppingListId = Model.Id})
+}
 
 
 @section FooterContent
 {
     <div class="row">
-        <div class="span6"><label><input type="checkbox" data-bind="'checked': hideZeros" checked="checked" /> Hide Zeros</label></div>
-        <div class="span6" style="text-align: right;"><label><input type="checkbox" data-bind="'checked': hidePicked" checked="checked" /> Hide Checked</label></div>
+        <div class="span6"><label><input type="checkbox" id="hideZeros" checked="checked" /> Hide Zeros</label></div>
+        <div class="span6" style="text-align: right;"><label><input type="checkbox" id="hidePicked" checked="checked" /> Hide Checked</label></div>
     </div>
 
     @if (CurrentUser.HasShoppingListAccess())
@@ -141,13 +110,9 @@
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/knockout")
-
     <script>
         $(function() {
-            app.urls.show = '@Url.Action("Show")';
             app.urls.changePicked = '@Url.Action("ChangePicked")';
-            app.urls.deleteItem = '@Url.Action("DeleteItem")';
             app.modules.shoppingListsShow.init();
         });
     </script>

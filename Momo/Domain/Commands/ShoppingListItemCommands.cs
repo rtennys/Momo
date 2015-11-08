@@ -64,9 +64,8 @@ namespace Momo.Domain.Commands
             var shoppingList = _repository.Get<ShoppingList>(command.ShoppingListId);
             var item = shoppingList.GetOrAddItem(command.Name);
 
-            if (item.Quantity <= 0) item.Quantity = 1;
-
             item.Picked = false;
+            item.Quantity = Math.Max(1, command.Quantity.GetValueOrDefault());
 
             return result;
         }

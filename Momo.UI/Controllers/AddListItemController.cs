@@ -64,12 +64,13 @@ namespace Momo.UI.Controllers
                 .Where(x => x.ShoppingList.UserProfile.Username == username)
                 .Where(x => x.ShoppingList.Name == shoppinglist)
                 .Where(x => x.Name.Contains(name))
-                .OrderBy(x => x.Name)
-                .Select(x => new {x.Name, x.Aisle, Quantity = Math.Max(1, x.Quantity)})
+                .OrderBy(x => x.Aisle)
+                .ThenBy(x => x.Name)
+                .Select(x => new {x.Name, x.Aisle, Quantity = Math.Max(1, x.Quantity), OnList = !x.Picked && x.Quantity > 0})
                 .ToList();
 
             if (!model.Any())
-                model.Add(new {Name = name.ToTitleCase(), Aisle = 0, Quantity = 1});
+                model.Add(new {Name = name.ToTitleCase(), Aisle = 0, Quantity = 1, OnList = false});
 
             return Json(model);
         }

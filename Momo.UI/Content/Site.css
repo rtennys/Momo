@@ -138,12 +138,16 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 
 /* misc */
 .spaced { margin-top: 75px; }
-.faded div { opacity: .6; }
 .clickable { cursor: pointer; }
 
 div.mobileAccessible { margin: 5px 0; padding: 10px 15px; border: solid 1px #bbb; border-radius: 3px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 
+.zero div, .picked div { opacity: .6; }
+.hide-zero .zero, .hide-picked .picked { display: none; }
+.hide-zero.hide-picked .nothing-needed { display: none; }
 
+.on-list-check { background-color: #090; color: white; font-weight: bolder; text-align: center; display: inline-block; width: 20px; height: 20px; -ms-border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; }
+.not-on-list .on-list-check { display: none; }
 
 @media (min-width: 768px) {
     div.mobileAccessible { margin: 3px 0; padding: 5px 10px; }

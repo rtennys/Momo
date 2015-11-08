@@ -50,17 +50,14 @@ namespace Momo.UI.Controllers
             if (shoppingList == null)
                 return HttpNotFound();
 
-            if (Request.HttpMethod == "GET")
-                return View(new ShoppingListsShowModel {Id = shoppingList.Id});
-
-            var model = shoppingList
+            var listItems = shoppingList
                 .ShoppingListItems
                 .OrderBy(x => x.Aisle)
                 .ThenBy(x => x.Name)
                 .Select(x => new ShoppingListItemModel(x))
                 .ToArray();
 
-            return Json(model);
+            return View(new ShoppingListsShowModel {Id = shoppingList.Id, ListItems = listItems});
         }
 
 
@@ -156,30 +153,22 @@ namespace Momo.UI.Controllers
             return RedirectToAction("Show");
         }
 
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
+        {
+            ModelState.AddModelErrors(_commandExecutor.Execute(command));
+
+            if (ModelState.IsValid)
+                _uow.Commit();
+
+            return RedirectToAction("Show");
+        }
+
 
         /* shoppinglists/show ajax calls */
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditItem(EditShoppingListItemCommand command)
-        {
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
-
-            var result = _commandExecutor.Execute(command);
-
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
-            }
-
-            _uow.Commit();
-
-            return Json(new {Success = true});
-        }
-
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
         {
             if (!ModelState.IsValid)
                 return Json(new {Errors = ModelState.ToErrorList()});

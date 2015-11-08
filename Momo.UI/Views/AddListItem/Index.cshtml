@@ -1,0 +1,47 @@
+﻿@using Momo.Common
+@using Momo.Domain.Commands
+@model AddShoppingListItemCommand
+@{
+    var routeData = Request.RequestContext.RouteData;
+    ViewBag.Title = "{0}/{1} - Add".F(routeData.Values["username"], routeData.Values["shoppinglist"]);
+}
+
+<p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): @Html.ActionLink((string)routeData.Values["shoppinglist"], "Show", "ShoppingLists"): <strong>add</strong></p>
+
+@using (Html.BeginForm("Search", null, FormMethod.Post, new {id = "searchForm"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("username")
+    @Html.Hidden("shoppinglist")
+    <ol>
+        <li>@Html.TextBox("name")</li>
+    </ol>
+    @Html.ValidationSummary()
+}
+
+
+<div id="searchResultContainer"></div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "addItemFormTemplate", style = "display: none; margin: 15px 0;", @class = "not-on-list"}))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="shoppingListId" value="@Model.ShoppingListId" />
+    <input type="hidden" name="name" />
+
+    <input type="submit" value="add" />
+    <label>
+        <input type="number" name="quantity" style="width: 25px" />
+        <span name="name"></span>
+        <span>-</span>
+        <span name="aisle"></span>
+        <span class="on-list-check">&#x2714;</span>
+    </label>
+}
+
+
+@section scripts
+{
+    <script>
+        app.modules.addListItemIndex.init();
+    </script>
+}

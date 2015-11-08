@@ -2,13 +2,6 @@
 /******************************************************/
 // prototypes
 
-String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) {
-        return typeof args[number] != 'undefined' ? args[number] : match;
-    });
-};
-
 if (!Array.prototype.filter) {
     Array.prototype.filter = function (fun /*, thisp*/) {
         var len = this.length >>> 0;
@@ -32,24 +25,6 @@ if (!Array.prototype.filter) {
 /******************************************************/
 /******************************************************/
 // jquery extensions
-
-$.fn.setToSizeOfWindow = function () {
-    return this.each(function () {
-        $(this).css({ width: $(window).width(), height: $(document).height() });
-    });
-};
-
-$.fn.centerInScreen = function (width, height) {
-    width = width || '85%';
-    height = height || '85%';
-    return this.each(function () {
-        var element = $(this);
-        element.css({ width: width, height: height });
-        var top = ($(window).height() - element.outerHeight()) / 2;
-        var left = ($(window).width() - element.outerWidth()) / 2;
-        element.css({ top: top, left: left });
-    });
-};
 
 $.fn.resetUnobtrusiveValidation = function () {
     return this.each(function () {
@@ -190,7 +165,7 @@ app = {
         return _dialog;
     },
 
-    debug: function(message) {
+    debug: function (message) {
         if (window.console && 'debug' in window.console)
             console.debug(message);
         else if (window.console && 'log' in window.console)
@@ -199,22 +174,6 @@ app = {
             $('<div>').text(message).appendTo('body');
         return this;
     },
-
-    overlay: (function () {
-        var _overlayDiv;
-        function getOverlayDiv() {
-            if (!_overlayDiv)
-                _overlayDiv = $('<div>').css({ position: 'absolute', top: '0', left: '0', 'z-index': '100', 'background-color': '#000', cursor: 'wait', filter: 'alpha(opacity=85)', '-moz-opacity': '0.85', opacity: '0.25', display: 'none' }).appendTo('body');
-            return _overlayDiv;
-        }
-
-        return {
-            show: function () { getOverlayDiv().setToSizeOfWindow().show(); return this; },
-            hide: function () { getOverlayDiv().hide(); return this; },
-            fadeIn: function (callback) { getOverlayDiv().setToSizeOfWindow().fadeIn(function () { (callback || function () { })(); }); return this; },
-            fadeOut: function (callback) { getOverlayDiv().fadeOut(function () { (callback || function () { })(); }); return this; }
-        };
-    })(),
 
     Delayed: function (callback, millisecondsToDelay) {
         /// <summary>
@@ -240,21 +199,29 @@ app = {
     }
 };
 
+
+/******************************************************/
+/******************************************************/
+// dev helper
+
 (function (window, $) {
 
-    var $window = $(window);
+    var $window, $screenSize;
 
-    $(function() {
+    $(function () {
 
-        if ($('.screenSize').length == 0) return;
+        $screenSize = $('.screenSize');
+        if ($screenSize.length == 0) return;
 
-        function setSize() {
-            $('.screenSize').text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
-        }
+        $window = $(window);
 
         setSize();
         $window.resize(setSize);
 
     });
+
+    function setSize() {
+        $screenSize.text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
+    }
 
 })(window, jQuery);

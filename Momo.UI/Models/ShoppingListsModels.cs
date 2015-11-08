@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
@@ -14,6 +16,19 @@ namespace Momo.UI.Models
     public class ShoppingListsShowModel
     {
         public int Id { get; set; }
+        public IList<ShoppingListItemModel> ListItems { get; set; }
+
+        public string Css(IGrouping<int, ShoppingListItemModel> lookup)
+        {
+            return string.Join(" ", GetCss(lookup));
+        }
+
+        private IEnumerable<string> GetCss(IGrouping<int, ShoppingListItemModel> lookup)
+        {
+            if (lookup.All(x => x.Css.Length > 0)) yield return "nothing-needed";
+            if (lookup.All(x => x.Css == "zero")) yield return "zero";
+            if (lookup.All(x => x.Css == "picked")) yield return "picked";
+        }
     }
 
     public class ShoppingListsRenameModel : RenameShoppingListCommand
@@ -50,5 +65,16 @@ namespace Momo.UI.Models
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public bool Picked { get; set; }
+
+        public string Css
+        {
+            get { return string.Join(" ", GetCss()); }
+        }
+
+        private IEnumerable<string> GetCss()
+        {
+            if (Picked) yield return "picked";
+            if (Quantity == 0) yield return "zero";
+        }
     }
 }
