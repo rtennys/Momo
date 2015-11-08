@@ -165,6 +165,30 @@ namespace Momo.UI.Controllers
         }
 
 
+        /* shoppinglists/index ajax calls */
+
+        [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Add(AddShoppingListCommand command)
+        {
+            if (!ModelState.IsValid)
+                return Json(new {Errors = ModelState.ToErrorList()});
+
+            var result = _commandExecutor.Execute(command);
+
+            if (result.AnyErrors())
+            {
+                ModelState.AddModelErrors(result);
+                return Json(new {Errors = ModelState.ToErrorList()});
+            }
+
+            _uow.Commit();
+
+            var list = result.Data.ShoppingList;
+
+            return Json(new {Success = true, ShoppingList = new ShoppingListModel(list, Url)});
+        }
+
+
         /* shoppinglists/show ajax calls */
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]

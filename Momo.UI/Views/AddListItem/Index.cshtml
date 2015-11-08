@@ -14,7 +14,7 @@
     @Html.Hidden("username")
     @Html.Hidden("shoppinglist")
     <ol>
-        <li>@Html.TextBox("name")</li>
+        <li>@Html.TextBox("name", null, new {autocomplete = "off"})</li>
     </ol>
     @Html.ValidationSummary()
 }

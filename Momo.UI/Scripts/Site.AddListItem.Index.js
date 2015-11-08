@@ -1,15 +1,20 @@
 ﻿(function (app, $) {
 
-    var _searchInput, _searchForm, _searchResultContainer, _addItemFormTemplate;
+    var _searchForm, _searchDelay, _searchInput, _searchResultContainer, _addItemFormTemplate;
 
     app.modules.addListItemIndex = { init: init };
 
     function init() {
         _addItemFormTemplate = $('#addItemFormTemplate');
         _searchResultContainer = $('#searchResultContainer');
+
         _searchForm = $('#searchForm');
+        _searchForm.submit(onSearchFormSubmit);
+
+        _searchDelay = new app.Delayed(search);
+
         _searchInput = $('#name');
-        _searchInput.keyup(new app.Delayed(search).execute);
+        _searchInput.keyup(_searchDelay.execute);
         _searchInput.val('').focus();
     }
 
@@ -42,6 +47,12 @@
             form.removeClass("not-on-list");
             _searchInput.focus();
         });
+    }
+
+    function onSearchFormSubmit(e) {
+        e.preventDefault();
+        _searchDelay.execute();
+        return false;
     }
 
 })(app, jQuery);
