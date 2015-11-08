@@ -4,11 +4,8 @@
     app.modules.shoppingListsShow = { init: init };
 
     function init() {
-        $(':checkbox[name="picked"]').click(onChangePicked);
         $('#hideZeros').click(onHideZeros);
         $('#hidePicked').click(onHidePicked);
-        $('.list-item-name').click(onNameClicked);
-        $('.list-item-quantity').click(onQuantityClicked);
 
         _editDialog = $('#edit-item-container').dialog({
             autoOpen: false,
@@ -16,6 +13,11 @@
             width: 'auto'
         });
 
+        if (_editDialog.length === 0) return; // doesn't have write access
+
+        $(':checkbox[name="picked"]').click(onChangePicked);
+        $('.list-item-name').click(onNameClicked);
+        $('.list-item-quantity').click(onQuantityClicked);
         $('#editItemForm', _editDialog).submit(onEditItemSubmit);
     }
 
