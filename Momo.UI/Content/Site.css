@@ -146,8 +146,10 @@ div.mobileAccessible { margin: 5px 0; padding: 10px 15px; border: solid 1px #bbb
 .hide-zero .zero, .hide-picked .picked { display: none; }
 .hide-zero.hide-picked .nothing-needed { display: none; }
 
-.on-list-check { background-color: #090; color: white; font-weight: bolder; text-align: center; display: inline-block; width: 20px; height: 20px; -ms-border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; }
-.not-on-list .on-list-check { display: none; }
+.list-item-status-exists:after,
+.list-item-status-new:after { color: white; font-weight: bolder; text-align: center; -ms-border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; display: inline; margin-left: 5px; padding: 2px 5px; }
+.list-item-status-exists:after { content: '\2714'; background-color: #090; }
+.list-item-status-new:after { content: 'new'; background-color: #00f; font-size: .9em; }
 
 @media (min-width: 768px) {
     div.mobileAccessible { margin: 3px 0; padding: 5px 10px; }

@@ -66,11 +66,11 @@ namespace Momo.UI.Controllers
                 .Where(x => x.Name.Contains(name))
                 .OrderBy(x => x.Aisle)
                 .ThenBy(x => x.Name)
-                .Select(x => new {x.Name, x.Aisle, Quantity = Math.Max(1, x.Quantity), OnList = !x.Picked && x.Quantity > 0})
+                .Select(x => new {x.Name, x.Aisle, Quantity = Math.Max(1, x.Quantity), OnList = !x.Picked && x.Quantity > 0, IsNew = false})
                 .ToList();
 
-            if (!model.Any())
-                model.Add(new {Name = name.ToTitleCase(), Aisle = 0, Quantity = 1, OnList = false});
+            if (model.All(x => !string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase)))
+                model.Add(new {Name = name.ToTitleCase(), Aisle = 0, Quantity = 1, OnList = false, IsNew = true});
 
             return Json(model);
         }

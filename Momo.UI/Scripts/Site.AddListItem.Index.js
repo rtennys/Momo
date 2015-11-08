@@ -5,7 +5,7 @@
     app.modules.addListItemIndex = { init: init };
 
     function init() {
-        _addItemFormTemplate = $('#addItemFormTemplate');
+        _addItemFormTemplate = $('#addItemFormTemplate').remove();
         _searchResultContainer = $('#searchResultContainer');
         _noSearchResults = $('#noSearchResults');
 
@@ -17,6 +17,8 @@
         _searchInput = $('#name');
         _searchInput.keyup(_searchDelay.execute);
         _searchInput.val('').focus();
+
+        $('body').on('keydown', 'input', onKeydown);
     }
 
     function search() {
@@ -36,22 +38,21 @@
     }
 
     function addSearchResult(result) {
-        var addItemForm = _addItemFormTemplate.clone().show();
-        addItemForm.find('input[name="quantity"]').val(result.Quantity);
-        addItemForm.find('input[name="name"]').val(result.Name);
-        addItemForm.find('span[name="name"]').text(result.Name);
-        addItemForm.find('input[name="aisle"]').val(result.Aisle);
-        if (result.OnList)
-            addItemForm.removeClass("not-on-list");
-        addItemForm.submit(onAddItem);
-        _searchResultContainer.append(addItemForm);
+        var form = _addItemFormTemplate.clone().show();
+        form.removeAttr('id');
+        form.find('input[name="quantity"]').val(result.Quantity);
+        form.find('input[name="name"]').val(result.Name);
+        form.find('span[name="name"]').text(result.Name).addClass(result.OnList ? 'list-item-status-exists' : result.IsNew ? 'list-item-status-new' : 'list-item-status-none');
+        form.find('input[name="aisle"]').val(result.Aisle);
+        form.submit(onAddItem);
+        _searchResultContainer.append(form);
     }
 
     function onAddItem(e) {
         e.preventDefault();
         var form = $(this);
         app.post(form.attr('action'), form.serializeArray(), function () {
-            form.removeClass("not-on-list");
+            form.find('span[name="name"]').removeClass('list-item-status-none list-item-status-new').addClass('list-item-status-exists');
             setTimeout(function () { _searchInput.focus().select(); }, 100);
         });
     }
@@ -59,6 +60,19 @@
     function onSearchFormSubmit(e) {
         e.preventDefault();
         _searchDelay.execute();
+        return false;
+    }
+
+    function onKeydown(e) {
+        if (e.which !== 38 && e.which !== 40) return true;
+
+        var allForms = $('form');
+        var index = allForms.index($(e.currentTarget).closest('form')) + (e.which === 38 ? -1 : 1);
+
+        if (allForms.length > index)
+            setTimeout(function () { allForms.eq(index).find('[name="quantity"]').focus().select(); });
+
+        e.preventDefault();
         return false;
     }
 
