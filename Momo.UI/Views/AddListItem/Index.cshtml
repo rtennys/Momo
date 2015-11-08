@@ -21,16 +21,15 @@
 
 
 <div class="row">
-    <div class="span1">&nbsp;</div>
-    <div class="span1">Qty</div>
-    <div class="span9">Name</div>
-    <div class="span1">Aisle</div>
+    <div class="span2">&nbsp;</div>
+    <div class="span2">Qty</div>
+    <div class="span6">Name</div>
+    <div class="span2">Aisle</div>
 </div>
 <hr/>
 
 <div id="noSearchResults" class="row" style="margin-bottom: 50px;">
-    <div class="span1">&nbsp;</div>
-    <div class="span1">&nbsp;</div>
+    <div class="span2">&nbsp;</div>
     <div class="span10"><em>no results</em></div>
 </div>
 
@@ -39,21 +38,21 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "addItemFormTemplate", style = "display: none; margin: 15px 0;", @class = "not-on-list"}))
 {
     <div class="row">
-        <div class="span1">
+        <div class="span2">
             @Html.AntiForgeryToken()
             <input type="hidden" name="shoppingListId" value="@Model.ShoppingListId" />
             <input type="hidden" name="name" />
             <input type="submit" value="add" />
         </div>
-        <div class="span1">
-            <input type="number" name="quantity" />
+        <div class="span2">
+            <input type="number" name="quantity" style="width: 75%; max-width: 25px;" />
         </div>
-        <div class="span9">
+        <div class="span6">
             <span name="name"></span>
             <span class="on-list-check">&#x2714;</span>
         </div>
-        <div class="span1">
-            <input type="number" name="aisle" />
+        <div class="span2">
+            <input type="number" name="aisle" style="width: 75%; max-width: 25px;" />
         </div>
     </div>
 }
