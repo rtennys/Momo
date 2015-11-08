@@ -25,10 +25,10 @@
         @Html.ValidationSummary()
     }
 
-    @using (Html.BeginForm("DeleteItem", null, FormMethod.Post, new {style = "margin-top: 50px;"}))
+    @using (Html.BeginForm("DeleteItem", null, FormMethod.Post, new {id = "deleteItemForm", style = "margin-top: 50px;"}))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.Id" />
-        <input type="submit" value="Forget this item" onclick="return confirm('Delete this item from the list?')" />
+        <input type="submit" value="Forget this item" />
     }
 </div>

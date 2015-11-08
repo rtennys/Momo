@@ -45,7 +45,7 @@
         var form = $(this);
         app.post(form.attr('action'), form.serializeArray(), function () {
             form.removeClass("not-on-list");
-            _searchInput.focus();
+            _searchInput.focus().select();
         });
     }
 

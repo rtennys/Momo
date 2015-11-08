@@ -142,7 +142,7 @@ input.placeholder { color: lightgray !important; font-style: italic !important; 
 
 div.mobileAccessible { margin: 5px 0; padding: 10px 15px; border: solid 1px #bbb; border-radius: 3px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) inset; }
 
-.zero div, .picked div { opacity: .6; }
+.item-container.zero div, .item-container.picked div { opacity: .6; }
 .hide-zero .zero, .hide-picked .picked { display: none; }
 .hide-zero.hide-picked .nothing-needed { display: none; }
 

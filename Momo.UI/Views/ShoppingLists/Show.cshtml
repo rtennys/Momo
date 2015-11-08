@@ -24,14 +24,14 @@
 <div id="items-container" class="hide-zero hide-picked">
     @foreach (var lookup in Model.ListItems.ToLookup(x => x.Aisle))
     {
-        <div class="aisle-container @(Model.Css(lookup))">
+        <div id="aisle_@lookup.Key" class="aisle-container @(Model.Css(lookup))">
             <p>
                 <strong>Aisle @(lookup.Key == 0 ? "not set" : lookup.Key.ToString())</strong>
             </p>
 
             @foreach (var listItem in lookup)
             {
-                <div class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
+                <div id="item_@listItem.Id" class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
                     <div class="row">
                         <div class="span1 clickable" style="text-align: center;">
                             <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />

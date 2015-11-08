@@ -153,17 +153,6 @@ namespace Momo.UI.Controllers
             return RedirectToAction("Show");
         }
 
-        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
-        {
-            ModelState.AddModelErrors(_commandExecutor.Execute(command));
-
-            if (ModelState.IsValid)
-                _uow.Commit();
-
-            return RedirectToAction("Show");
-        }
-
 
         /* shoppinglists/index ajax calls */
 
@@ -194,19 +183,24 @@ namespace Momo.UI.Controllers
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
         public ActionResult EditItem(EditShoppingListItemCommand command)
         {
+            ModelState.AddModelErrors(_commandExecutor.Execute(command));
+
             if (!ModelState.IsValid)
                 return Json(new {Errors = ModelState.ToErrorList()});
 
-            var result = _commandExecutor.Execute(command);
+            _uow.Commit();
+            return Json(new {Success = true});
+        }
 
-            if (result.AnyErrors())
-            {
-                ModelState.AddModelErrors(result);
+        [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
+        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
+        {
+            ModelState.AddModelErrors(_commandExecutor.Execute(command));
+
+            if (!ModelState.IsValid)
                 return Json(new {Errors = ModelState.ToErrorList()});
-            }
 
             _uow.Commit();
-
             return Json(new {Success = true});
         }
 

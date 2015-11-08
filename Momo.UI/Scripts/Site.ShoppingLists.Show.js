@@ -19,6 +19,7 @@
         $('.list-item-name').click(onNameClicked);
         $('.list-item-quantity').click(onQuantityClicked);
         $('#editItemForm', _editDialog).submit(onEditItemSubmit);
+        $('#deleteItemForm', _editDialog).submit(onDeleteItemForm);
     }
 
     function onChangePicked() {
@@ -71,6 +72,25 @@
         });
     }
 
+    function onDeleteItemForm(e) {
+        e.preventDefault();
+
+        if (!confirm('Delete this item from the list?')) return;
+
+        var form = $(this);
+        app.post(form.attr('action'), form.serializeArray(), function (result) {
+            if (!result.Success) {
+                form
+                    .resetUnobtrusiveValidation()
+                    .appendValidationErrors(result.Errors);
+                return;
+            }
+
+            _editDialog.dialog('close');
+            removeItem($('[name="Id"]', form).val());
+        });
+    }
+
     function showHideAisles() {
         $('.aisle-container').each(function () {
             showHideAisle($(this));
@@ -102,6 +122,15 @@
                 setTimeout(function () { element.focus().select(); }, 100);
             })
             .dialog('open');
+    }
+
+    function removeItem(itemId) {
+        var itemContainer = $('#item_' + itemId),
+            aisleContainer = itemContainer.closest('.aisle-container');
+
+        itemContainer.remove();
+        if (aisleContainer.children('.item-container').length === 0)
+            aisleContainer.remove();
     }
 
 })(app, jQuery);
