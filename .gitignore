@@ -18,6 +18,7 @@ _ReSharper.*
 packages
 
 .svn
+.vs
 
 [Tt]humbs.db
 *.DS_Store
