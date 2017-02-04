@@ -3,15 +3,18 @@ using System.Web.Optimization;
 
 namespace Momo.UI
 {
-    public class BundleConfig
+    public static class BundleConfig
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new Bundle("~/bundles/jquery").Include(
-                "~/Scripts/jquery.unobtrusive*",
-                "~/Scripts/jquery.validate*"));
+            BundleTable.EnableOptimizations = true;
+#if DEBUG
+            //BundleTable.EnableOptimizations = false;
+#endif
 
-            bundles.Add(new ScriptBundle("~/bundles/js").Include(
+            bundles.Add(GetScriptBundle("~/js").Include(
+                "~/Scripts/jquery.unobtrusive*",
+                "~/Scripts/jquery.validate*",
                 "~/Scripts/toastr.js",
                 "~/Scripts/Site.js",
                 "~/Scripts/Site.*"));
@@ -19,6 +22,11 @@ namespace Momo.UI
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/toastr.css",
                 "~/Content/site.css"));
+        }
+
+        private static ScriptBundle GetScriptBundle(string virtualPath)
+        {
+            return new ScriptBundle(virtualPath) { ConcatenationToken = ";" + Environment.NewLine };
         }
     }
 }
