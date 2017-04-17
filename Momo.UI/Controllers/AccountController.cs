@@ -252,7 +252,8 @@ namespace Momo.UI.Controllers
             var externalLogins = new List<ExternalLogin>();
             foreach (var account in accounts)
             {
-                var clientData = OAuthWebSecurity.GetOAuthClientData(account.Provider);
+                AuthenticationClientData clientData;
+                if (!OAuthWebSecurity.TryGetOAuthClientData(account.Provider, out clientData)) continue;
 
                 externalLogins.Add(new ExternalLogin
                                    {
