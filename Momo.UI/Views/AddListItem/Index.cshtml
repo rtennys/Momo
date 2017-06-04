@@ -14,7 +14,9 @@
     @Html.Hidden("username")
     @Html.Hidden("shoppinglist")
     <ol>
-        <li>@Html.TextBox("name", null, new {autocomplete = "off"})</li>
+        <li class="row">
+            @Html.TextBox("name", null, new { autocomplete = "off", style = "width: 100%;" })
+        </li>
     </ol>
     @Html.ValidationSummary()
 }
@@ -51,7 +53,7 @@
             <span name="name"></span>
         </div>
         <div class="span2">
-            <input type="number" name="aisle" style="width: 75%; max-width: 25px;" />
+            <input type="number" name="aisle" style="width: 75%; max-width: 30px;" />
         </div>
     </div>
 }

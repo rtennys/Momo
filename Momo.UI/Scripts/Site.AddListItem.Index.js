@@ -50,10 +50,11 @@
 
     function onAddItem(e) {
         e.preventDefault();
+        _searchInput.focus().select();
         var form = $(this);
         app.post(form.attr('action'), form.serializeArray(), function () {
             form.find('span[name="name"]').removeClass('list-item-status-none list-item-status-new').addClass('list-item-status-exists');
-            setTimeout(function () { _searchInput.focus().select(); }, 100);
+            setTimeout(function () { _searchInput.focus().select(); });
         });
     }
 
@@ -64,13 +65,19 @@
     }
 
     function onKeydown(e) {
-        if (e.which !== 38 && e.which !== 40) return true;
+        var upArrow = 38;
+        var downArrow = 40;
+
+        if (e.which !== upArrow && e.which !== downArrow) return true;
 
         var allForms = $('form');
-        var index = allForms.index($(e.currentTarget).closest('form')) + (e.which === 38 ? -1 : 1);
+        var index = allForms.index($(e.currentTarget).closest('form')) + (e.which === upArrow ? -1 : 1);
 
-        if (allForms.length > index)
-            setTimeout(function () { allForms.eq(index).find('[name="quantity"]').focus().select(); });
+        if (allForms.length > index) {
+            var nextQtyInput = allForms.eq(index).find('[name="quantity"]');
+            nextQtyInput.focus().select();
+            setTimeout(function () { nextQtyInput.focus().select(); });
+        }
 
         e.preventDefault();
         return false;
