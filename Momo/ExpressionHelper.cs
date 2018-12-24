@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Linq.Expressions;
 
-namespace Momo.Common
+namespace Momo
 {
     public static class ExpressionHelper
     {
@@ -21,13 +21,12 @@ namespace Momo.Common
             var memberExpression = body as MemberExpression;
             if (memberExpression == null)
             {
-                var unaryExpression = body as UnaryExpression;
-                if (unaryExpression != null)
+                if (body is UnaryExpression unaryExpression)
                     memberExpression = unaryExpression.Operand as MemberExpression;
             }
 
             if (memberExpression == null)
-                throw new Exception("Unknown property type: '{0}'".F(body));
+                throw new Exception($"Unknown property type: '{body}'");
 
             return memberExpression.Member.Name;
         }

@@ -1,10 +1,9 @@
-﻿@using Momo.Common
-@using Momo.Domain.Commands
+﻿@using Momo.Domain.Commands
 @model ShoppingListsShowModel
 
 @{
     var routeData = Request.RequestContext.RouteData;
-    ViewBag.Title = "{0}/{1}".F(routeData.Values["username"], routeData.Values["shoppinglist"]);
+    ViewBag.Title = string.Format("{0}/{1}", routeData.Values["username"], routeData.Values["shoppinglist"]);
 }
 
 <p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): <strong>@routeData.Values["shoppinglist"]</strong></p>

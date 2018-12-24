@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Momo.Common;
-using Momo.Common.DataAccess;
+using Momo.Domain;
 using Momo.Domain.Entities;
 
 namespace Momo.UI.Controllers

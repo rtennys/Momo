@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Momo.Common.DataAccess;
 using Momo.Domain.Entities;
 
 namespace Momo.Domain.Commands

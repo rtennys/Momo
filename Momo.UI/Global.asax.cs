@@ -6,9 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Momo.Common;
 using Momo.UI.Controllers;
-using StructureMap.Web.Pipeline;
 using WebMatrix.WebData;
 
 namespace Momo.UI
@@ -28,7 +26,7 @@ namespace Momo.UI
                 .InformationalVersion;
 
             Application["version"] = version;
-            Application["versionUrl"] = "https://github.com/rtennys/Momo/commit/{0}".F(version.Split('.').Last());
+            Application["versionUrl"] = $"https://github.com/rtennys/Momo/commit/{version.Split('.').Last()}";
             Application["name"] = "mnmllist";
 
             AreaRegistration.RegisterAllAreas();
@@ -39,15 +37,11 @@ namespace Momo.UI
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
-            IocConfig.Initialize();
-
             WebSecurity.InitializeDatabaseConnection("momo_conn", "UserProfile", "Id", "Username", true);
         }
 
         protected void Application_EndRequest()
         {
-            HttpContextLifecycle.DisposeAndClearAll();
-
             if (Context.Response.StatusCode == 404) HandleNotFoundResponse();
         }
 
@@ -61,9 +55,8 @@ namespace Momo.UI
             routeData.Values["controller"] = "Home";
             routeData.Values["action"] = "NotFound";
 
-            Ioc.Resolve<HomeController>()
-                .As<IController>()
-                .Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+            var homeController = (IController)Ioc.Resolve<HomeController>();
+            homeController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
         }
     }
 }

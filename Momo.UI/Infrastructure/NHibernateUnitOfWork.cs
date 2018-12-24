@@ -1,5 +1,4 @@
 ﻿using System;
-using Momo.Common.DataAccess;
 using NHibernate;
 
 namespace Momo.UI.Infrastructure
@@ -9,7 +8,7 @@ namespace Momo.UI.Infrastructure
         ISession CurrentSession { get; }
     }
 
-    public class NHibernateUnitOfWork : INHibernateUnitOfWork
+    public sealed class NHibernateUnitOfWork : INHibernateUnitOfWork
     {
         public NHibernateUnitOfWork(INHibernateSessionFactoryHelper sessionFactoryHelper)
         {
@@ -19,10 +18,7 @@ namespace Momo.UI.Infrastructure
         private readonly INHibernateSessionFactoryHelper _sessionFactoryHelper;
         private ISession _session;
 
-        public ISession CurrentSession
-        {
-            get { return _session ?? (_session = OpenSession()); }
-        }
+        public ISession CurrentSession => _session ?? (_session = OpenSession());
 
         public void Commit()
         {

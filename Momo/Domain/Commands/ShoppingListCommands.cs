@@ -1,13 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Momo.Common;
-using Momo.Common.DataAccess;
 using Momo.Domain.Entities;
 
 namespace Momo.Domain.Commands
 {
-    public class AddEditShoppingListCommandBase : ICommand
+    public abstract class AddEditShoppingListCommandBase : ICommand
     {
         [Required]
         public string Username { get; set; }
@@ -16,7 +14,7 @@ namespace Momo.Domain.Commands
         public string Name { get; set; }
     }
 
-    public class AddShoppingListCommand : AddEditShoppingListCommandBase
+    public sealed class AddShoppingListCommand : AddEditShoppingListCommandBase
     {
     }
 
@@ -26,7 +24,7 @@ namespace Momo.Domain.Commands
         public int Id { get; set; }
     }
 
-    public class DeleteShoppingListCommand : ICommand
+    public sealed class DeleteShoppingListCommand : ICommand
     {
         [Required]
         public string Username { get; set; }
@@ -35,7 +33,7 @@ namespace Momo.Domain.Commands
         public int Id { get; set; }
     }
 
-    public class ClearShoppingListCommand : ICommand
+    public sealed class ClearShoppingListCommand : ICommand
     {
         [Required]
         public string Username { get; set; }
@@ -46,7 +44,7 @@ namespace Momo.Domain.Commands
         public bool CheckedOnly { get; set; }
     }
 
-    public class ShoppingListCommandHandler : ICommandHandler<AddShoppingListCommand>, ICommandHandler<RenameShoppingListCommand>, ICommandHandler<DeleteShoppingListCommand>, ICommandHandler<ClearShoppingListCommand>
+    public sealed class ShoppingListCommandHandler : ICommandHandler<AddShoppingListCommand>, ICommandHandler<RenameShoppingListCommand>, ICommandHandler<DeleteShoppingListCommand>, ICommandHandler<ClearShoppingListCommand>
     {
         public ShoppingListCommandHandler(IRepository repository, IValidationFacade validationFacade)
         {

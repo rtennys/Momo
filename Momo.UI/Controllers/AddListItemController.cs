@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Momo.Common;
-using Momo.Common.DataAccess;
 using Momo.Domain;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
@@ -10,7 +8,7 @@ using Momo.Domain.Entities;
 namespace Momo.UI.Controllers
 {
     [Authorize]
-    public class AddListItemController : AppController
+    public sealed class AddListItemController : AppController
     {
         public AddListItemController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
         {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,24 +16,17 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml.Serialization;
 
-namespace Momo.Common
+namespace Momo
 {
     public static class ExtensionMethods
     {
-        public static T As<T>(this object source)
-        {
-            return (T)source;
-        }
-
-        public static T With<T>(this T source, Action<T> action)
-        {
-            action(source);
-            return source;
-        }
-
         public static T NullCheck<T>(this T source, T defaultValue) where T : class
         {
-            if (source == null || (source is string && source.As<string>() == ""))
+            if (source == null)
+                return defaultValue;
+
+            var str = source as string;
+            if (str != null && str == "")
                 return defaultValue;
 
             return source;
@@ -51,13 +43,12 @@ namespace Momo.Common
             return source
                 .NullCheck()
                 .Where(x => x != null)
-                .Where(x => !(x is string) || !string.IsNullOrEmpty(x.As<string>()));
+                .Where(x => !(x is string) || !string.IsNullOrEmpty(x as string));
         }
 
         public static ReadOnlyCollection<T> AsReadOnly<T>(this IEnumerable<T> source)
         {
-            var readOnly = source as ReadOnlyCollection<T>;
-            if (readOnly != null)
+            if (source is ReadOnlyCollection<T> readOnly)
                 return readOnly;
 
             var list = source as IList<T> ?? source.NullCheck().ToArray();
@@ -65,58 +56,13 @@ namespace Momo.Common
             return new ReadOnlyCollection<T>(list);
         }
 
-        public static IList<T> Each<T>(this IList<T> source, Action<T> action)
-        {
-            foreach (var obj in source) action(obj);
-            return source;
-        }
-
-        public static ICollection<T> Each<T>(this ICollection<T> source, Action<T> action)
-        {
-            foreach (var obj in source) action(obj);
-            return source;
-        }
-
-        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> action)
-        {
-            var collection = source as ICollection<T>;
-            if (collection != null) return Each(collection, action);
-
-            return source
-                .NullCheck()
-                .Select(item =>
-                {
-                    action(item);
-                    return item;
-                })
-                .AsReadOnly();
-        }
-
-        public static IList<T> Each<T>(this IList<T> source, Action<T, int> action)
-        {
-            for (var i = 0; i < source.Count; i++) action(source[i], i);
-            return source;
-        }
-
-        public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T, int> action)
-        {
-            var list = source as IList<T>;
-            if (list != null) return Each(list, action);
-
-            return source
-                .NullCheck()
-                .Select((item, index) =>
-                {
-                    action(item, index);
-                    return item;
-                })
-                .AsReadOnly();
-        }
 
         public static int IndexOf<T>(this IEnumerable<T> source, T value)
         {
-            var list = source as IList<T>;
-            return list != null ? list.IndexOf(value) : source.IndexOf(value, EqualityComparer<T>.Default);
+            if (source is IList<T> list)
+                return list.IndexOf(value);
+
+            return source.IndexOf(value, EqualityComparer<T>.Default);
         }
 
         public static int IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T> comparer)
@@ -128,6 +74,7 @@ namespace Momo.Common
                     return i;
                 i++;
             }
+
             return -1;
         }
 
@@ -148,27 +95,6 @@ namespace Momo.Common
                 .Where(x => x != null)
                 .Where(x => !string.IsNullOrEmpty(x.Trim()))
                 .Join(separator);
-        }
-
-
-        public static string F(this string source, object arg0)
-        {
-            return string.Format(source, arg0);
-        }
-
-        public static string F(this string source, object arg0, object arg1)
-        {
-            return string.Format(source, arg0, arg1);
-        }
-
-        public static string F(this string source, object arg0, object arg1, object arg2)
-        {
-            return string.Format(source, arg0, arg1, arg2);
-        }
-
-        public static string F(this string source, params object[] args)
-        {
-            return string.Format(source, args);
         }
 
 
@@ -222,14 +148,12 @@ namespace Momo.Common
             if (source == null || source is ExpandoObject || source is string || source.GetType().IsPrimitive)
                 return source;
 
-            var list = source as IList;
-            if (list != null)
+            if (source is IList list)
                 return list.Cast<object>().Select(x => x.ToDynamic()).AsReadOnly();
 
             IDictionary<string, object> expando = new ExpandoObject();
 
-            var dictionary = source as IDictionary;
-            if (dictionary != null)
+            if (source is IDictionary dictionary)
                 foreach (DictionaryEntry entry in dictionary)
                     expando.Add(entry.Key.ToString(), entry.Value.ToDynamic());
             else
@@ -287,33 +211,7 @@ namespace Momo.Common
         public static T DeserializeXml<T>(this byte[] source)
         {
             using (var memoryStream = new MemoryStream(source))
-                return new XmlSerializer(typeof(T)).Deserialize(memoryStream).As<T>();
-        }
-
-
-        public static void RunAsync(this Action action)
-        {
-            action.BeginInvoke(action.EndInvoke, null);
-        }
-
-        public static void RunAsync<T>(this Action<T> action, T arg)
-        {
-            action.BeginInvoke(arg, action.EndInvoke, null);
-        }
-
-        public static void RunAsync<T1, T2>(this Action<T1, T2> action, T1 arg1, T2 arg2)
-        {
-            action.BeginInvoke(arg1, arg2, action.EndInvoke, null);
-        }
-
-        public static void RunAsync<T>(this Action<T> action, T arg, TimeSpan timeToDelay)
-        {
-            new Timer(obj => action.BeginInvoke(arg, action.EndInvoke, null), null, (long)timeToDelay.TotalMilliseconds, Timeout.Infinite);
-        }
-
-        public static void RunAsync<T1, T2>(this Action<T1, T2> action, T1 arg1, T2 arg2, TimeSpan timeToDelay)
-        {
-            new Timer(obj => action.BeginInvoke(arg1, arg2, action.EndInvoke, null), null, (long)timeToDelay.TotalMilliseconds, Timeout.Infinite);
+                return (T)new XmlSerializer(typeof(T)).Deserialize(memoryStream);
         }
 
 
@@ -345,8 +243,7 @@ namespace Momo.Common
 
         public static TValue TryGet<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
         {
-            TValue value;
-            return source.TryGetValue(key, out value) ? value : default(TValue);
+            return source.TryGetValue(key, out var value) ? value : default(TValue);
         }
 
         public static byte[] ReadAll(this Stream stream)
@@ -361,43 +258,6 @@ namespace Momo.Common
             }
         }
 
-        public static IEnumerable<T> Debug<T>(this IEnumerable<T> source)
-        {
-            source = source.NullCheck();
-            if (!(source is IList<T>))
-                source = source.AsReadOnly();
-
-            var propertyInfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            var output = new string[source.Count() + 1,propertyInfos.Length];
-            var columnWidths = new int[propertyInfos.Length];
-
-            for (var columnIndex = 0; columnIndex < propertyInfos.Length; columnIndex++)
-            {
-                output[0, columnIndex] = propertyInfos[columnIndex].Name;
-                columnWidths[columnIndex] = output[0, columnIndex].Length;
-            }
-
-            for (var itemIndex = 0; itemIndex < source.Count(); itemIndex++)
-            {
-                for (var columnIndex = 0; columnIndex < propertyInfos.Length; columnIndex++)
-                {
-                    var value = propertyInfos[columnIndex].GetValue(source.ElementAt(itemIndex), null);
-                    output[itemIndex + 1, columnIndex] = value is decimal || value is double ? "{0:#0.000}".F(value) : value.ToString();
-                    columnWidths[columnIndex] = Math.Max(columnWidths[columnIndex], output[itemIndex + 1, columnIndex].Length);
-                }
-            }
-
-            for (var row = 0; row < source.Count() + 1; row++)
-            {
-                for (var col = 0; col < propertyInfos.Length; col++)
-                    Console.Write("{0," + (columnWidths[col] + 2) + "}", output[row, col]);
-                Console.WriteLine();
-            }
-
-            return source;
-        }
-
         public static string GetDisplayName(this MemberInfo member)
         {
             var displayAttr = member.GetCustomAttributes(false).OfType<DisplayAttribute>().FirstOrDefault();
@@ -407,13 +267,6 @@ namespace Momo.Common
         public static string GetDisplayName(this Enum value)
         {
             return value.GetType().GetMember(value.ToString())[0].GetDisplayName();
-        }
-
-        public static Boolean IsAnonymous(this Type type)
-        {
-            return
-                type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any() &&
-                type.FullName.Contains("AnonymousType");
         }
     }
 }

@@ -6,7 +6,6 @@ using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions.Instances;
-using Momo.Common;
 using Momo.Domain.Entities;
 using NHibernate;
 
@@ -17,11 +16,11 @@ namespace Momo.UI.Infrastructure
         ISessionFactory CurrentSessionFactory { get; }
     }
 
-    public class NHibernateSessionFactoryHelper : INHibernateSessionFactoryHelper
+    public sealed class NHibernateSessionFactoryHelper : INHibernateSessionFactoryHelper
     {
         private ISessionFactory _currentSessionFactory;
 
-        public ISessionFactory CurrentSessionFactory { get { return _currentSessionFactory ?? (_currentSessionFactory = CreateSessionFactory()); } }
+        public ISessionFactory CurrentSessionFactory => _currentSessionFactory ?? (_currentSessionFactory = CreateSessionFactory());
 
         private static ISessionFactory CreateSessionFactory()
         {
@@ -47,7 +46,7 @@ namespace Momo.UI.Infrastructure
                 .BuildSessionFactory();
         }
 
-        public class MyIdConvention : IIdConvention
+        private sealed class MyIdConvention : IIdConvention
         {
             public void Apply(IIdentityInstance instance)
             {
@@ -56,15 +55,16 @@ namespace Momo.UI.Infrastructure
             }
         }
 
-        public class MyForeignKeyConvention : ForeignKeyConvention
+        private sealed class MyForeignKeyConvention : ForeignKeyConvention
         {
             protected override string GetKeyName(Member property, Type type)
             {
-                return "{0}Id".F(property != null ? property.Name : type.Name);
+                object arg0 = property != null ? property.Name : type.Name;
+                return $"{arg0}Id";
             }
         }
 
-        public class MyCollectionConvention : ICollectionConvention
+        private sealed class MyCollectionConvention : ICollectionConvention
         {
             public void Apply(ICollectionInstance instance)
             {

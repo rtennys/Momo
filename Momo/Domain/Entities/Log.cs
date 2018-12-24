@@ -1,9 +1,8 @@
 ﻿using System;
-using Momo.Common.DataAccess;
 
 namespace Momo.Domain.Entities
 {
-    public class Log : Entity<int>
+    public class Log : Entity
     {
         public virtual DateTimeOffset Date { get; protected set; }
         public virtual string Level { get; protected set; }

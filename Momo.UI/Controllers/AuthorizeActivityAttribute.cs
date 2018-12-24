@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using Momo.Common;
 
 namespace Momo.UI.Controllers
 {
@@ -20,7 +19,7 @@ namespace Momo.UI.Controllers
 
         public string Activity
         {
-            get { return _activity; }
+            get => _activity;
             set
             {
                 _activity = value;
@@ -41,7 +40,7 @@ namespace Momo.UI.Controllers
                 var routeData = httpContext.Request.RequestContext.RouteData;
                 var controller = routeData.GetRequiredString("controller");
                 var action = routeData.GetRequiredString("action");
-                activity = "{0}/{1}".F(controller, action);
+                activity = $"{controller}/{action}";
             }
 
             return user.IsInRole(activity);

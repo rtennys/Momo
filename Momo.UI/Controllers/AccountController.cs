@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
 using Microsoft.Web.WebPages.OAuth;
-using Momo.Common.DataAccess;
 using Momo.Domain;
 using Momo.Domain.Commands;
 using Momo.UI.Models;
@@ -13,7 +12,7 @@ using WebMatrix.WebData;
 namespace Momo.UI.Controllers
 {
     [Authorize]
-    public class AccountController : AppController
+    public sealed class AccountController : AppController
     {
         public AccountController(IUnitOfWork uow, ICommandExecutor commandExecutor)
         {

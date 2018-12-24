@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Momo.Common;
 
 namespace Momo.Domain.Entities
 {

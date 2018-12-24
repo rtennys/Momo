@@ -1,9 +1,8 @@
 ﻿using System;
-using Momo.Common.DataAccess;
 
 namespace Momo.Domain.Entities
 {
-    public abstract class EntityBase : Entity<int>
+    public abstract class EntityBase : Entity
     {
         public virtual int Version { get; protected internal set; }
     }

@@ -1,5 +1,4 @@
-﻿@using Momo.Common
-@model ICollection<AuthenticationClientData>
+﻿@model ICollection<AuthenticationClientData>
 
 @using (Html.BeginForm("ExternalLogin", "Account", new {ViewBag.ReturnUrl}))
 {
@@ -12,7 +11,7 @@
                 name="provider"
                 value="@externalLogin.AuthenticationClient.ProviderName"
                 title="Log in using your @externalLogin.DisplayName account"
-                class="login-button @("{0}-login".F(externalLogin.AuthenticationClient.ProviderName))">
+                class="login-button @(string.Format("{0}-login", externalLogin.AuthenticationClient.ProviderName))">
 
                 &nbsp;
 

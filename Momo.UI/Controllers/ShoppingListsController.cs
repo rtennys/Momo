@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Momo.Common.DataAccess;
 using Momo.Domain;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
@@ -10,7 +9,7 @@ using Momo.UI.Models;
 namespace Momo.UI.Controllers
 {
     [Authorize]
-    public class ShoppingListsController : AppController
+    public sealed class ShoppingListsController : AppController
     {
         public ShoppingListsController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
         {

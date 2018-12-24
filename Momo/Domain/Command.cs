@@ -1,5 +1,4 @@
 ﻿using System;
-using Momo.Common;
 
 namespace Momo.Domain
 {
@@ -24,7 +23,10 @@ namespace Momo.Domain
             var handler = Ioc.Resolve<ICommandHandler<T>>();
 
             if (handler == null)
-                return new CommandResult().Add("No command handler registered for {0}".F(typeof(T).FullName));
+            {
+                object arg0 = typeof(T).FullName;
+                return new CommandResult().Add($"No command handler registered for {arg0}");
+            }
 
             return handler.Handle(command);
         }
