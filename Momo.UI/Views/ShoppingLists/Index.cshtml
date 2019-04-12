@@ -9,12 +9,12 @@
 
 @if (CurrentUser.IsRouteUsername())
 {
-    using (Html.BeginForm("add", null, FormMethod.Post, new {id = "addListForm"}))
+    using (Html.BeginForm("add", null, FormMethod.Post, new { id = "addListForm" }))
     {
         @Html.AntiForgeryToken()
-        <ol>
-            <li>@addHtmlHelper.TextBoxFor(m => m.Name, new {placeholder = "new list"})</li>
-        </ol>
+        <div class="form-group">
+            @addHtmlHelper.TextBoxFor(m => m.Name, new { placeholder = "new list", @class = "form-control" })
+        </div>
         @Html.ValidationSummary()
     }
 }

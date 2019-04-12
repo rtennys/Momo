@@ -7,52 +7,50 @@
 
 <p>@Html.ActionLink((string)routeData.Values["username"], "Index", "ShoppingLists"): @Html.ActionLink((string)routeData.Values["shoppinglist"], "Show", "ShoppingLists"): <strong>add</strong></p>
 
-@using (Html.BeginForm("Search", null, FormMethod.Post, new {id = "searchForm"}))
+@using (Html.BeginForm("Search", null, FormMethod.Post, new { id = "searchForm" }))
 {
     @Html.AntiForgeryToken()
     @Html.Hidden("username")
     @Html.Hidden("shoppinglist")
-    <ol>
-        <li class="row">
-            @Html.TextBox("name", null, new { autocomplete = "off", style = "width: 100%;" })
-        </li>
-    </ol>
+    <div class="form-group">
+        @Html.TextBox("name", null, new { autocomplete = "off", @class = "form-control" })
+    </div>
     @Html.ValidationSummary()
 }
 
 
 <div class="row">
-    <div class="span2">&nbsp;</div>
-    <div class="span2">Qty</div>
-    <div class="span6">Name</div>
-    <div class="span2">Aisle</div>
+    <div class="col-2 col-lg-1">&nbsp;</div>
+    <div class="col-2 col-lg-1 text-center">Qty</div>
+    <div class="col">Name</div>
+    <div class="col-2 col-lg-1 text-center">Aisle</div>
 </div>
-<hr/>
+<hr />
 
 <div id="noSearchResults" class="row" style="margin-bottom: 50px;">
-    <div class="span2">&nbsp;</div>
-    <div class="span10"><em>no results</em></div>
+    <div class="col-2">&nbsp;</div>
+    <div class="col-10"><em>no results</em></div>
 </div>
 
 <div id="searchResultContainer" style="margin-bottom: 50px;"></div>
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new {id = "addItemFormTemplate", style = "display: none; margin: 15px 0;"}))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addItemFormTemplate", style = "display: none; margin: 15px 0;" }))
 {
     <div class="row">
-        <div class="span2">
+        <div class="col-2 col-lg-1">
             @Html.AntiForgeryToken()
             <input type="hidden" name="shoppingListId" value="@Model.ShoppingListId" />
             <input type="hidden" name="name" />
-            <input type="submit" value="add" />
+            <button type="submit" class="btn btn-sm btn-secondary">add</button>
         </div>
-        <div class="span2">
-            <input type="number" name="quantity" style="width: 75%; max-width: 25px;" />
+        <div class="col-2 col-lg-1">
+            <input type="number" name="quantity" class="form-control p-1" />
         </div>
-        <div class="span6">
+        <div class="col">
             <span name="name"></span>
         </div>
-        <div class="span2">
-            <input type="number" name="aisle" style="width: 75%; max-width: 30px;" />
+        <div class="col-2 col-lg-1">
+            <input type="number" name="aisle" class="form-control p-1" />
         </div>
     </div>
 }

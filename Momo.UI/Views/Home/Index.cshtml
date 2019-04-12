@@ -4,11 +4,17 @@
     ViewBag.Title = "Home";
 }
 
-@if (Request.IsAuthenticated) {
-<p>@Html.ActionLink("My Shopping Lists", "Index", "ShoppingLists")</p>
+@if (Request.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("My Shopping Lists", "Index", "ShoppingLists")
+    </p>
 }
-<p>@(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))</p>
 
 <p>
-    As an example, check out this website author's personal lists: @Html.ActionLink("Rob Tennyson", "Index", "ShoppingLists", new {username = "robtennyson"}, null)
+    @(Request.IsAuthenticated ? Html.ActionLink("My Account", "Manage", "Account") : Html.ActionLink("Sign in", "Login", "Account"))
+</p>
+
+<p>
+    As an example, check out this website author's personal lists: @Html.ActionLink("Rob Tennyson", "Index", "ShoppingLists", new { username = "robtennyson" }, null)
 </p>

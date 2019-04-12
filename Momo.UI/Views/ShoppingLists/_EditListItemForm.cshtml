@@ -1,34 +1,32 @@
 ﻿@model Momo.Domain.Commands.EditShoppingListItemCommand
 
 <div id="edit-item-container" style="display: none;">
-    @using (Html.BeginForm("EditItem", null, FormMethod.Post, new {id = "editItemForm"}))
+    @using (Html.BeginForm("EditItem", null, FormMethod.Post, new { id = "editItemForm" }))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="@Html.NameFor(m => m.ShoppingListId)" value="@Model.ShoppingListId" />
         <input type="hidden" name="@Html.NameFor(m => m.Id)" />
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.Name)
-                @Html.TextBoxFor(m => m.Name, new {placeholder = "Name", autocomplete = "off"})
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Quantity)
-                @Html.TextBoxFor(m => m.Quantity, new {placeholder = "Quantity", autocomplete = "off"})
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Aisle)
-                @Html.TextBoxFor(m => m.Aisle, new {placeholder = "Aisle", autocomplete = "off"})
-            </li>
-        </ol>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Name", autocomplete = "off" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Quantity)
+            @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", placeholder = "Quantity", autocomplete = "off" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Aisle)
+            @Html.TextBoxFor(m => m.Aisle, new { @class = "form-control", placeholder = "Aisle", autocomplete = "off" })
+        </div>
 
-        <input type="submit" value="Done" />
+        <button type="submit" class="btn btn-secondary">Done</button>
         @Html.ValidationSummary()
     }
 
-    @using (Html.BeginForm("DeleteItem", null, FormMethod.Post, new {id = "deleteItemForm", style = "margin-top: 50px;"}))
+    @using (Html.BeginForm("DeleteItem", null, FormMethod.Post, new { id = "deleteItemForm", style = "margin-top: 50px;" }))
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.Id" />
-        <input type="submit" value="Forget this item" />
+        <button type="submit" class="btn btn-secondary">Forget this item</button>
     }
 </div>

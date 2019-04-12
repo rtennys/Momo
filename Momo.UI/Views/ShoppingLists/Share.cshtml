@@ -9,10 +9,10 @@
     @Html.AntiForgeryToken()
     @Html.Hidden("username")
     @Html.Hidden("shoppinglist")
-    <ol>
-        <li>@Html.TextBox("shareWith", "", new {placeholder = "Username"})</li>
-    </ol>
-    <input type="submit" value="Add" />
+    <div class="form-group">
+        @Html.TextBox("shareWith", "", new { @class = "form-control", placeholder = "Username" })
+    </div>
+    <button type="submit" class="btn btn-secondary">Add</button>
 }
 
 <p style="margin-top: 50px;">Currently Shared With</p>
@@ -30,8 +30,8 @@
         @Html.Hidden("shoppinglist")
         @Html.Hidden("shareWith", username)
         <div class="mobileAccessible">
-            <input type="submit" value="Remove" style="margin-right: 25px;" />
-            @Html.ActionLink(username, "Index", "ShoppingLists", new {username}, null)
+            <button type="submit" class="btn btn-secondary btn-sm" style="margin-right: 25px;">Remove</button>
+            @Html.ActionLink(username, "Index", "ShoppingLists", new { username }, null)
         </div>
     }
 }

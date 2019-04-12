@@ -5,28 +5,28 @@
     <h3>Registered external logins</h3>
     <table>
         <tbody>
-        @foreach (var externalLogin in Model)
-        {
-            <tr>
-                <td>@externalLogin.ProviderDisplayName</td>
-                <td>
-                    @if (ViewBag.ShowRemoveButton)
-                    {
-                        using (Html.BeginForm("Disassociate", "Account"))
+            @foreach (var externalLogin in Model)
+            {
+                <tr>
+                    <td>@externalLogin.ProviderDisplayName</td>
+                    <td>
+                        @if (ViewBag.ShowRemoveButton)
                         {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("provider", externalLogin.Provider)
-                            @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-                            <input type="submit" value="Remove" title="Remove this @externalLogin.ProviderDisplayName credential from your account" />
+                            using (Html.BeginForm("Disassociate", "Account"))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("provider", externalLogin.Provider)
+                                @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
+                                <button type="submit" class="btn btn-sm btn-secondary" title="Remove this @externalLogin.ProviderDisplayName credential from your account">Remove</button>
+                            }
                         }
-                    }
-                    else
-                    {
-                        @: &nbsp;
-                    }
-                </td>
-            </tr>
-        }
+                        else
+                        {
+                            <span>&nbsp;</span>
+                        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }

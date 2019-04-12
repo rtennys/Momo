@@ -4,28 +4,26 @@
     ViewBag.Title = "Sign in";
 }
 
-<div class="row">
+<div>
     <h2>Use an external account</h2>
-    @Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl})
+    @Html.Action("ExternalLoginsList", new { ViewBag.ReturnUrl })
     <p>Keep the number of usernames and passwords you have to remember to a minimum!</p>
 </div>
 
-<div class="row spaced">
+<div>
     <h2>Use a local account</h2>
-    @using (Html.BeginForm(new {ViewBag.ReturnUrl}))
+    @using (Html.BeginForm(new { ViewBag.ReturnUrl }))
     {
         @Html.AntiForgeryToken()
 
-        <ol>
-            <li>@Html.EditorFor(m => m.Username)</li>
-            <li>@Html.EditorFor(m => m.Password)</li>
-            <li>
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new {@class = "checkbox"})
-            </li>
-        </ol>
+        <div class="form-group">@Html.EditorFor(m => m.Username)</div>
+        <div class="form-group">@Html.EditorFor(m => m.Password)</div>
+        <div class="form-group">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+        </div>
 
-        <input type="submit" value="Sign in" />
+        <button type="submit" class="btn btn-secondary">Sign in</button>
 
         @Html.ValidationSummary(true)
 

@@ -9,11 +9,11 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Id)
 
-    <ol>
-        <li>@Html.Editor("Name")</li>
-    </ol>
+    <div class="form-group">
+        @Html.Editor("Name")
+    </div>
 
-    <input type="submit" value="Save" />
+    <button type="submit" class="btn btn-secondary">Save</button>
 
     @Html.ValidationSummary()
 }

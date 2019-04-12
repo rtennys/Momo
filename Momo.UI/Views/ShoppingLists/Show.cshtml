@@ -10,7 +10,7 @@
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    @Html.ActionLink("Add Items", "Index", "AddListItem")
+    <p>@Html.ActionLink("Add Items", "Index", "AddListItem")</p>
 }
 
 <p id="nothingNeededMsg" style="@(Model.ListItems.Any(x => !x.Picked && x.Quantity > 0) ? "display: none" : "")">
@@ -29,14 +29,16 @@
             {
                 <div id="item_@listItem.Id" class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
                     <div class="row">
-                        <div class="span1 clickable" style="text-align: center;">
-                            <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                        <div class="col-1">
+                            <label class="d-block m-0 text-center">
+                                <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                            </label>
                         </div>
-                        <div class="span10 clickable list-item-name">
-                            @listItem.Name
+                        <div class="col-10">
+                            <button class="btn d-block w-100 p-0 text-left list-item-name">@listItem.Name</button>
                         </div>
-                        <div class="span1 clickable list-item-quantity" style="text-align: center;">
-                            @listItem.Quantity
+                        <div class="col-1">
+                            <button class="btn d-block w-100 p-0 list-item-quantity">@listItem.Quantity</button>
                         </div>
                     </div>
                 </div>
@@ -53,9 +55,13 @@
 
 @section FooterContent
 {
-    <div class="row">
-        <div class="span6"><label><input type="checkbox" id="hideZeros" checked="checked" /> Hide Zeros</label></div>
-        <div class="span6" style="text-align: right;"><label><input type="checkbox" id="hidePicked" checked="checked" /> Hide Checked</label></div>
+    <div class="row mb-4">
+        <div class="col">
+            <label><input type="checkbox" id="hideZeros" checked="checked"/> Hide Zeros</label>
+        </div>
+        <div class="col text-right">
+            <label><input type="checkbox" id="hidePicked" checked="checked"/> Hide Checked</label>
+        </div>
     </div>
 
     @if (CurrentUser.HasShoppingListAccess())
@@ -66,7 +72,7 @@
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <input type="hidden" name="CheckedOnly" value="True" />
             <p>
-                <input type="submit" value="Set checked to Zero" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set checked quantities to zero?'); " />
+                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set checked quantities to zero?'); ">Set checked to Zero</button>
             </p>
         }
         using (Html.BeginForm("Clear", "ShoppingLists"))
@@ -75,7 +81,7 @@
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <input type="hidden" name="CheckedOnly" value="False" />
             <p>
-                <input type="submit" value="Set all to Zero" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); " />
+                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); ">Set all to Zero</button>
             </p>
         }
     }
@@ -84,18 +90,22 @@
     {
         using (Html.BeginForm("Rename", "ShoppingLists", FormMethod.Get))
         {
-            <p><input type="submit" value="Rename" /></p>
+            <p>
+                <button type="submit" class="btn btn-sm btn-secondary">Rename</button>
+            </p>
         }
         using (Html.BeginForm("Share", "ShoppingLists", FormMethod.Get))
         {
-            <p><input type="submit" value="Sharing" /></p>
+            <p>
+                <button type="submit" class="btn btn-sm btn-secondary">Sharing</button>
+            </p>
         }
         using (Html.BeginForm("Delete", "ShoppingLists"))
         {
             @Html.AntiForgeryToken()
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <p>
-                <input type="submit" value="Delete This List" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); " />
+                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); ">Delete This List</button>
             </p>
         }
     }

@@ -1,29 +1,5 @@
 ﻿/******************************************************/
 /******************************************************/
-// prototypes
-
-if (!Array.prototype.filter) {
-    Array.prototype.filter = function (fun /*, thisp*/) {
-        var len = this.length >>> 0;
-        if (typeof fun != "function")
-            throw new TypeError();
-
-        var res = [];
-        var thisp = arguments[1];
-        for (var i = 0; i < len; i++) {
-            if (i in this) {
-                var val = this[i]; // in case fun mutates this
-                if (fun.call(thisp, val, i, this))
-                    res.push(val);
-            }
-        }
-        return res;
-    };
-}
-
-
-/******************************************************/
-/******************************************************/
 // jquery extensions
 
 $.fn.resetUnobtrusiveValidation = function () {
@@ -57,10 +33,12 @@ app = {
 
     urls: {},
 
-    logger: (function () {
+    logger: (function (window, toastr) {
         if (!toastr) throw 'toastr plugin not referenced';
 
         toastr.options.timeOut = 3000;
+        toastr.options.extendedTimeOut = 5000;
+        toastr.options.toastClass = 'toastr';
         toastr.options.positionClass = 'toast-bottom-right';
 
         return {
@@ -88,7 +66,7 @@ app = {
             !!console && console.log && console.log.apply && console.log.apply(console, arguments);
         }
 
-    })(),
+    }(window, toastr)),
 
     ajax: function (method, url, data, callback, type) {
         // shift arguments if data argument was omitted
@@ -149,7 +127,7 @@ app = {
             .dialog({ modal: true, width: 'auto', close: function () { _dialog.remove(); } })
             .append($('<p>').text('Loading...'))
             .load(loadUrl, function (response, status, xhr) {
-                if (status != "error") {
+                if (status !== 'error') {
                     reposition();
                     return;
                 }
@@ -211,7 +189,7 @@ app = {
     $(function () {
 
         $screenSize = $('.screenSize');
-        if ($screenSize.length == 0) return;
+        if ($screenSize.length === 0) return;
 
         $window = $(window);
 

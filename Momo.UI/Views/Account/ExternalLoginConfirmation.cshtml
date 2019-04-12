@@ -9,16 +9,14 @@
     signing in.
 </p>
 
-@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new {ViewBag.ReturnUrl}))
+@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ViewBag.ReturnUrl }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.ExternalLoginData)
 
-    <ol>
-        <li>@Html.EditorFor(m => m.Username)</li>
-    </ol>
+    <div class="form-group">@Html.EditorFor(m => m.Username)</div>
 
-    <input type="submit" value="Register" />
+    <button type="submit" class="btn btn-secondary">Register</button>
 
     @Html.ValidationSummary(true)
 }

@@ -5,23 +5,28 @@
 
 <p>@ViewBag.StatusMessage</p>
 
-<div class="row">
+<div>
     @using (Html.BeginForm("LogOff", "Account"))
     {
         @Html.AntiForgeryToken()
-        <p>You're signed in as <strong>@User.Identity.Name</strong>. <input type="submit" value="Sign Out"/></p>
+        <p>
+            You're signed in as <strong>@User.Identity.Name</strong>.
+            <button type="submit" class="btn btn-sm btn-secondary">Sign Out</button>
+        </p>
     }
+</div>
 
+<div class="mt-5">
     @(ViewBag.HasLocalPassword ? Html.Partial("_ChangePasswordPartial") : Html.Partial("_SetPasswordPartial"))
 </div>
 
 
-<div class="row spaced">
+<div class="mt-5">
     @Html.Action("RemoveExternalLogins")
 </div>
 
 
-<div class="row spaced">
+<div class="mt-5">
     <h3>Add an external login</h3>
-    @Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl })
+    @Html.Action("ExternalLoginsList", new { ViewBag.ReturnUrl })
 </div>

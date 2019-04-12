@@ -1,13 +1,13 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>@ViewBag.Title - @App["name"]</title>
 
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 
     @Styles.Render("~/content/css")
 
@@ -15,42 +15,38 @@
 </head>
 <body>
 
-    <div class="row">
-        <div class="pg-content">
+    <div class="container">
+
+        <div class="my-2">
             @RenderBody()
         </div>
-    </div>
 
-    <div class="row">
-        <div class="pg-content">
-            <hr />
-        </div>
-    </div>
+        <hr />
 
-    <div class="row">
-        <div class="pg-content">
-            <footer>
+        <footer>
 
-                @if (IsSectionDefined("FooterContent"))
-                {
-                    <div class="row">
-                        @RenderSection("FooterContent", false)
-                    </div>
-                }
-
-                <div class="row" style="@(IsSectionDefined("FooterContent") ? "margin-top: 50px" : "")">
-                    <p><a href="@Url.Action("Index", "Home")">Home</a></p>
-                    <p><a href="@Url.Action("About", "Home")">About</a></p>
-                    <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
-                    @if (Request.IsLocal) { <p class="screenSize"></p> }
+            @if (IsSectionDefined("FooterContent"))
+            {
+                <div>
+                    @RenderSection("FooterContent", false)
                 </div>
+            }
 
-            </footer>
-        </div>
+            <div style="@(IsSectionDefined("FooterContent") ? "margin-top: 50px" : "")">
+                <p><a href="@Url.Action("Index", "Home")">Home</a></p>
+                <p><a href="@Url.Action("About", "Home")">About</a></p>
+                <p>&copy; @DateTime.Now.Year - @App["name"] | <a href="@App["versionUrl"]" rel="external" target="_blank">Version @App["version"]</a></p>
+                @if (Request.IsLocal)
+                {<p class="screenSize"></p>}
+            </div>
+
+        </footer>
+
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
 
     @Scripts.Render("~/js")
     @RenderSection("scripts", false)
