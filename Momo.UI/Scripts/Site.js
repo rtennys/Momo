@@ -199,7 +199,7 @@ app = {
     });
 
     function setSize() {
-        $screenSize.text($window.width() + ' x ' + $window.height() + '  (320 x 421 - iphone)');
+        $screenSize.text($window.width() + ' x ' + $window.height() + '  (375 x 667 - iphone)');
     }
 
 })(window, jQuery);

@@ -34,10 +34,10 @@
                                 <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
                             </label>
                         </div>
-                        <div class="col-10">
+                        <div class="col">
                             <button class="btn d-block w-100 p-0 text-left list-item-name">@listItem.Name</button>
                         </div>
-                        <div class="col-1">
+                        <div class="col-2 col-md-1">
                             <button class="btn d-block w-100 p-0 list-item-quantity">@listItem.Quantity</button>
                         </div>
                     </div>
