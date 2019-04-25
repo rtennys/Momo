@@ -12,7 +12,7 @@
     <div class="form-group">
         @Html.TextBox("shareWith", "", new { @class = "form-control", placeholder = "Username" })
     </div>
-    <button type="submit" class="btn btn-secondary">Add</button>
+    <button type="submit" class="btn btn-primary">Add</button>
 }
 
 <p style="margin-top: 50px;">Currently Shared With</p>
@@ -30,7 +30,7 @@
         @Html.Hidden("shoppinglist")
         @Html.Hidden("shareWith", username)
         <div class="mobileAccessible">
-            <button type="submit" class="btn btn-secondary btn-sm" style="margin-right: 25px;">Remove</button>
+            <button type="submit" class="btn btn-sm btn-primary" style="margin-right: 25px;">Remove</button>
             @Html.ActionLink(username, "Index", "ShoppingLists", new { username }, null)
         </div>
     }

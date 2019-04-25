@@ -19,7 +19,7 @@
             @Html.TextBoxFor(m => m.Aisle, new { @class = "form-control", placeholder = "Aisle", autocomplete = "off" })
         </div>
 
-        <button type="submit" class="btn btn-secondary">Done</button>
+        <button type="submit" class="btn btn-primary">Done</button>
         @Html.ValidationSummary()
     }
 
@@ -27,6 +27,6 @@
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.Id" />
-        <button type="submit" class="btn btn-secondary">Forget this item</button>
+        <button type="submit" class="btn btn-primary">Forget this item</button>
     }
 </div>

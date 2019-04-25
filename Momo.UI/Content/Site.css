@@ -1,4 +1,11 @@
-﻿/* auth buttons */
+﻿/* colors */
+body#momo, #momo h1 a, #momo h2 a, #momo h3 a, #momo h1 a:visited, #momo h2 a:visited, #momo h3 a:visited { color: #3a3838; }
+#momo a, #momo a:visited { color: #5c80b1; }
+#momo .btn-primary { background-color: #5c80b1; border-color: #5c80b1; color: #fff; }
+#momo .btn-primary:hover { background-color: #3066b0; border-color: #3066b0; color: #fff; }
+
+
+/* auth buttons */
 .login-button { margin-right: 15px; margin-bottom: 15px; width: 60px; height: 60px; background-color: transparent; background-size: 60px 60px; cursor: pointer; border: none; }
 .facebook-login { background-image: url('images/facebook.png'); }
 .microsoft-login { background-image: url('images/microsoft.png'); }
@@ -33,8 +40,8 @@ div.mobileAccessible { margin: 5px 0; padding: 10px 15px; border: solid 1px #bbb
 
 .list-item-status-exists::after,
 .list-item-status-new::after { color: white; font-weight: bolder; text-align: center; -ms-border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; display: inline; margin-left: 5px; padding: 2px 5px; }
-.list-item-status-exists::after { content: '\2714'; background-color: #090; }
-.list-item-status-new::after { content: 'new'; background-color: #00f; font-size: .9em; }
+.list-item-status-exists::after { content: '\2714'; background-color: #9cc19c; }
+.list-item-status-new::after { content: 'new'; background-color: #3066b0; font-size: .9em; }
 
 @media (min-width: 768px) {
     div.mobileAccessible { margin: 3px 0; padding: 5px 10px; }

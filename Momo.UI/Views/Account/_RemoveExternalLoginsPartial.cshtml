@@ -17,7 +17,7 @@
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("provider", externalLogin.Provider)
                                 @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-                                <button type="submit" class="btn btn-sm btn-secondary" title="Remove this @externalLogin.ProviderDisplayName credential from your account">Remove</button>
+                                <button type="submit" class="btn btn-sm btn-primary" title="Remove this @externalLogin.ProviderDisplayName credential from your account">Remove</button>
                             }
                         }
                         else

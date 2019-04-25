@@ -72,7 +72,7 @@
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <input type="hidden" name="CheckedOnly" value="True" />
             <p>
-                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set checked quantities to zero?'); ">Set checked to Zero</button>
+                <button type="submit" class="btn btn-sm btn-primary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set checked quantities to zero?'); ">Set checked to Zero</button>
             </p>
         }
         using (Html.BeginForm("Clear", "ShoppingLists"))
@@ -81,7 +81,7 @@
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <input type="hidden" name="CheckedOnly" value="False" />
             <p>
-                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); ">Set all to Zero</button>
+                <button type="submit" class="btn btn-sm btn-primary" onclick=" return confirm('Setting a quantity to zero removes the item from view, but doesn\'t forget it.  Set all quantities to zero?'); ">Set all to Zero</button>
             </p>
         }
     }
@@ -91,13 +91,13 @@
         using (Html.BeginForm("Rename", "ShoppingLists", FormMethod.Get))
         {
             <p>
-                <button type="submit" class="btn btn-sm btn-secondary">Rename</button>
+                <button type="submit" class="btn btn-sm btn-primary">Rename</button>
             </p>
         }
         using (Html.BeginForm("Share", "ShoppingLists", FormMethod.Get))
         {
             <p>
-                <button type="submit" class="btn btn-sm btn-secondary">Sharing</button>
+                <button type="submit" class="btn btn-sm btn-primary">Sharing</button>
             </p>
         }
         using (Html.BeginForm("Delete", "ShoppingLists"))
@@ -105,7 +105,7 @@
             @Html.AntiForgeryToken()
             <input type="hidden" name="@Html.IdFor(m => m.Id)" value="@Model.Id" />
             <p>
-                <button type="submit" class="btn btn-sm btn-secondary" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); ">Delete This List</button>
+                <button type="submit" class="btn btn-sm btn-primary" onclick=" return confirm('Are you sure? All items and saved prices will be lost.'); ">Delete This List</button>
             </p>
         }
     }
