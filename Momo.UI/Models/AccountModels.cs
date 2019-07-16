@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Momo.Domain.Commands;
+using Momo.Domain.Users;
 
 namespace Momo.UI.Models
 {
@@ -16,7 +16,7 @@ namespace Momo.UI.Models
         public bool RememberMe { get; set; }
     }
 
-    public class RegisterModel : AddUserCommand
+    public class RegisterModel : AddUserModel
     {
         [Required, StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6), DataType(DataType.Password)]
         public string Password { get; set; }
@@ -25,7 +25,7 @@ namespace Momo.UI.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class RegisterExternalLoginModel : AddUserCommand
+    public class RegisterExternalLoginModel : AddUserModel
     {
         public string ExternalLoginData { get; set; }
     }

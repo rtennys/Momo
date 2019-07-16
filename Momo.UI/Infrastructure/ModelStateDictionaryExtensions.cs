@@ -7,7 +7,7 @@ namespace Momo.UI
 {
     public static class ModelStateDictionaryExtensions
     {
-        public static ModelStateDictionary AddModelErrors(this ModelStateDictionary modelState, CommandResult result)
+        public static ModelStateDictionary AddModelErrors(this ModelStateDictionary modelState, DomainResult result)
         {
             foreach (var error in result.Errors)
                 modelState.AddModelError(error.Key, error.Error);

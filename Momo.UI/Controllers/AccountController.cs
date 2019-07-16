@@ -4,8 +4,7 @@ using System.Text.RegularExpressions;
 using System.Transactions;
 using System.Web.Mvc;
 using Microsoft.Web.WebPages.OAuth;
-using Momo.Domain;
-using Momo.Domain.Commands;
+using Momo.Domain.Users;
 using Momo.UI.Models;
 using WebMatrix.WebData;
 
@@ -14,14 +13,14 @@ namespace Momo.UI.Controllers
     [Authorize]
     public sealed class AccountController : AppController
     {
-        public AccountController(IUnitOfWork uow, ICommandExecutor commandExecutor)
+        public AccountController(IUnitOfWork uow, IUserService userService)
         {
             _uow = uow;
-            _commandExecutor = commandExecutor;
+            _userService = userService;
         }
 
         private readonly IUnitOfWork _uow;
-        private readonly ICommandExecutor _commandExecutor;
+        private readonly IUserService _userService;
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -62,7 +61,7 @@ namespace Momo.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _commandExecutor.Execute((AddUserCommand)model);
+                var result = _userService.AddUser(model);
 
                 if (result.AnyErrors())
                     ModelState.AddModelErrors(result);
@@ -149,8 +148,7 @@ namespace Momo.UI.Controllers
                 // User does not have a local password so remove any validation errors caused by a missing
                 // OldPassword field
                 var state = ModelState["OldPassword"];
-                if (state != null)
-                    state.Errors.Clear();
+                state?.Errors.Clear();
 
                 if (ModelState.IsValid)
                 {
@@ -203,15 +201,12 @@ namespace Momo.UI.Controllers
         [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public ActionResult ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)
         {
-            string provider;
-            string providerUserId;
-
-            if (User.Identity.IsAuthenticated || !OAuthWebSecurity.TryDeserializeProviderUserId(model.ExternalLoginData, out provider, out providerUserId))
+            if (User.Identity.IsAuthenticated || !OAuthWebSecurity.TryDeserializeProviderUserId(model.ExternalLoginData, out var provider, out var providerUserId))
                 return RedirectToAction("Manage");
 
             if (ModelState.IsValid)
             {
-                var result = _commandExecutor.Execute((AddUserCommand)model);
+                var result = _userService.AddUser(model);
 
                 if (result.AnyErrors())
                     ModelState.AddModelErrors(result);
@@ -251,8 +246,7 @@ namespace Momo.UI.Controllers
             var externalLogins = new List<ExternalLogin>();
             foreach (var account in accounts)
             {
-                AuthenticationClientData clientData;
-                if (!OAuthWebSecurity.TryGetOAuthClientData(account.Provider, out clientData)) continue;
+                if (!OAuthWebSecurity.TryGetOAuthClientData(account.Provider, out var clientData)) continue;
 
                 externalLogins.Add(new ExternalLogin
                                    {
@@ -300,8 +294,8 @@ namespace Momo.UI.Controllers
                 ReturnUrl = returnUrl;
             }
 
-            public string Provider { get; private set; }
-            public string ReturnUrl { get; private set; }
+            public string Provider { get; }
+            public string ReturnUrl { get; }
 
             public override void ExecuteResult(ControllerContext context)
             {

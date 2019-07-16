@@ -55,7 +55,7 @@ namespace Momo.Domain.Commands
         private readonly IRepository _repository;
         private readonly IValidationFacade _validationFacade;
 
-        public CommandResult Handle(AddShoppingListCommand command)
+        public DomainResult Handle(AddShoppingListCommand command)
         {
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
@@ -71,7 +71,7 @@ namespace Momo.Domain.Commands
             return result;
         }
 
-        public CommandResult Handle(RenameShoppingListCommand command)
+        public DomainResult Handle(RenameShoppingListCommand command)
         {
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
@@ -90,7 +90,7 @@ namespace Momo.Domain.Commands
             return result;
         }
 
-        public CommandResult Handle(DeleteShoppingListCommand command)
+        public DomainResult Handle(DeleteShoppingListCommand command)
         {
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
@@ -107,7 +107,7 @@ namespace Momo.Domain.Commands
             return result;
         }
 
-        public CommandResult Handle(ClearShoppingListCommand command)
+        public DomainResult Handle(ClearShoppingListCommand command)
         {
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())

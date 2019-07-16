@@ -22,15 +22,8 @@ namespace Momo.Domain.Entities
         public virtual UserProfile UserProfile { get; protected set; }
         public virtual string Name { get; protected internal set; }
 
-        public virtual IReadOnlyList<ShoppingListItem> ShoppingListItems
-        {
-            get { return _shoppingListItems.AsReadOnly(); }
-        }
-
-        public virtual IReadOnlyList<UserProfile> SharedWith
-        {
-            get { return _sharedWith.AsReadOnly(); }
-        }
+        public virtual IReadOnlyList<ShoppingListItem> ShoppingListItems => _shoppingListItems.AsReadOnly();
+        public virtual IReadOnlyList<UserProfile> SharedWith => _sharedWith.AsReadOnly();
 
         public virtual void StartSharing(UserProfile user)
         {
@@ -66,25 +59,5 @@ namespace Momo.Domain.Entities
                 item.Picked = false;
             }
         }
-    }
-
-    public class ShoppingListItem : EntityBase
-    {
-        protected ShoppingListItem()
-        {
-        }
-
-        public ShoppingListItem(ShoppingList shoppingList, string name)
-        {
-            ShoppingList = shoppingList;
-            Name = name;
-        }
-
-        public virtual ShoppingList ShoppingList { get; protected set; }
-        public virtual string Name { get; protected internal set; }
-        public virtual int Aisle { get; set; }
-        public virtual decimal Price { get; set; }
-        public virtual int Quantity { get; set; }
-        public virtual bool Picked { get; set; }
     }
 }

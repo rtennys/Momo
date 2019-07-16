@@ -6,17 +6,17 @@ namespace Momo.Domain
 {
     public interface IValidationFacade
     {
-        CommandResult Validate(object instance);
+        DomainResult Validate(object instance);
     }
 
     public class ValidationFacade : IValidationFacade
     {
-        public CommandResult Validate(object instance)
+        public DomainResult Validate(object instance)
         {
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(instance, new ValidationContext(instance), validationResults, true);
 
-            var serviceResult = new CommandResult();
+            var serviceResult = new DomainResult();
 
             foreach (var validationResult in validationResults)
                 serviceResult.Add(validationResult.MemberNames.Join(", "), validationResult.ErrorMessage);

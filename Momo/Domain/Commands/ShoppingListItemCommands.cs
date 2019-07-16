@@ -52,7 +52,7 @@ namespace Momo.Domain.Commands
         private readonly IRepository _repository;
         private readonly IValidationFacade _validationFacade;
 
-        public CommandResult Handle(AddShoppingListItemCommand command)
+        public DomainResult Handle(AddShoppingListItemCommand command)
         {
             TrimInput(command);
 
@@ -70,7 +70,7 @@ namespace Momo.Domain.Commands
             return result;
         }
 
-        public CommandResult Handle(EditShoppingListItemCommand command)
+        public DomainResult Handle(EditShoppingListItemCommand command)
         {
             TrimInput(command);
 
@@ -94,7 +94,7 @@ namespace Momo.Domain.Commands
             return result;
         }
 
-        public CommandResult Handle(DeleteShoppingListItemCommand command)
+        public DomainResult Handle(DeleteShoppingListItemCommand command)
         {
             var result = _validationFacade.Validate(command);
             if (result.AnyErrors())
