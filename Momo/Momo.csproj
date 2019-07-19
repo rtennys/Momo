@@ -63,7 +63,6 @@
     </Compile>
     <Compile Include="Domain\Command.cs" />
     <Compile Include="Domain\DomainResult.cs" />
-    <Compile Include="Domain\Commands\ShoppingListCommands.cs" />
     <Compile Include="Domain\Commands\ShoppingListItemCommands.cs" />
     <Compile Include="Domain\Entities\EntityBase.cs" />
     <Compile Include="Domain\Entities\Log.cs" />
@@ -71,6 +70,7 @@
     <Compile Include="Domain\Entities\ShoppingListItem.cs" />
     <Compile Include="Domain\Entities\UserProfile.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\ShoppingLists\ShoppingListService.cs" />
     <Compile Include="Domain\Users\AddUserModel.cs" />
     <Compile Include="Domain\Users\UserService.cs" />
     <Compile Include="ExpressionHelper.cs" />

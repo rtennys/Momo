@@ -1,9 +1,8 @@
-﻿@using Momo.Domain.Commands
-@model ShoppingListsIndexModel
+﻿@model ShoppingListsIndexModel
 
 @{
     ViewBag.Title = Request.RequestContext.RouteData.Values["username"];
-    var addHtmlHelper = Html.HtmlHelperFor<AddShoppingListCommand>();
+    var addHtmlHelper = Html.HtmlHelperFor<ShoppingListsAddModel>();
 }
 
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
+using Momo.Domain.ShoppingLists;
 using Momo.UI.Models;
 
 namespace Momo.UI.Controllers
@@ -11,15 +13,17 @@ namespace Momo.UI.Controllers
     [Authorize]
     public sealed class ShoppingListsController : AppController
     {
-        public ShoppingListsController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
+        public ShoppingListsController(IUnitOfWork uow, IRepository repository, IShoppingListService shoppingListService, ICommandExecutor commandExecutor)
         {
             _uow = uow;
             _repository = repository;
+            _shoppingListService = shoppingListService;
             _commandExecutor = commandExecutor;
         }
 
         private readonly IUnitOfWork _uow;
         private readonly IRepository _repository;
+        private readonly IShoppingListService _shoppingListService;
         private readonly ICommandExecutor _commandExecutor;
 
         [AllowAnonymous]
@@ -68,13 +72,7 @@ namespace Momo.UI.Controllers
             if (shoppingList == null)
                 return HttpNotFound();
 
-            var model = new ShoppingListsRenameModel
-            {
-                Id = shoppingList.Id,
-                Name = shoppingList.Name
-            };
-
-            return View(model);
+            return View(new ShoppingListsRenameModel { Id = shoppingList.Id, Name = shoppingList.Name });
         }
 
         [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
@@ -85,7 +83,7 @@ namespace Momo.UI.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            ModelState.AddModelErrors(_commandExecutor.Execute<RenameShoppingListCommand>(model));
+            ModelState.AddModelErrors(_shoppingListService.RenameShoppingList(model.Username, model.Id, model.Name));
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -110,7 +108,7 @@ namespace Momo.UI.Controllers
         public ActionResult StartSharing(string username, string shoppinglist, string shareWith)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
-            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+            var shoppingList = user.ShoppingLists.First(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
 
             shoppingList.StartSharing(_repository.Get<UserProfile>(x => x.Username == shareWith));
 
@@ -122,7 +120,7 @@ namespace Momo.UI.Controllers
         public ActionResult StopSharing(string username, string shoppinglist, string shareWith)
         {
             var user = _repository.Get<UserProfile>(x => x.Username == username);
-            var shoppingList = user.ShoppingLists.FirstOrDefault(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
+            var shoppingList = user.ShoppingLists.First(x => string.Equals(x.Name, shoppinglist, StringComparison.OrdinalIgnoreCase));
 
             shoppingList.StopSharing(shareWith);
 
@@ -131,23 +129,27 @@ namespace Momo.UI.Controllers
         }
 
         [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Delete(DeleteShoppingListCommand command)
+        public ActionResult Delete(ShoppingListsDeleteModel model)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(command));
-
             if (ModelState.IsValid)
-                _uow.Commit();
+            {
+                ModelState.AddModelErrors(_shoppingListService.DeleteShoppingList(model.Username, model.Id));
+                if (ModelState.IsValid)
+                    _uow.Commit();
+            }
 
             return RedirectToAction("Index");
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Clear(ClearShoppingListCommand command)
+        public ActionResult Clear(ShoppingListsClearModel model)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(command));
-
             if (ModelState.IsValid)
-                _uow.Commit();
+            {
+                ModelState.AddModelErrors(_shoppingListService.ClearShoppingList(model.Username, model.Id, model.CheckedOnly));
+                if (ModelState.IsValid)
+                    _uow.Commit();
+            }
 
             return RedirectToAction("Show");
         }
@@ -156,12 +158,12 @@ namespace Momo.UI.Controllers
         /* shoppinglists/index ajax calls */
 
         [ValidateRouteUsername, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Add(AddShoppingListCommand command)
+        public ActionResult Add(ShoppingListsAddModel model)
         {
             if (!ModelState.IsValid)
                 return Json(new {Errors = ModelState.ToErrorList()});
 
-            var result = _commandExecutor.Execute(command);
+            var result = _shoppingListService.AddShoppingList(model.Username, model.Name);
 
             if (result.AnyErrors())
             {
@@ -210,5 +212,46 @@ namespace Momo.UI.Controllers
             item.Picked = picked;
             _uow.Commit();
         }
+    }
+
+    public sealed class ShoppingListsAddModel
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Start with a letter and then letters, numbers, and dashes only")]
+        public string Name { get; set; }
+    }
+
+    public sealed class ShoppingListsRenameModel
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required, RegularExpression(@"^[A-Za-z]+[A-Za-z0-9-]*$", ErrorMessage = "Start with a letter and then letters, numbers, and dashes only")]
+        public string Name { get; set; }
+
+        [Required]
+        public int Id { get; set; }
+    }
+
+    public sealed class ShoppingListsDeleteModel
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public int Id { get; set; }
+    }
+
+    public sealed class ShoppingListsClearModel
+    {
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public int Id { get; set; }
+
+        public bool CheckedOnly { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿use Momo;
-
-if not exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = N'Log')
+﻿if not exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = N'Log')
     create table dbo.[Log] (
         [Id] int identity(1, 1) not null,
         [Date] datetimeoffset not null,
@@ -11,5 +9,3 @@ if not exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = N'Log'
         [Message] nvarchar(max) not null,
         [Exception] nvarchar(max) null
     );
-
-GO

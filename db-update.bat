@@ -1,1 +1,1 @@
-sqlcmd -E -S .\sqlexpress -d master -i db-update.sql
+sqlcmd -E -S .\sqlexpress -d Momo -i db-update.sql

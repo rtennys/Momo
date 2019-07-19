@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain.Commands;
 using Momo.Domain.Entities;
+using Momo.UI.Controllers;
 
 namespace Momo.UI.Models
 {
@@ -29,10 +30,6 @@ namespace Momo.UI.Models
             if (lookup.All(x => x.Css == "zero")) yield return "zero";
             if (lookup.All(x => x.Css == "picked")) yield return "picked";
         }
-    }
-
-    public class ShoppingListsRenameModel : RenameShoppingListCommand
-    {
     }
 
     public class ShoppingListModel

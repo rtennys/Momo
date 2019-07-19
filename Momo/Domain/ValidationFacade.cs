@@ -16,12 +16,12 @@ namespace Momo.Domain
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(instance, new ValidationContext(instance), validationResults, true);
 
-            var serviceResult = new DomainResult();
+            var result = new DomainResult();
 
             foreach (var validationResult in validationResults)
-                serviceResult.Add(validationResult.MemberNames.Join(", "), validationResult.ErrorMessage);
+                result.Add(validationResult.MemberNames.Join(", "), validationResult.ErrorMessage);
 
-            return serviceResult;
+            return result;
         }
     }
 }
