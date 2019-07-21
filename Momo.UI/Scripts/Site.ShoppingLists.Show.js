@@ -68,7 +68,17 @@
                 return;
             }
 
-            (window || document).location.reload(true);
+            var item = $('#item_' + $('[name="Id"]', form).val());
+            item.data('aisle', $('[name="Aisle"]', form).val());
+            moveItem(item);
+
+            item.data('name', $('[name="Name"]', form).val());
+            item.find('.list-item-name').text(item.data('name'));
+
+            item.data('quantity', $('[name="Quantity"]', form).val());
+            item.find('.list-item-quantity').text(item.data('quantity'));
+
+            _editDialog.dialog('close');
         });
     }
 
@@ -86,8 +96,9 @@
                 return;
             }
 
-            _editDialog.dialog('close');
             removeItem($('[name="Id"]', form).val());
+
+            _editDialog.dialog('close');
         });
     }
 
@@ -129,8 +140,26 @@
             aisleContainer = itemContainer.closest('.aisle-container');
 
         itemContainer.remove();
-        if (aisleContainer.children('.item-container').length === 0)
-            aisleContainer.remove();
+
+        showHideAisle(aisleContainer);
+    }
+
+    function moveItem(item) {
+        var oldAisle = item.closest('.aisle-container'),
+            aisleNum = item.data('aisle');
+
+        var newAisle = $('#aisle_' + aisleNum);
+        if (newAisle.length === 0) {
+            $('#items-container').prepend(newAisle = $('<div id="aisle_' + aisleNum + '" class="mb-3 aisle-container"><strong>Aisle ' + (aisleNum === '0' ? 'not set' : aisleNum) + '</strong></div>'));
+        }
+
+        if (oldAisle.get(0) === newAisle.get(0))
+            return;
+
+        newAisle.append(item);
+
+        showHideAisle(oldAisle);
+        showHideAisle(newAisle);
     }
 
 })(app, jQuery);

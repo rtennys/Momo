@@ -19,18 +19,16 @@
 <div id="items-container" class="hide-zero hide-picked">
     @foreach (var lookup in Model.ListItems.ToLookup(x => x.Aisle))
     {
-        <div id="aisle_@lookup.Key" class="aisle-container @(Model.Css(lookup))">
-            <p>
-                <strong>Aisle @(lookup.Key == 0 ? "not set" : lookup.Key.ToString())</strong>
-            </p>
-
+        <div id="aisle_@lookup.Key" class="mb-3 aisle-container @(Model.Css(lookup))">
+            <strong>Aisle @(lookup.Key == 0 ? "not set" : lookup.Key.ToString())</strong>
             @foreach (var listItem in lookup)
             {
                 <div id="item_@listItem.Id" class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
                     <div class="row">
                         <div class="col-1">
                             <label class="d-block m-0 text-center">
-                                <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"") />
+                                <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"")/>
+                                &nbsp;
                             </label>
                         </div>
                         <div class="col">
