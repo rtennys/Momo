@@ -1,5 +1,4 @@
-﻿@using Momo.Domain.Commands
-@model AddShoppingListItemCommand
+﻿@model AddShoppingListItemModel
 @{
     var routeData = Request.RequestContext.RouteData;
     ViewBag.Title = string.Format("{0}/{1} - Add", routeData.Values["username"], routeData.Values["shoppinglist"]);

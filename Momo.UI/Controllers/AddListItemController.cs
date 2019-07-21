@@ -1,25 +1,26 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain;
-using Momo.Domain.Commands;
 using Momo.Domain.Entities;
+using Momo.Domain.ShoppingLists;
 
 namespace Momo.UI.Controllers
 {
     [Authorize]
     public sealed class AddListItemController : AppController
     {
-        public AddListItemController(IUnitOfWork uow, IRepository repository, ICommandExecutor commandExecutor)
+        public AddListItemController(IUnitOfWork uow, IRepository repository, IShoppingListItemService shoppingListItemService)
         {
             _uow = uow;
             _repository = repository;
-            _commandExecutor = commandExecutor;
+            _shoppingListItemService = shoppingListItemService;
         }
 
         private readonly IUnitOfWork _uow;
         private readonly IRepository _repository;
-        private readonly ICommandExecutor _commandExecutor;
+        private readonly IShoppingListItemService _shoppingListItemService;
 
         [ValidateShoppingListAccess]
         public ActionResult Index(string username, string shoppinglist)
@@ -32,16 +33,16 @@ namespace Momo.UI.Controllers
             if (shoppingList == null)
                 return HttpNotFound();
 
-            return View(new AddShoppingListItemCommand {ShoppingListId = shoppingList.Id});
+            return View(new AddShoppingListItemModel {ShoppingListId = shoppingList.Id});
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Index(AddShoppingListItemCommand command)
+        public ActionResult Index(AddShoppingListItemModel model)
         {
             if (!ModelState.IsValid)
                 return Json(new {Errors = ModelState.ToErrorList()});
 
-            var result = _commandExecutor.Execute(command);
+            var result = _shoppingListItemService.AddShoppingListItem(model.ShoppingListId, model.Name, model.Quantity ?? 1, model.Aisle ?? 0);
 
             if (result.AnyErrors())
             {
@@ -72,5 +73,19 @@ namespace Momo.UI.Controllers
 
             return Json(model);
         }
+    }
+
+    public class AddShoppingListItemModel
+    {
+        [Required]
+        public int ShoppingListId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public int? Aisle { get; set; }
+
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
+        public int? Quantity { get; set; }
     }
 }

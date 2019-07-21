@@ -66,11 +66,6 @@ namespace Momo.UI
                 .Excluding<NHibernateUnitOfWork>()
                 .BindDefaultInterface());
 
-            kernel.Bind(x => x.From("Momo", "Momo.UI")
-                .SelectAllClasses()
-                .InheritedFrom(typeof(ICommandHandler<>))
-                .BindAllInterfaces());
-
             Ioc.Initialize(kernel);
 
             GlobalConfiguration.Configuration.DependencyResolver = kernel.Get<IDependencyResolver>();

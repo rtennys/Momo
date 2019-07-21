@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
 using Momo.Domain;
-using Momo.Domain.Commands;
 using Momo.Domain.Entities;
 using Momo.Domain.ShoppingLists;
 using Momo.UI.Models;
@@ -13,18 +12,18 @@ namespace Momo.UI.Controllers
     [Authorize]
     public sealed class ShoppingListsController : AppController
     {
-        public ShoppingListsController(IUnitOfWork uow, IRepository repository, IShoppingListService shoppingListService, ICommandExecutor commandExecutor)
+        public ShoppingListsController(IUnitOfWork uow, IRepository repository, IShoppingListService shoppingListService, IShoppingListItemService shoppingListItemService)
         {
             _uow = uow;
             _repository = repository;
             _shoppingListService = shoppingListService;
-            _commandExecutor = commandExecutor;
+            _shoppingListItemService = shoppingListItemService;
         }
 
         private readonly IUnitOfWork _uow;
         private readonly IRepository _repository;
         private readonly IShoppingListService _shoppingListService;
-        private readonly ICommandExecutor _commandExecutor;
+        private readonly IShoppingListItemService _shoppingListItemService;
 
         [AllowAnonymous]
         public ActionResult Index(string username)
@@ -60,7 +59,7 @@ namespace Momo.UI.Controllers
                 .Select(x => new ShoppingListItemModel(x))
                 .ToArray();
 
-            return View(new ShoppingListsShowModel {Id = shoppingList.Id, ListItems = listItems});
+            return View(new ShoppingListsShowModel { Id = shoppingList.Id, ListItems = listItems });
         }
 
 
@@ -89,7 +88,7 @@ namespace Momo.UI.Controllers
 
             _uow.Commit();
 
-            return RedirectToAction("Show", new {username = model.Username, shoppingList = model.Name});
+            return RedirectToAction("Show", new { username = model.Username, shoppingList = model.Name });
         }
 
         [ValidateRouteUsername]
@@ -161,48 +160,44 @@ namespace Momo.UI.Controllers
         public ActionResult Add(ShoppingListsAddModel model)
         {
             if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
+                return Json(new { Errors = ModelState.ToErrorList() });
 
             var result = _shoppingListService.AddShoppingList(model.Username, model.Name);
 
             if (result.AnyErrors())
             {
                 ModelState.AddModelErrors(result);
-                return Json(new {Errors = ModelState.ToErrorList()});
+                return Json(new { Errors = ModelState.ToErrorList() });
             }
 
             _uow.Commit();
 
             var list = result.Data.ShoppingList;
 
-            return Json(new {Success = true, ShoppingList = new ShoppingListModel(list, Url)});
+            return Json(new { Success = true, ShoppingList = new ShoppingListModel(list, Url) });
         }
 
 
         /* shoppinglists/show ajax calls */
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult EditItem(EditShoppingListItemCommand command)
+        public ActionResult EditItem(ShoppingListsEditItemModel model)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(command));
+            ModelState.AddModelErrors(_shoppingListItemService.EditShoppingListItem(model.ShoppingListId, model.Id, model.Name, model.Quantity ?? 0, model.Aisle ?? 0, model.Price ?? 0));
 
             if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
+                return Json(new { Errors = ModelState.ToErrorList() });
 
             _uow.Commit();
-            return Json(new {Success = true});
+            return Json(new { Success = true });
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
-        public ActionResult DeleteItem(DeleteShoppingListItemCommand command)
+        public ActionResult DeleteItem(ShoppingListsDeleteItemModel model)
         {
-            ModelState.AddModelErrors(_commandExecutor.Execute(command));
-
-            if (!ModelState.IsValid)
-                return Json(new {Errors = ModelState.ToErrorList()});
-
+            _shoppingListItemService.DeleteShoppingListItem(model.Id);
             _uow.Commit();
-            return Json(new {Success = true});
+            return Json(new { Success = true });
         }
 
         [ValidateShoppingListAccess, HttpPost, ValidateAntiForgeryToken]
@@ -253,5 +248,29 @@ namespace Momo.UI.Controllers
         public int Id { get; set; }
 
         public bool CheckedOnly { get; set; }
+    }
+
+    public class ShoppingListsEditItemModel
+    {
+        [Required]
+        public int Id { get; set; }
+
+        [Required]
+        public int ShoppingListId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        public int? Aisle { get; set; }
+
+        [Required, Range(0, int.MaxValue, ErrorMessage = "Quantity must be positive.")]
+        public int? Quantity { get; set; }
+
+        public decimal? Price { get; set; }
+    }
+
+    public class ShoppingListsDeleteItemModel
+    {
+        public int Id { get; set; }
     }
 }

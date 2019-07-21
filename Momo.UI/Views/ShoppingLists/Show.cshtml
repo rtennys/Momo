@@ -1,5 +1,4 @@
-﻿@using Momo.Domain.Commands
-@model ShoppingListsShowModel
+﻿@model ShoppingListsShowModel
 
 @{
     var routeData = Request.RequestContext.RouteData;
@@ -49,7 +48,7 @@
 
 @if (CurrentUser.HasShoppingListAccess())
 {
-    @Html.Partial("_EditListItemForm", new EditShoppingListItemCommand {ShoppingListId = Model.Id})
+    @Html.Partial("_EditListItemForm", new ShoppingListsEditItemModel {ShoppingListId = Model.Id})
 }
 
 
