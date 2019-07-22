@@ -26,10 +26,7 @@
                 <div id="item_@listItem.Id" class="item-container mobileAccessible @listItem.Css" data-id="@listItem.Id" data-name="@listItem.Name" data-quantity="@listItem.Quantity" data-aisle="@listItem.Aisle">
                     <div class="row">
                         <div class="col-1">
-                            <label class="d-block m-0 text-center">
-                                <input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"")/>
-                                &nbsp;
-                            </label>
+                            <label class="d-block m-0 text-center"><input type="checkbox" name="picked" data-id="@listItem.Id" @(listItem.Picked ? "checked=\"checked\"" : "") @(CurrentUser.HasShoppingListAccess() ? "" : "disabled=\"disabled\"")/></label>
                         </div>
                         <div class="col">
                             <button class="btn d-block w-100 p-0 text-left list-item-name">@listItem.Name</button>
